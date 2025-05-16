@@ -73,18 +73,6 @@
     canvas {
       margin-bottom: 1rem;
     }
-    .spin-btn {
-      background-color: #1e40af;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .spin-btn:hover {
-      background-color: #1d4ed8;
-    }
     .result-text {
       margin-top: 1rem;
       font-weight: bold;
@@ -126,40 +114,38 @@
   <p>Spin each wheel to receive your daily Bible readings!</p>
 
   <div class="scripture-of-day" id="dailyVerse">
-  <span id="verseText">Loading scripture of the day...</span><br>
-  <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: underline; font-size: 0.9rem;">Learn more</a>
-</div>
+    <span id="verseText">Loading scripture of the day...</span><br>
+    <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: underline; font-size: 0.9rem;">Learn more</a>
+  </div>
 
   <div class="wheel-container">
     <div class="wheel-section">
       <h2>Old Testament</h2>
       <div style="position: relative; display: inline-block;">
-  <canvas id="oldWheel" width="300" height="300"></canvas>
-  <div onclick="startSpin('old')" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: #000; border-radius: 50%; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; cursor: pointer;">
-  <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #000;"></div>
-  Spin
-</div>
-</div>
-      
+        <canvas id="oldWheel" width="300" height="300"></canvas>
+        <div onclick="startSpin('old')" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: #000; border-radius: 50%; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; cursor: pointer;">
+          <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #000;"></div>
+          Spin
+        </div>
+      </div>
       <div id="oldResult" class="result-text"></div>
     </div>
     <div class="wheel-section">
       <h2>New Testament</h2>
       <div style="position: relative; display: inline-block;">
-  <canvas id="newWheel" width="300" height="300"></canvas>
-  <div onclick="startSpin('new')" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -130%); width: 60px; height: 60px; background: #000; border-radius: 50%; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; cursor: pointer;">
-  <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #000;"></div>
-  Spin
-</div>
-</div>
-      
+        <canvas id="newWheel" width="300" height="300"></canvas>
+        <div onclick="startSpin('new')" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: #000; border-radius: 50%; border: 4px solid white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; cursor: pointer;">
+          <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid #000;"></div>
+          Spin
+        </div>
+      </div>
       <div id="newResult" class="result-text"></div>
     </div>
   </div>
 
   <script>
-    const oldTestamentBooks = [..."Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",")];
-    const newTestamentBooks = [..."Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",")];
+    const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
+    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
 
     const angles = { old: 0, new: 0 };
     const spinning = { old: false, new: false };
@@ -191,101 +177,79 @@
       });
     }
 
-    function animateWheel(type, books) {
-      const canvasId = type + "Wheel";
-      if (!spinning[type]) return;
-
-      angles[type] += 0.2;
-      drawWheel(canvasId, books, angles[type]);
-
-      if (angles[type] > Math.PI * 4 + Math.random() * Math.PI * 2) {
-        spinning[type] = false;
-        const index = Math.floor((books.length * ((2 * Math.PI - angles[type] % (2 * Math.PI)) % (2 * Math.PI))) / (2 * Math.PI));
-        const book = books[index];
-        const chapter = Math.ceil(Math.random() * 30);
-        const result = `${book} ${chapter}`;
-        document.getElementById(`${type}Result`).textContent = result;
-        sessionStorage.setItem(`${type}TestamentResult`, result);
-      } else {
-        requestAnimationFrame(() => animateWheel(type, books));
-      }
-    }
-
     function startSpin(type) {
-  if (spinning[type]) return;
-  const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
-  spinning[type] = true;
+      if (spinning[type]) return;
+      const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
+      spinning[type] = true;
 
-  // Preselect a book
-  const selectedIndex = Math.floor(Math.random() * books.length);
-  const selectedBook = books[selectedIndex];
-  const selectedChapter = Math.ceil(Math.random() * 30);
-  const arc = (2 * Math.PI) / books.length;
-  const stopAngle = 2 * Math.PI * 5 + (books.length - selectedIndex) * arc - arc / 2;
-  const duration = 2000;
-  const start = performance.now();
-  const initial = angles[type];
+      const selectedIndex = Math.floor(Math.random() * books.length);
+      const selectedBook = books[selectedIndex];
+      const selectedChapter = Math.ceil(Math.random() * 30);
+      const arc = (2 * Math.PI) / books.length;
+      const stopAngle = 2 * Math.PI * 5 - selectedIndex * arc + Math.PI / 2;
+      const duration = 2000;
+      const start = performance.now();
+      const initial = angles[type];
 
-  function animate(timestamp) {
-    const elapsed = timestamp - start;
-    const progress = Math.min(elapsed / duration, 1);
-    angles[type] = initial + (stopAngle - initial) * easeOutCubic(progress);
-    drawWheel(type + "Wheel", books, angles[type]);
+      function animate(timestamp) {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        angles[type] = initial + (stopAngle - initial) * easeOutCubic(progress);
+        drawWheel(type + "Wheel", books, angles[type]);
 
-    if (progress < 1) {
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinning[type] = false;
+          const result = `${selectedBook} ${selectedChapter}`;
+          document.getElementById(`${type}Result`).textContent = result;
+          const button = document.querySelector(`#${type}Wheel`).nextElementSibling;
+          button.style.boxShadow = '0 0 10px 4px gold';
+          setTimeout(() => button.style.boxShadow = '', 1500);
+          new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg').play();
+          sessionStorage.setItem(`${type}TestamentResult`, result);
+        }
+      }
+
       requestAnimationFrame(animate);
-    } else {
-      spinning[type] = false;
-      const result = `${selectedBook} ${selectedChapter}`;
-      document.getElementById(`${type}Result`).textContent = result;
-      const button = document.querySelector(`#${type}Wheel`).nextElementSibling;
-      button.style.boxShadow = '0 0 10px 4px gold';
-      setTimeout(() => button.style.boxShadow = '', 1500);
-      new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg').play();
-      sessionStorage.setItem(`${type}TestamentResult`, result);
     }
-  }
 
-  requestAnimationFrame(animate);
-}
-
-function easeOutCubic(t) {
-  return 1 - Math.pow(1 - t, 3);
-}
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
     }
 
     window.onload = function () {
       const verses = [
         "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
         "Philippians 4:13 — I can do all things through Christ who strengthens me.",
-        "John 3:16 — For God so loved the world that he gave his one and only Son...",
+        "John 3:16 — For God so loved the world...",
         "Romans 8:28 — And we know that in all things God works for the good...",
         "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
         "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
         "Proverbs 3:5 — Trust in the Lord with all your heart...",
         "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
         "Psalm 46:1 — God is our refuge and strength...",
-        "James 1:2 — Consider it pure joy, my brothers and sisters, whenever you face trials...",
-        "1 Peter 5:7 — Cast all your anxiety on him because he cares for you.",
+        "James 1:2 — Consider it pure joy...",
+        "1 Peter 5:7 — Cast all your anxiety on him...",
         "Romans 12:2 — Do not conform to the pattern of this world...",
-        "Hebrews 11:1 — Now faith is the assurance of things hoped for...",
+        "Hebrews 11:1 — Now faith is the assurance...",
         "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
-        "2 Timothy 1:7 — For God gave us a spirit not of fear but of power...",
+        "2 Timothy 1:7 — For God gave us a spirit not of fear...",
         "Psalm 118:24 — This is the day that the Lord has made...",
-        "Matthew 6:33 — But seek first the kingdom of God and his righteousness...",
+        "Matthew 6:33 — But seek first the kingdom of God...",
         "Colossians 3:23 — Whatever you do, work at it with all your heart...",
         "Joshua 1:9 — Be strong and courageous...",
         "Ephesians 2:8 — For by grace you have been saved through faith...",
         "Psalm 34:8 — Taste and see that the Lord is good...",
         "Isaiah 41:10 — Do not fear, for I am with you...",
-        "1 Corinthians 10:13 — God is faithful; he will not let you be tempted...",
+        "1 Corinthians 10:13 — God is faithful...",
         "Proverbs 18:10 — The name of the Lord is a strong tower...",
         "Philippians 1:6 — He who began a good work in you...",
         "Psalm 139:14 — I praise you because I am fearfully and wonderfully made...",
         "Romans 15:13 — May the God of hope fill you with all joy and peace...",
         "1 John 4:19 — We love because he first loved us.",
         "Lamentations 3:22 — The steadfast love of the Lord never ceases...",
-        "Matthew 28:20 — I am with you always, to the very end of the age."
+        "Matthew 28:20 — I am with you always..."
       ];
       const today = new Date();
       const start = new Date(today.getFullYear(), 0, 0);
@@ -299,6 +263,7 @@ function easeOutCubic(t) {
 
       drawWheel("oldWheel", oldTestamentBooks);
       drawWheel("newWheel", newTestamentBooks);
+
       const oldSaved = sessionStorage.getItem("oldTestamentResult");
       const newSaved = sessionStorage.getItem("newTestamentResult");
       if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
