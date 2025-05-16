@@ -52,21 +52,25 @@ function spinWheel(type) {
   const randomIndex = Math.floor(Math.random() * books.length);
   const chosenBook = books[randomIndex];
   const chosenChapter = Math.ceil(Math.random() * 30);
+  const displayText = `${chosenBook} ${chosenChapter}`;
 
   // Display result under the wheel
   const existingResult = document.getElementById(`${type}Result`);
   if (existingResult) {
-    existingResult.textContent = `${chosenBook} ${chosenChapter}`;
+    existingResult.textContent = displayText;
   } else {
     const resultEl = document.createElement("div");
     resultEl.id = `${type}Result`;
     resultEl.style.marginTop = "1rem";
     resultEl.style.fontWeight = "bold";
-    resultEl.textContent = `${chosenBook} ${chosenChapter}`;
+    resultEl.textContent = displayText;
     document
       .getElementById(`${type}Wheel`)
       .parentNode.appendChild(resultEl);
   }
+
+  // Save to localStorage so it can be accessed on journal page
+  localStorage.setItem(`${type}TestamentReading`, displayText);
 }
 
 // Initialize wheels
