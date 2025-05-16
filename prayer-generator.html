@@ -277,7 +277,7 @@
         const opening = openings[Math.floor(Math.random() * openings.length)];
         const closing = closings[Math.floor(Math.random() * closings.length)];
         const line = (pastoralLines[selectedEmotion] || [])[Math.floor(Math.random() * (pastoralLines[selectedEmotion]?.length || 1))] || "";
-        const verse = (scriptureReferences[selectedEmotion] || [])[Math.floor(Math.random() * (scriptureReferences[selectedEmotion]?.length || 1))] || "";
+        const verse = "";
 
         const reminders = [
           "Let Your Word speak louder than my fears. Remind me of Your promises:",
@@ -290,42 +290,14 @@
         ];
         const reminderLine = reminders[Math.floor(Math.random() * reminders.length)];
 
-        let prayerForOther = "";
-
-        // Check for 'pray for' pattern and extract a name
-        const match = situation.match(/pray for ([A-Z][a-z]+)(.*)/i);
-        if (match) {
-          const name = match[1];
-          const detail = match[2].trim();
-
-          let blessing = "Be near to them, meet their need, and strengthen their spirit.";
-          let scripture = "Romans 15:13 — 'May the God of hope fill [them] with all joy and peace as [they] trust in Him.'";
-
-          if (/healing|sick|health|recover/i.test(detail)) {
-            blessing = `Bring healing to ${name} and peace to their body and mind.`;
-            scripture = "Jeremiah 17:14 — 'Heal me, Lord, and I will be healed.'";
-          } else if (/peace|anxiety|fear/i.test(detail)) {
-            blessing = `Calm the heart of ${name} and let Your peace rule over their thoughts.`;
-            scripture = "Philippians 4:6–7 — 'Do not be anxious about anything... and the peace of God... will guard your hearts.'";
-          } else if (/guidance|direction|lost/i.test(detail)) {
-            blessing = `Guide ${name}'s steps and speak clearly to their heart.`;
-            scripture = "Proverbs 3:5–6 — 'Trust in the Lord with all your heart... and He will make your paths straight.'";
-          }
-
-          prayerForOther = `
-
-And Lord, I lift up ${name} to You. ${blessing}
-
-${scripture}`;
-        }
-
+        // Prayer without verse references
         const prayer = `${opening}
 
 Today I come to You feeling ${selectedEmotion}. ${line}
 
 ${reminderLine}
 
-${verse}${prayerForOther}
+${prayerForOther}
 
 ${closing}`;
 
