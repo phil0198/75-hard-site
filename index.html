@@ -142,7 +142,6 @@
     </div>
   </div>
 
-  <script src="wheel.js"></script>
   <script>
     const dailyVerses = [
       "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
@@ -160,6 +159,13 @@
 
     const verseText = dailyVerses[dayOfYear % dailyVerses.length] || "Scripture unavailable.";
     document.getElementById("dailyVerse").innerText = `Scripture of the Day: ${verseText}`;
+
+    function spinWheel(type) {
+      const books = type === 'old' ? ['Genesis 1', 'Exodus 3', 'Psalms 23'] : ['Matthew 5', 'John 3', 'Romans 8'];
+      const result = books[Math.floor(Math.random() * books.length)];
+      document.getElementById(type + 'Result').innerText = result;
+      sessionStorage.setItem(type === 'old' ? 'oldTestamentResult' : 'newTestamentResult', result);
+    }
   </script>
 </body>
 </html>
