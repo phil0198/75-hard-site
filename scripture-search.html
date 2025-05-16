@@ -69,13 +69,8 @@
     }
 
     #results li {
-      margin-bottom: 0.75rem;
-      cursor: pointer;
+      margin-bottom: 1rem;
       color: #1e40af;
-    }
-
-    #results li:hover {
-      text-decoration: underline;
     }
 
     .verse-text {
@@ -127,27 +122,41 @@
     const verseText = {
       "1 Corinthians 13:4-5": "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.",
       "John 15:13": "Greater love has no one than this: to lay down one's life for one's friends.",
-      "Isaiah 41:10": "Fear not, for I am with you; be not dismayed, for I am your God.",
-      "2 Timothy 1:7": "For God gave us a spirit not of fear but of power and love and self-control.",
-      "Matthew 11:28": "Come to me, all who labor and are heavy laden, and I will give you rest.",
+      "Isaiah 41:10": "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
+      "2 Timothy 1:7": "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
+      "Matthew 11:28": "Come to me, all you who are weary and burdened, and I will give you rest.",
       "Psalm 4:8": "In peace I will lie down and sleep, for you alone, LORD, make me dwell in safety.",
-      "Jeremiah 29:11": "'For I know the plans I have for you,' declares the LORD, 'plans to prosper you and not to harm you...'",
-      "Romans 15:13": "May the God of hope fill you with all joy and peace as you trust in him...",
-      "Philippians 4:6-7": "Do not be anxious about anything, but in everything by prayer and supplication... the peace of God... will guard your hearts.",
-      "1 Peter 5:7": "Cast all your anxiety on Him because He cares for you.",
-      "Isaiah 40:31": "But those who hope in the LORD will renew their strength. They will soar on wings like eagles...",
-      "Philippians 4:13": "I can do all things through Christ who strengthens me.",
-      "Hebrews 11:6": "Without faith it is impossible to please God...",
-      "Romans 10:17": "So faith comes from hearing, and hearing through the word of Christ.",
-      "1 John 1:9": "If we confess our sins, He is faithful and just to forgive us our sins...",
+      "Jeremiah 29:11": "'For I know the plans I have for you,' declares the LORD, 'plans to prosper you and not to harm you, plans to give you hope and a future.'",
+      "Romans 15:13": "May the God of hope fill you with all joy and peace as you trust in him, so that you may overflow with hope by the power of the Holy Spirit.",
+      "Philippians 4:6-7": "Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God. And the peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.",
+      "1 Peter 5:7": "Cast all your anxiety on him because he cares for you.",
+      "Isaiah 40:31": "But those who hope in the LORD will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.",
+      "Philippians 4:13": "I can do all this through him who gives me strength.",
+      "Hebrews 11:6": "And without faith it is impossible to please God, because anyone who comes to him must believe that he exists and that he rewards those who earnestly seek him.",
+      "Romans 10:17": "Consequently, faith comes from hearing the message, and the message is heard through the word about Christ.",
+      "1 John 1:9": "If we confess our sins, he is faithful and just and will forgive us our sins and purify us from all unrighteousness.",
       "Ephesians 4:32": "Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you.",
-      "Galatians 5:22": "But the fruit of the Spirit is love, joy, peace, patience, kindness...",
+      "Galatians 5:22": "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness.",
       "Romans 12:12": "Be joyful in hope, patient in affliction, faithful in prayer.",
-      "Nehemiah 8:10": "The joy of the LORD is your strength.",
-      "Psalm 16:11": "In your presence there is fullness of joy...",
-      "James 1:5": "If any of you lacks wisdom, let him ask of God...",
-      "Proverbs 3:5-6": "Trust in the LORD with all your heart and lean not on your own understanding...",
-      // Add more full verses here as needed
+      "Nehemiah 8:10": "Nehemiah said, 'Go and enjoy choice food and sweet drinks, and send some to those who have nothing prepared. This day is holy to our Lord. Do not grieve, for the joy of the LORD is your strength.'",
+      "Psalm 16:11": "You make known to me the path of life; you will fill me with joy in your presence, with eternal pleasures at your right hand.",
+      "Jeremiah 17:14": "Heal me, LORD, and I will be healed; save me and I will be saved, for you are the one I praise.",
+      "Isaiah 53:5": "But he was pierced for our transgressions, he was crushed for our iniquities; the punishment that brought us peace was on him, and by his wounds we are healed.",
+      "Romans 8:1": "Therefore, there is now no condemnation for those who are in Christ Jesus.",
+      "Micah 7:19": "You will again have compassion on us; you will tread our sins underfoot and hurl all our iniquities into the depths of the sea.",
+      "Psalm 56:3": "When I am afraid, I put my trust in you.",
+      "Psalm 32:8": "I will instruct you and teach you in the way you should go; I will counsel you with my loving eye on you.",
+      "Isaiah 30:21": "Whether you turn to the right or to the left, your ears will hear a voice behind you, saying, 'This is the way; walk in it.'",
+      "Psalm 34:17": "The righteous cry out, and the LORD hears them; he delivers them from all their troubles.",
+      "Colossians 1:13": "For he has rescued us from the dominion of darkness and brought us into the kingdom of the Son he loves.",
+      "Romans 12:2": "Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",
+      "Psalm 51:10": "Create in me a pure heart, O God, and renew a steadfast spirit within me.",
+      "Philippians 4:19": "And my God will meet all your needs according to the riches of his glory in Christ Jesus.",
+      "Psalm 23:1": "The LORD is my shepherd, I lack nothing.",
+      "John 14:23": "Jesus replied, 'Anyone who loves me will obey my teaching. My Father will love them, and we will come to them and make our home with them.'",
+      "James 1:22": "Do not merely listen to the word, and so deceive yourselves. Do what it says.",
+      "John 14:27": "Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.",
+      "Romans 5:1": "Therefore, since we have been justified through faith, we have peace with God through our Lord Jesus Christ."
     };
 
     const grid = document.getElementById("topics");
@@ -165,16 +174,12 @@
       const verses = scriptureData[topic];
       let html = `<h3>Verses about ${topic.replace(/_/g, ' ')}:</h3><ul>`;
       verses.forEach(ref => {
-        html += `<li onclick="toggleVerseText(this, '${ref}')">${ref}<div class="verse-text" style="display:none;">${verseText[ref] || "Verse text not available."}</div></li>`;
+        const url = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(ref)}`;
+        html += `<li><a href="${url}" target="_blank">${ref}</a><div class="verse-text">${verseText[ref]}</div></li>`;
       });
       html += "</ul>";
       container.innerHTML = html;
       window.scrollTo({ top: container.offsetTop - 20, behavior: "smooth" });
-    }
-
-    function toggleVerseText(li, ref) {
-      const textDiv = li.querySelector('.verse-text');
-      textDiv.style.display = textDiv.style.display === "none" ? "block" : "none";
     }
   </script>
 </body>
