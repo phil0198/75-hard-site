@@ -6,21 +6,27 @@
   <title>Journal Entry – 75 Hard Bible Edition</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 1rem;
-      max-width: 600px;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      background: #f9fafb;
+      color: #111827;
+      max-width: 700px;
       margin: auto;
     }
     .btn {
       display: inline-block;
-      margin: 1rem 0.5rem;
+      margin: 1rem 0.5rem 0;
       padding: 0.75rem 1.5rem;
       background-color: #3b82f6;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       text-decoration: none;
+      font-weight: 600;
+    }
+    .btn:hover {
+      background-color: #2563eb;
     }
     .timer {
       font-size: 2rem;
@@ -29,30 +35,75 @@
     }
     textarea, input {
       width: 100%;
+      margin-top: 0.25rem;
       margin-bottom: 1rem;
-      padding: 0.5rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 1rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    .reading-section {
+      background-color: #eef2ff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .reading-section p {
+      margin: 0.25rem 0;
+      font-size: 1.125rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
   <a href="index.html" class="btn">← Back to Home</a>
   <h1>Daily Journal</h1>
-  <p><strong>Old Testament:</strong> <span id="oldReading">...</span></p>
-  <p><strong>New Testament:</strong> <span id="newReading">...</span></p>
+  <p class="subtitle">Reflect on today's Scripture and what it means to you.</p>
 
-  <div class="timer" id="timer">05:00</div>
-  <button class="btn" onclick="startTimer()">Start</button>
-  <button class="btn" onclick="pauseTimer()">Pause</button>
+  <div class="reading-section">
+    <p><strong>Old Testament:</strong> <span id="oldReading">...</span></p>
+    <p><strong>New Testament:</strong> <span id="newReading">...</span></p>
+    <p><strong>5-Minute Reflection Timer</strong></p>
+    <div class="timer" id="timer">5:00</div>
+    <button class="btn" onclick="startTimer()">Start Timer</button>
+    <button class="btn" onclick="pauseTimer()">Pause Timer</button>
+  </div>
 
-  <h2>Reflection</h2>
-  <input type="text" placeholder="Meaningful Verse" id="verse">
-  <textarea placeholder="Your reflection..." id="reflection"></textarea>
-  <h3>Gratitude</h3>
-  <input type="text" placeholder="1." id="g1">
-  <input type="text" placeholder="2." id="g2">
-  <input type="text" placeholder="3." id="g3">
+  <div class="form-group">
+    <label for="verse">Standout Verse:</label>
+    <input type="text" id="verse" placeholder="Type the verse that stood out to you...">
+  </div>
+
+  <div class="form-group">
+    <label for="reflection">Reflection:</label>
+    <textarea id="reflection" rows="5" placeholder="What did the verse mean to you today?"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Gratitude (3 items):</label>
+    <input type="text" id="g1" placeholder="I'm thankful for... #1">
+    <input type="text" id="g2" placeholder="#2">
+    <input type="text" id="g3" placeholder="#3">
+  </div>
+
+  <button class="btn">Save Entry</button>
 
   <script>
     document.getElementById("oldReading").textContent = localStorage.getItem("oldTestament") || "Not selected yet";
