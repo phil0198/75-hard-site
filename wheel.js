@@ -55,26 +55,25 @@ function spinWheel(type) {
   const displayText = `${chosenBook} ${chosenChapter}`;
 
   // Display result under the wheel
-  const existingResult = document.getElementById(`${type}Result`);
-  if (existingResult) {
-    existingResult.textContent = displayText;
-  } else {
-    const resultEl = document.createElement("div");
-    resultEl.id = `${type}Result`;
-    resultEl.style.marginTop = "1rem";
-    resultEl.style.fontWeight = "bold";
-    resultEl.textContent = displayText;
-    document
-      .getElementById(`${type}Wheel`)
-      .parentNode.appendChild(resultEl);
-  }
+  const resultElement = document.getElementById(`${type}Result`);
+  resultElement.textContent = displayText;
 
   // Save to localStorage so it can be accessed on journal page
   localStorage.setItem(`${type}TestamentReading`, displayText);
 }
 
-// Initialize wheels
+// Initialize wheels and load saved results if available
 window.onload = function () {
   drawWheel("oldWheel", oldTestamentBooks);
   drawWheel("newWheel", newTestamentBooks);
+
+  const oldSaved = localStorage.getItem("oldTestamentReading");
+  const newSaved = localStorage.getItem("newTestamentReading");
+
+  if (oldSaved) {
+    document.getElementById("oldResult").textContent = oldSaved;
+  }
+  if (newSaved) {
+    document.getElementById("newResult").textContent = newSaved;
+  }
 };
