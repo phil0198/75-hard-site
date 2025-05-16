@@ -85,27 +85,35 @@
   <button onclick="saveEntry()">Save Entry</button>
 
   <script>
-    function saveEntry() {
-      const entry = {
-        date: new Date().toLocaleDateString(),
-        oldTestament: document.getElementById("oldTestament").value,
-        newTestament: document.getElementById("newTestament").value,
-        verse: document.getElementById("verse").value,
-        reflection: document.getElementById("reflection").value,
-        gratitude: [
-          document.getElementById("grat1").value,
-          document.getElementById("grat2").value,
-          document.getElementById("grat3").value,
-        ]
-      };
+  // Prepopulate fields from sessionStorage if available
+  window.addEventListener("DOMContentLoaded", () => {
+    const old = sessionStorage.getItem("oldTestamentResult");
+    const newT = sessionStorage.getItem("newTestamentResult");
+    if (old) document.getElementById("oldTestament").value = old;
+    if (newT) document.getElementById("newTestament").value = newT;
+  });
 
-      let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
-      entries.push(entry);
-      localStorage.setItem("journalEntries", JSON.stringify(entries));
-      alert("Journal entry saved!");
+  function saveEntry() {
+    const entry = {
+      date: new Date().toLocaleDateString(),
+      oldTestament: document.getElementById("oldTestament").value,
+      newTestament: document.getElementById("newTestament").value,
+      verse: document.getElementById("verse").value,
+      reflection: document.getElementById("reflection").value,
+      gratitude: [
+        document.getElementById("grat1").value,
+        document.getElementById("grat2").value,
+        document.getElementById("grat3").value,
+      ]
+    };
 
-      document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
-    }
-  </script>
+    let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+    entries.push(entry);
+    localStorage.setItem("journalEntries", JSON.stringify(entries));
+    alert("Journal entry saved!");
+
+    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
+  }
+</script>
 </body>
 </html>
