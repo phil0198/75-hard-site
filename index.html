@@ -104,7 +104,7 @@
   background-color: #1d4ed8;
 }
 
-$1
+
 </head>
 <body>
   <nav>
@@ -134,13 +134,21 @@ $1
   </div>
 
   <div class="wheel-container">
-    $1
-<button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
+    <div class="wheel-section">
+  <h2>Old Testament</h2>
+  <div style="position: relative; display: inline-block;">
+    <canvas id="oldWheel" width="300" height="300"></canvas>
+  </div>
+  <button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
       </div>
       <div id="oldResult" class="result-text"></div>
     </div>
-    $1
-<button onclick="startSpin('new')" class="spin-btn">Spin New Testament</button>
+    <div class="wheel-section">
+  <h2>New Testament</h2>
+  <div style="position: relative; display: inline-block;">
+    <canvas id="newWheel" width="300" height="300"></canvas>
+  </div>
+  <button onclick="startSpin('new')" class="spin-btn">Spin New Testament</button>
       </div>
       <div id="newResult" class="result-text"></div>
     </div>
