@@ -291,13 +291,34 @@
         const reminderLine = reminders[Math.floor(Math.random() * reminders.length)];
 
         // Prayer without verse references
+        let prayerForOther = "";
+
+        const match = situation.match(/pray for ([A-Z][a-z]+)(.*)/i);
+        if (match) {
+          const name = match[1];
+          const detail = match[2].trim();
+
+          let blessing = `Be near to ${name}, meet their need, and strengthen their spirit.`;
+          if (/healing|sick|health|recover/i.test(detail)) {
+            blessing = `Bring healing to ${name} and peace to their body and mind.`;
+          } else if (/peace|anxiety|fear/i.test(detail)) {
+            blessing = `Calm the heart of ${name} and let Your peace rule over their thoughts.`;
+          } else if (/guidance|direction|lost/i.test(detail)) {
+            blessing = `Guide ${name}'s steps and speak clearly to their heart.`;
+          } else if (/job|work|employment/i.test(detail)) {
+            blessing = `Provide for ${name} and open new doors with Your perfect timing.`;
+          }
+
+          prayerForOther = `
+
+And Lord, I lift up ${name} to You. ${blessing}`;
+        }
+
         const prayer = `${opening}
 
 Today I come to You feeling ${selectedEmotion}. ${line}
 
-${reminderLine}
-
-${prayerForOther}
+${reminderLine}${prayerForOther}
 
 ${closing}`;
 
