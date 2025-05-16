@@ -15,26 +15,15 @@
       margin: auto;
     }
 
-    .navbar {
+    nav {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-
-    .nav-logo {
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #1e293b;
-    }
-
-    .nav-links {
-      display: flex;
+      justify-content: center;
       gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
     }
 
-    .nav-links a {
+    nav a {
       text-decoration: none;
       padding: 0.5rem 1rem;
       background-color: #1e293b;
@@ -43,34 +32,40 @@
       font-weight: 500;
     }
 
-    .dropdown-toggle {
+    #mobile-toggle {
       display: none;
       background-color: #1e293b;
       color: white;
+      border: none;
       padding: 0.5rem 1rem;
       border-radius: 6px;
       font-weight: 500;
       cursor: pointer;
-      border: none;
     }
 
-    .nav-links.mobile {
+    #mobile-menu {
+      display: none;
       flex-direction: column;
+      gap: 0.5rem;
       width: 100%;
       margin-top: 1rem;
-      display: none;
     }
 
     @media (max-width: 640px) {
-      .dropdown-toggle {
-        display: block;
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .nav-links {
+      #nav-links {
         display: none;
       }
 
-      .nav-links.mobile.show {
+      #mobile-toggle {
+        display: block;
+      }
+
+      #mobile-menu.show {
         display: flex;
       }
     }
@@ -119,17 +114,16 @@
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-logo">Prayer Generator</div>
-    <button class="dropdown-toggle" onclick="toggleDropdown()">Menu</button>
-    <div class="nav-links">
+  <nav>
+    <button id="mobile-toggle" onclick="toggleMobileMenu()">Menu</button>
+    <div id="nav-links">
       <a href="index.html">Home</a>
       <a href="journal.html">Journal</a>
       <a href="prayer-generator.html">Prayer Generator</a>
       <a href="past-entries.html">Past Entries</a>
       <a href="scripture-search.html">Scripture Search</a>
     </div>
-    <div class="nav-links mobile" id="mobileMenu">
+    <div id="mobile-menu">
       <a href="index.html">Home</a>
       <a href="journal.html">Journal</a>
       <a href="prayer-generator.html">Prayer Generator</a>
@@ -161,12 +155,12 @@
   <div id="output"></div>
 
   <script>
-    function toggleDropdown() {
-      const menu = document.getElementById('mobileMenu');
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
       menu.classList.toggle('show');
     }
 
-    // ... your existing prayer generation script continues here ...
+    // Your existing prayer generation logic continues here...
   </script>
 </body>
 </html>
