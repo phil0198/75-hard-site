@@ -14,6 +14,23 @@
       margin: auto;
       text-align: center;
     }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    nav a:hover {
+      background-color: #2563eb;
+    }
     .btn {
       display: inline-block;
       margin: 1rem 0.5rem 0;
@@ -87,6 +104,13 @@
   </style>
 </head>
 <body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+  </nav>
+
   <h1>75 Hard – Bible Edition</h1>
   <p class="subtitle">Spin the wheels to receive your daily Bible readings!</p>
 
@@ -105,8 +129,6 @@
       <div class="result" id="ntResult">New Testament: Not selected</div>
     </div>
   </div>
-
-  <a href="journal.html" class="btn">Go to Journal</a>
 
   <script>
     const booksOT = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel"];
