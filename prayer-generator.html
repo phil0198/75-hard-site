@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prayer Generator – 75 Hard Bible Edition</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #ffffff;
+      background: #f9fafb;
       color: #1f2937;
-      max-width: 800px;
-      margin: auto;
       padding: 2rem;
-      line-height: 1.6;
+      text-align: center;
     }
     nav {
       display: flex;
@@ -31,45 +30,33 @@
     nav a:hover {
       background-color: #334155;
     }
-    h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-    }
-    .card-grid {
+    .emotion-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin: 2rem 0;
     }
-    .card {
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+    .emotion-card {
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      padding: 1rem;
       border-radius: 10px;
-      padding: 0.75rem;
-      text-align: center;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
-    .card:hover {
-      background: #e2e8f0;
-    }
-    .card.selected {
-      background: #0f172a;
-      color: white;
-      border-color: #0f172a;
+    .emotion-card.selected {
+      border-color: #3b82f6;
+      background: #e0f2fe;
     }
     textarea {
       width: 100%;
+      max-width: 600px;
+      margin: 1rem auto;
+      display: block;
       padding: 1rem;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      margin-bottom: 1.5rem;
-      font-size: 1rem;
-      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
-    .btn {
+    button {
       background: #0f172a;
       color: white;
       border: none;
@@ -78,17 +65,20 @@
       cursor: pointer;
       font-size: 1rem;
       transition: background 0.2s;
+      margin-top: 1rem;
     }
-    .btn:hover {
+    button:hover {
       background: #1e293b;
     }
-    .output {
+    .prayer-box {
+      background: #f1f5f9;
+      padding: 2rem;
       margin-top: 2rem;
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 1.5rem;
-      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       font-style: italic;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
@@ -101,49 +91,74 @@
   </nav>
 
   <h1>Prayer Generator</h1>
-  <p style="text-align:center; margin-bottom: 2rem; font-size: 1.1rem; color: #475569;">
-    Let us help you find the words. Select what you're feeling and share your heart.
-  </p>
+  <p>Select how you're feeling and describe your situation.</p>
 
-  <div class="card-grid" id="emotionGrid">
-    <div class="card">Anxious</div>
-    <div class="card">Grateful</div>
-    <div class="card">Angry</div>
-    <div class="card">Lonely</div>
-    <div class="card">Hopeful</div>
-    <div class="card">Tired</div>
-    <div class="card">Joyful</div>
-    <div class="card">Afraid</div>
-    <div class="card">Sad</div>
-    <div class="card">Peaceful</div>
-    <div class="card">Confused</div>
-    <div class="card">Hurt</div>
-  </div>
+  <div class="emotion-grid" id="emotionGrid"></div>
 
-  <textarea id="situation" rows="5" placeholder="Write a little about what you're going through..."></textarea>
+  <textarea id="situation" placeholder="Tell God what you're going through..."></textarea>
 
-  <div style="text-align:center">
-    <button class="btn" onclick="generatePrayer()">Generate Prayer</button>
-  </div>
+  <button onclick="handleGeneratePrayer()">Generate Prayer</button>
 
-  <div class="output" id="prayerOutput" style="display: none;"></div>
+  <div id="prayerResult" class="prayer-box"></div>
 
   <script>
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        card.classList.toggle('selected');
-      });
+    const emotions = [
+      "Anxious", "Grateful", "Lonely", "Confused", "Joyful", "Angry",
+      "Sad", "Hopeful", "Guilty", "Worried", "Lost", "Peaceful"
+    ];
+
+    const emotionGrid = document.getElementById("emotionGrid");
+    const selectedEmotions = new Set();
+
+    emotions.forEach((emotion) => {
+      const card = document.createElement("div");
+      card.className = "emotion-card";
+      card.textContent = emotion;
+      card.onclick = () => {
+        if (selectedEmotions.has(emotion)) {
+          selectedEmotions.delete(emotion);
+          card.classList.remove("selected");
+        } else {
+          selectedEmotions.add(emotion);
+          card.classList.add("selected");
+        }
+      };
+      emotionGrid.appendChild(card);
     });
 
-    function generatePrayer() {
-      const selected = [...document.querySelectorAll('.card.selected')].map(card => card.textContent);
-      const context = document.getElementById('situation').value;
-      const prayer = `Heavenly Father, I come before You feeling ${selected.join(', ') || 'unsure'}. You know my heart and the situation I face: ${context || '...even the things I cannot express.'} Please meet me where I am, surround me with peace, and guide me with Your love. Amen.`;
+    function generatePastoralPrayer(emotions, situation) {
+  let opening = "Heavenly Father, I come before You seeking peace and perspective.";
+  let reflections = [];
 
-      const output = document.getElementById('prayerOutput');
-      output.textContent = prayer;
-      output.style.display = 'block';
+  if (emotions.length > 0) {
+    reflections.push(`I'm navigating a season filled with emotions like ${emotions.join(", ")}. Grant me discernment to respond in love and not react from pain.`);
+  }
+
+  if (situation) {
+    reflections.push("You know the burdens I carry, even those I cannot fully express. Meet me in this moment with Your understanding and strength.");
+  }
+
+  let middle = reflections.join(" ");
+  let close = "Thank You for always hearing me, even when words fail. Help me trust Your presence, and walk forward in faith. Amen.";
+
+  return `${opening} ${middle} ${close}`;
+}. Help me to process these emotions through Your wisdom and not my own.`;
+      }
+
+      if (situation) {
+        body += ` You know the details of my situation: ${situation}. I ask for clarity, strength, and grace in the midst of it.`;
+      }
+
+      let close = " Thank You for always hearing me, even when I don’t know what to say. Remind me of Your love and lead me with Your Spirit. Amen.";
+
+      return `${opening}${body}${close}`;
+    }
+
+    function handleGeneratePrayer() {
+      const situation = document.getElementById("situation").value.trim();
+      const emotionList = Array.from(selectedEmotions);
+      const prayer = generatePastoralPrayer(emotionList, situation);
+      document.getElementById("prayerResult").textContent = prayer;
     }
   </script>
 </body>
