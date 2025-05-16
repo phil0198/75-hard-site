@@ -40,9 +40,9 @@
     }
     .wheel-container {
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       flex-wrap: wrap;
-      gap: 2rem;
+      align-items: flex-start;
       margin-top: 2rem;
     }
     .wheel-section {
@@ -71,20 +71,18 @@
       color: #1e293b;
       font-size: 1.1rem;
     }
-    .verse-of-day {
-      flex-basis: 100%;
+    .scripture-of-day {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      font-style: italic;
       margin-top: 2rem;
     }
-    .verse-of-day h3 {
-      font-size: 1.25rem;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
-    .verse-of-day p {
-      font-style: italic;
-      color: #374151;
-    }
   </style>
+  <script src="dailyVerses.js"></script>
 </head>
 <body>
   <nav>
@@ -98,6 +96,8 @@
   <h1>75 Hard – Bible Edition</h1>
   <p>Spin each wheel to receive your daily Bible readings!</p>
 
+  <div class="scripture-of-day" id="dailyVerse"></div>
+
   <div class="wheel-container">
     <div class="wheel-section">
       <h2>Old Testament</h2>
@@ -105,12 +105,6 @@
       <button class="spin-btn" onclick="spinWheel('old')">Spin Old Testament</button>
       <div id="oldResult" class="result-text"></div>
     </div>
-
-    <div class="verse-of-day">
-      <h3>Scripture of the Day</h3>
-      <p id="dailyVerse"></p>
-    </div>
-
     <div class="wheel-section">
       <h2>New Testament</h2>
       <canvas id="newWheel" width="300" height="300"></canvas>
@@ -119,23 +113,14 @@
     </div>
   </div>
 
-  <script src="wheel.js"></script>
   <script>
-    const dailyVerses = [
-      "Psalm 118:24 — 'This is the day that the Lord has made; let us rejoice and be glad in it.'",
-      "Isaiah 41:10 — 'Fear not, for I am with you; be not dismayed, for I am your God.'",
-      "John 16:33 — 'In this world you will have trouble. But take heart! I have overcome the world.'",
-      "Romans 8:28 — 'And we know that in all things God works for the good of those who love Him.'",
-      "Proverbs 3:5-6 — 'Trust in the Lord with all your heart and lean not on your own understanding.'",
-      "Philippians 4:13 — 'I can do all things through Christ who strengthens me.'",
-      "Matthew 6:33 — 'But seek first His kingdom and His righteousness, and all these things will be given to you as well.'",
-      "2 Timothy 1:7 — 'For God gave us a spirit not of fear but of power and love and self-control.'",
-      "Lamentations 3:22-23 — 'His mercies never come to an end; they are new every morning; great is Your faithfulness.'",
-      "James 1:5 — 'If any of you lacks wisdom, let him ask of God, who gives generously to all without reproach.'"
-    ];
-
-    const todayIndex = new Date().getDate() % dailyVerses.length;
-    document.getElementById("dailyVerse").innerText = dailyVerses[todayIndex];
+    // Display a scripture of the day from the 365 list
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+    const verseText = window.dailyVerses ? window.dailyVerses[dayOfYear % window.dailyVerses.length] : "Scripture unavailable.";
+    document.getElementById("dailyVerse").innerText = `Scripture of the Day: ${verseText}`;
   </script>
+
+  <script src="wheel.js"></script>
 </body>
 </html>
