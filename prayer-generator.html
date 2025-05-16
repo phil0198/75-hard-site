@@ -98,157 +98,146 @@
   <div id="output"></div>
 
   <script>
-    document.querySelectorAll('.emotion-card').forEach(card => {
-      card.addEventListener('click', () => {
-        card.classList.toggle('selected');
-      });
+  document.querySelectorAll('.emotion-card').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('selected');
     });
+  });
 
-    function generatePrayer() {
-      const emotions = Array.from(document.querySelectorAll('.emotion-card.selected'))
-        .map(card => card.innerText.toLowerCase());
-      const situation = document.getElementById("situation").value.trim();
+  function generatePrayer() {
+    const emotions = Array.from(document.querySelectorAll('.emotion-card.selected'))
+      .map(card => card.innerText.toLowerCase());
+    const situation = document.getElementById("situation").value.trim();
 
-      const emotionSummary = emotions.length
-        ? `They feel ${emotions.join(', ')}.`
-        : '';
+    document.getElementById("output").innerText = "Generating prayer...";
 
-      const prompt = `
-Write a heartfelt, pastoral-style prayer. ${emotionSummary}
-The person is going through a difficult situation and shared this context: "${situation}".
-Do NOT repeat their exact words. Instead, craft a comforting, wise, and hopeful prayer that reflects the emotions and struggles implied.
-Invoke God’s presence, peace, and assurance in an authentic voice.
-`;
+    setTimeout(() => {
+      const emotionText = emotions.length
+        ? `In this season where I feel ${emotions.join(', ')},`
+        : "In this season,";
 
-      // Simulate AI response
-      document.getElementById("output").innerText = "Generating prayer...";
+      const emotionPhrases = {
+        anxious: [
+          "Calm my anxious heart and steady my mind with Your peace.",
+          "Grant me serenity and remind me You are in control.",
+          "Still the storm within and anchor me in Your promises."
+        ],
+        lonely: [
+          "Let me feel Your nearness when others seem distant.",
+          "Comfort me in my solitude and surround me with Your love.",
+          "Remind me I am never truly alone with You beside me."
+        ],
+        grateful: [
+          "Thank You for every good gift, seen and unseen.",
+          "My heart overflows with thanks for Your daily grace.",
+          "Help me live in gratitude, always aware of Your blessings."
+        ],
+        confused: [
+          "Be my guide in this uncertainty and shine Your truth on my path.",
+          "Clear the fog in my mind and help me trust where I cannot see.",
+          "Give me discernment and the courage to follow Your lead."
+        ],
+        hurt: [
+          "Heal what has been wounded, and help me forgive where needed.",
+          "Tend to the pain I carry and restore my joy.",
+          "Give me strength to let go of what breaks me and hold onto hope."
+        ],
+        angry: [
+          "Calm the fire within me and teach me to respond with grace.",
+          "Help me release bitterness and seek reconciliation.",
+          "Channel my frustration toward peace, not destruction."
+        ],
+        lost: [
+          "Help me rediscover purpose and clarity in this wandering season.",
+          "Lead me when I cannot see the road ahead.",
+          "Anchor me in Your truth when I feel adrift."
+        ],
+        tired: [
+          "Renew my strength and help me rest in Your presence.",
+          "Give me endurance for today and hope for tomorrow.",
+          "Carry me when I am weary, and let me find rest in You."
+        ],
+        hopeful: [
+          "Thank You for reminding me that better days are ahead.",
+          "Strengthen my hope and deepen my trust in Your promises.",
+          "Let this hope anchor me through every storm."
+        ],
+        joyful: [
+          "Thank You for the joy overflowing in my heart.",
+          "Let my joy be a light to others.",
+          "Help me celebrate Your goodness and share it freely."
+        ],
+        content: [
+          "Keep my heart grateful in every circumstance.",
+          "Let me rest in Your sufficiency and want for nothing.",
+          "Teach me to treasure what matters most."
+        ],
+        burdened: [
+          "Lift this weight from my shoulders and give me peace.",
+          "Remind me that I do not carry my burdens alone.",
+          "Hold me together when I feel like I’m falling apart."
+        ]
+      };
 
-      setTimeout(() => {
-        let emotionText = emotions.length
-          ? `In this season where I feel ${emotions.join(', ')},`
-          : "In this season,";
-
-        const emotionPhrases = {
-          anxious: [
-            "Calm my anxious heart and steady my mind with Your peace.",
-            "Grant me serenity and remind me You are in control.",
-            "Still the storm within and anchor me in Your promises."
-          ],
-          lonely: [
-            "Let me feel Your nearness when others seem distant.",
-            "Comfort me in my solitude and surround me with Your love.",
-            "Remind me I am never truly alone with You beside me."
-          ],
-          grateful: [
-            "Thank You for every good gift, seen and unseen.",
-            "My heart overflows with thanks for Your daily grace.",
-            "Help me live in gratitude, always aware of Your blessings."
-          ],
-          confused: [
-            "Be my guide in this uncertainty and shine Your truth on my path.",
-            "Clear the fog in my mind and help me trust where I cannot see.",
-            "Give me discernment and the courage to follow Your lead."
-          ],
-          hurt: [
-            "Heal what has been wounded, and help me forgive where needed.",
-            "Tend to the pain I carry and restore my joy.",
-            "Give me strength to let go of what breaks me and hold onto hope."
-          ],
-          angry: [
-            "Calm the fire within me and teach me to respond with grace.",
-            "Help me release bitterness and seek reconciliation.",
-            "Channel my frustration toward peace, not destruction."
-          ],
-          lost: [
-            "Help me rediscover purpose and clarity in this wandering season.",
-            "Lead me when I cannot see the road ahead.",
-            "Anchor me in Your truth when I feel adrift."
-          ],
-          tired: [
-            "Renew my strength and help me rest in Your presence.",
-            "Give me endurance for today and hope for tomorrow.",
-            "Carry me when I am weary, and let me find rest in You."
-          ],
-          hopeful: [
-            "Thank You for reminding me that better days are ahead.",
-            "Strengthen my hope and deepen my trust in Your promises.",
-            "Let this hope anchor me through every storm."
-          ],
-          joyful: [
-            "Thank You for the joy overflowing in my heart.",
-            "Let my joy be a light to others.",
-            "Help me celebrate Your goodness and share it freely."
-          ],
-          content: [
-            "Keep my heart grateful in every circumstance.",
-            "Let me rest in Your sufficiency and want for nothing.",
-            "Teach me to treasure what matters most."
-          ],
-          burdened: [
-            "Lift this weight from my shoulders and give me peace.",
-            "Remind me that I do not carry my burdens alone.",
-            "Hold me together when I feel like I’m falling apart."
-          ]
-        };
-
-        let spiritualFocus = "";
-        if (emotions.includes("anxious") && emotions.includes("confused")) {
-          spiritualFocus += "When my thoughts are restless and my path unclear, grant me peace and wisdom in equal measure.
+      let spiritualFocus = "";
+      if (emotions.includes("anxious") && emotions.includes("confused")) {
+        spiritualFocus += "When my thoughts are restless and my path unclear, grant me peace and wisdom in equal measure.
 
 ";
-        } else if (emotions.includes("lonely") && emotions.includes("hurt")) {
-          spiritualFocus += "In the silence and in the ache, be my comfort and healer.
+      } else if (emotions.includes("lonely") && emotions.includes("hurt")) {
+        spiritualFocus += "In the silence and in the ache, be my comfort and healer.
 
 ";
-        } else if (emotions.includes("grateful") && emotions.includes("hopeful")) {
-          spiritualFocus += "Thank You for the joy ahead and the grace behind. Let me live today full of hope and remembrance.
+      } else if (emotions.includes("grateful") && emotions.includes("hopeful")) {
+        spiritualFocus += "Thank You for the joy ahead and the grace behind. Let me live today full of hope and remembrance.
 
 ";
-        } else if (emotions.includes("angry") && emotions.includes("burdened")) {
-          spiritualFocus += "Lift my burdens, soften my spirit, and replace bitterness with Your peace.
+      } else if (emotions.includes("angry") && emotions.includes("burdened")) {
+        spiritualFocus += "Lift my burdens, soften my spirit, and replace bitterness with Your peace.
 
 ";
-        } else if (emotions.includes("tired") && emotions.includes("lost")) {
-          spiritualFocus += "When I feel both weary and directionless, be my rest and compass.
+      } else if (emotions.includes("tired") && emotions.includes("lost")) {
+        spiritualFocus += "When I feel both weary and directionless, be my rest and compass.
 
 ";
-        } else if (emotions.includes("joyful") && emotions.includes("content")) {
-          spiritualFocus += "May my joy and contentment be a witness to Your goodness and faithfulness.
+      } else if (emotions.includes("joyful") && emotions.includes("content")) {
+        spiritualFocus += "May my joy and contentment be a witness to Your goodness and faithfulness.
 
 ";
-        } else if (emotions.includes("burdened") && emotions.includes("confused")) {
-          spiritualFocus += "Help me carry the weight of the unknown and remind me You are with me in it.
+      } else if (emotions.includes("burdened") && emotions.includes("confused")) {
+        spiritualFocus += "Help me carry the weight of the unknown and remind me You are with me in it.
 
 ";
-        } else if (emotions.includes("angry") && emotions.includes("hurt")) {
-          spiritualFocus += "Heal my pain and calm my heart where anger rises from woundedness.
+      } else if (emotions.includes("angry") && emotions.includes("hurt")) {
+        spiritualFocus += "Heal my pain and calm my heart where anger rises from woundedness.
 
 ";
-        } else {
-          for (const emotion of emotions) {
-            if (emotionPhrases[emotion]) {
-              const options = emotionPhrases[emotion];
-              spiritualFocus += options[Math.floor(Math.random() * options.length)] + "
+      } else {
+        for (const emotion of emotions) {
+          if (emotionPhrases[emotion]) {
+            const options = emotionPhrases[emotion];
+            spiritualFocus += options[Math.floor(Math.random() * options.length)] + "
 
 ";
-            }
           }
         }
-        }
+      }
 
-        document.getElementById("output").innerText =
-          `Dear Heavenly Father,
-
-` +
-          `You know what weighs heavy on me. ${emotionText} draw near to me.
+      const prayer =
+        `Dear Heavenly Father,
 
 ` +
-          spiritualFocus +
-          `Help me trust You, seek You first, and walk by faith even when I cannot see.
+        `You know what weighs heavy on me. ${emotionText} draw near to me.
+
+` +
+        spiritualFocus +
+        `Help me trust You, seek You first, and walk by faith even when I cannot see.
 
 Amen.`;
-      }, 1000);
-    }
-  </script>
+
+      document.getElementById("output").innerText = prayer;
+    }, 1000);
+  }
+</script>
 </body>
 </html>
