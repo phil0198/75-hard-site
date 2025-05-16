@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scripture Search</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9faff;
+        margin: 0;
+        padding: 2rem;
+        text-align: center;
+      }
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      nav a {
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        background-color: #1e293b;
+        color: white;
+        border-radius: 6px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+        max-width: 900px;
+        margin: 2rem auto;
+      }
+      .topic-card {
+        background-color: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .topic-card:hover {
+        background-color: #e0e7ff;
+        border-color: #4f46e5;
+      }
+      #results {
+        margin-top: 2rem;
+        text-align: left;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="journal.html">Journal</a>
+      <a href="prayer-generator.html">Prayer Generator</a>
+      <a href="scripture-search.html">Scripture Search</a>
+    </nav>
+
+    <h1>Scripture Search</h1>
+    <p>Select a topic to view related verses:</p>
+
+    <div class="grid" id="topics"></div>
+    <div id="results"></div>
+
+    <script>
+      const scriptureData = {
+        love: ["1 Corinthians 13:4-5", "John 15:13", "Romans 5:8", "1 John 4:8", "1 John 4:18", "Colossians 3:14"],
+        fear: ["Isaiah 41:10", "2 Timothy 1:7", "Psalm 23:4", "Psalm 27:1", "Joshua 1:9", "Deuteronomy 31:6"],
+        hope: ["Jeremiah 29:11", "Romans 15:13", "Hebrews 11:1", "Psalm 39:7", "Lamentations 3:24", "1 Peter 1:3"],
+        anxiety: ["Philippians 4:6-7", "Matthew 6:34", "1 Peter 5:7", "Proverbs 12:25", "Luke 12:25", "Psalm 94:19"],
+        peace: ["John 14:27", "Isaiah 26:3", "Colossians 3:15", "Romans 5:1", "2 Thessalonians 3:16", "Psalm 4:8"],
+        strength: ["Isaiah 40:31", "Philippians 4:13", "Psalm 46:1", "Nehemiah 8:10", "2 Corinthians 12:9-10", "Exodus 15:2"],
+        faith: ["Hebrews 11:6", "Matthew 17:20", "Romans 10:17", "James 1:6", "Galatians 2:20", "2 Corinthians 5:7"],
+        forgiveness: ["1 John 1:9", "Ephesians 4:32", "Matthew 6:14-15", "Colossians 3:13", "Luke 6:37", "Psalm 103:12"],
+        patience: ["Galatians 5:22", "Ecclesiastes 7:8", "Proverbs 14:29", "Romans 12:12", "James 5:8", "1 Thessalonians 5:14"],
+        joy: ["Nehemiah 8:10", "Psalm 16:11", "Romans 15:13", "James 1:2-3", "John 16:24", "Psalm 30:5"],
+        healing: ["Jeremiah 17:14", "James 5:14-15", "Isaiah 53:5", "Psalm 147:3", "Exodus 15:26", "3 John 1:2"],
+        wisdom: ["James 1:5", "Proverbs 3:5-6", "Ecclesiastes 7:12", "Colossians 3:16", "Proverbs 16:16", "Psalm 111:10"],
+        forgiveness_of_self: ["Romans 8:1", "Isaiah 43:25", "Psalm 103:10-12", "Hebrews 8:12", "Micah 7:19", "1 John 2:1-2"],
+        trust: ["Proverbs 3:5-6", "Psalm 9:10", "Jeremiah 17:7", "Isaiah 26:4", "Nahum 1:7", "Psalm 56:3"],
+        guidance: ["Psalm 32:8", "Proverbs 16:9", "James 1:5", "Isaiah 30:21", "John 16:13", "Psalm 119:105"],
+        rest: ["Matthew 11:28", "Psalm 4:8", "Exodus 33:14", "Hebrews 4:9-10", "Isaiah 30:15", "Psalm 23:2"],
+        deliverance: ["Psalm 34:17", "2 Samuel 22:2", "Psalm 50:15", "Colossians 1:13", "Psalm 107:6", "Romans 7:24-25"],
+        renewal: ["Romans 12:2", "Isaiah 40:31", "2 Corinthians 4:16", "Ephesians 4:23", "Titus 3:5", "Psalm 51:10"],
+        provision: ["Philippians 4:19", "Matthew 6:31-33", "Psalm 34:10", "Genesis 22:14", "2 Corinthians 9:8", "Psalm 23:1"]
+      };
+
+      const grid = document.getElementById("topics");
+      const container = document.getElementById("results");
+
+      Object.keys(scriptureData).forEach((topic) => {
+        const card = document.createElement("div");
+        card.className = "topic-card";
+        card.textContent = topic.charAt(0).toUpperCase() + topic.slice(1).replace(/_/g, ' ');
+        card.onclick = () => {
+          container.innerHTML = `<h3>Verses about ${topic.replace(/_/g, ' ')}:</h3><ul>` +
+            scriptureData[topic].map(v => `<li>${v}</li>`).join("") +
+            "</ul>";
+          window.scrollTo({ top: container.offsetTop - 20, behavior: "smooth" });
+        };
+        grid.appendChild(card);
+      });
+    </script>
+  </body>
+</html>
