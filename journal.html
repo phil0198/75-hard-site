@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Journal</title>
+  <title>Journal – 75 Hard Bible Edition</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
@@ -14,21 +14,12 @@
       max-width: 700px;
       margin: auto;
     }
-
-    /* Navigation */
-    .nav-container {
+    nav {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
+      gap: 1rem;
       margin-bottom: 2rem;
     }
-
-    .nav-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
     nav a {
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -37,69 +28,41 @@
       border-radius: 6px;
       font-weight: 500;
     }
-
-    .hamburger {
+    .mobile-nav {
       display: none;
-      flex-direction: column;
-      cursor: pointer;
     }
-
-    .hamburger div {
-      width: 25px;
-      height: 3px;
-      background-color: #1e293b;
-      margin: 4px 0;
-    }
-
-    @media (max-width: 768px) {
-      .nav-links {
+    @media (max-width: 640px) {
+      nav {
         display: none;
-        flex-direction: column;
+      }
+      .mobile-nav {
+        display: block;
+        margin-bottom: 2rem;
+      }
+      select.mobile-dropdown {
         width: 100%;
-      }
-
-      .nav-links.show {
-        display: flex;
-      }
-
-      .hamburger {
-        display: flex;
+        max-width: 300px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
       }
     }
-
     h1 {
       text-align: center;
-      font-size: 2rem;
       margin-bottom: 1rem;
     }
-
     .verse-display {
       background: #eef2ff;
       padding: 1rem;
       border-radius: 6px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       font-size: 0.95rem;
       text-align: center;
     }
-
-    .timer-section {
-      background: #e0f2fe;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-
-    .timer-display {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 1rem 0;
-    }
-
     label {
       font-weight: 600;
     }
-
     input, textarea {
       width: 100%;
       padding: 0.75rem;
@@ -109,7 +72,6 @@
       background: white;
       font-size: 1rem;
     }
-
     button {
       padding: 0.75rem 1.5rem;
       background-color: #1e40af;
@@ -118,36 +80,32 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 1rem;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-
-  <div class="nav-container">
-    <div class="hamburger" onclick="toggleMenu()">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <nav class="nav-links" id="mobileNav">
-      <a href="index.html">Home</a>
-      <a href="journal.html">Journal</a>
-      <a href="prayer-generator.html">Prayer Generator</a>
-      <a href="past-entries.html">Past Entries</a>
-      <a href="scripture-search.html">Scripture Search</a>
-    </nav>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+  </nav>
+  <div class="mobile-nav">
+    <select class="mobile-dropdown" onchange="location = this.value;">
+      <option disabled selected>Navigate to...</option>
+      <option value="index.html">Home</option>
+      <option value="journal.html">Journal</option>
+      <option value="prayer-generator.html">Prayer Generator</option>
+      <option value="past-entries.html">Past Entries</option>
+      <option value="scripture-search.html">Scripture Search</option>
+    </select>
   </div>
 
   <h1>Today's Journal</h1>
 
   <div class="verse-display" id="verseDisplay">Loading your chapters...</div>
-
-  <div class="timer-section">
-    <label for="timerMinutes">Set Timer (minutes):</label>
-    <input type="number" id="timerMinutes" min="1" max="120" step="1" value="5" />
-    <div class="timer-display" id="timerDisplay">05:00</div>
-    <button onclick="toggleTimer()">Start / Pause</button>
-  </div>
 
   <label for="oldTestament">Old Testament Book & Chapter</label>
   <input type="text" id="oldTestament" placeholder="e.g. Genesis 1">
@@ -170,51 +128,7 @@
 
   <button onclick="saveEntry()">Save Entry</button>
 
-  <audio id="timerSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
-
   <script>
-    // Hamburger toggle
-    function toggleMenu() {
-      document.getElementById("mobileNav").classList.toggle("show");
-    }
-
-    // Timer Logic
-    let timer = null;
-    let remainingSeconds = 0;
-
-    function toggleTimer() {
-      const input = document.getElementById("timerMinutes");
-      if (!timer) {
-        const minutes = parseInt(input.value);
-        if (isNaN(minutes) || minutes <= 0) return;
-
-        remainingSeconds = minutes * 60;
-        updateTimerDisplay();
-
-        timer = setInterval(() => {
-          if (remainingSeconds <= 0) {
-            clearInterval(timer);
-            timer = null;
-            document.getElementById("timerDisplay").textContent = "Time’s up!";
-            document.getElementById("timerSound").play();
-          } else {
-            remainingSeconds--;
-            updateTimerDisplay();
-          }
-        }, 1000);
-      } else {
-        clearInterval(timer);
-        timer = null;
-      }
-    }
-
-    function updateTimerDisplay() {
-      const mins = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
-      const secs = String(remainingSeconds % 60).padStart(2, '0');
-      document.getElementById("timerDisplay").textContent = `${mins}:${secs}`;
-    }
-
-    // Populate sessionStorage data and inputs
     window.addEventListener("DOMContentLoaded", () => {
       const old = sessionStorage.getItem("oldTestamentResult");
       const newT = sessionStorage.getItem("newTestamentResult");
@@ -232,7 +146,6 @@
       document.getElementById("verseDisplay").innerHTML = display || "No chapters loaded.";
     });
 
-    // Save journal entry
     function saveEntry() {
       const entry = {
         date: new Date().toLocaleDateString(),
@@ -253,7 +166,6 @@
 
       alert("Journal entry saved!");
       document.querySelectorAll("input, textarea").forEach(el => el.value = "");
-      document.getElementById("timerDisplay").textContent = "00:00";
     }
   </script>
 </body>
