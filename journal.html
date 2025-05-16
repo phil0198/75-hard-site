@@ -1,142 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal Entry – 75 Hard Bible Edition</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 2rem;
-      background: #f9fafb;
-      color: #111827;
-      max-width: 700px;
-      margin: auto;
-    }
-    .btn {
-      display: inline-block;
-      margin: 1rem 0.5rem 0;
-      padding: 0.75rem 1.5rem;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .btn:hover {
-      background-color: #2563eb;
-    }
-    .timer {
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 1rem 0;
-    }
-    textarea, input {
-      width: 100%;
-      margin-top: 0.25rem;
-      margin-bottom: 1rem;
-      padding: 0.75rem;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      font-size: 1rem;
-    }
-    h1 {
-      font-size: 2.25rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-    .subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 2rem;
-    }
-    .reading-section {
-      background-color: #eef2ff;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .reading-section p {
-      margin: 0.25rem 0;
-      font-size: 1.125rem;
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    label {
-      font-weight: 600;
-    }
-  </style>
-</head>
-<body>
-  <a href="index.html" class="btn">← Back to Home</a>
-  <h1>Daily Journal</h1>
-  <p class="subtitle">Reflect on today's Scripture and what it means to you.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Journal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9faff;
+        margin: 0;
+        padding: 2rem;
+        text-align: center;
+      }
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      nav a {
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        background-color: #1e293b;
+        color: white;
+        border-radius: 6px;
+      }
+      .journal-box {
+        background-color: #eef0ff;
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .timer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      input, textarea {
+        width: 90%;
+        margin-top: 1rem;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+      button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        background-color: #4f46e5;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="journal.html">Journal</a>
+      <a href="prayer-generator.html">Prayer Generator</a>
+      <a href="past-entries.html">Past Entries</a>
+    </nav>
 
-  <div class="reading-section">
-    <p><strong>Old Testament:</strong> <span id="oldReading">...</span></p>
-    <p><strong>New Testament:</strong> <span id="newReading">...</span></p>
-    <p><strong>5-Minute Reflection Timer</strong></p>
-    <div class="timer" id="timer">5:00</div>
-    <button class="btn" onclick="startTimer()">Start Timer</button>
-    <button class="btn" onclick="pauseTimer()">Pause Timer</button>
-  </div>
+    <h1>Daily Journal</h1>
+    <p>Reflect on today's Scripture and what it means to you.</p>
 
-  <div class="form-group">
-    <label for="verse">Standout Verse:</label>
-    <input type="text" id="verse" placeholder="Type the verse that stood out to you...">
-  </div>
+    <div class="journal-box">
+      <p><strong>Old Testament:</strong> <span id="journalOldTestament">Not selected yet</span></p>
+      <p><strong>New Testament:</strong> <span id="journalNewTestament">Not selected yet</span></p>
+      <p><strong>5-Minute Reflection Timer</strong></p>
+      <h2 id="timer">5:00</h2>
 
-  <div class="form-group">
-    <label for="reflection">Reflection:</label>
-    <textarea id="reflection" rows="5" placeholder="What did the verse mean to you today?"></textarea>
-  </div>
+      <div class="timer-controls">
+        <button onclick="startTimer()">Start Timer</button>
+        <button onclick="pauseTimer()">Pause Timer</button>
+      </div>
 
-  <div class="form-group">
-    <label>Gratitude (3 items):</label>
-    <input type="text" id="g1" placeholder="I'm thankful for... #1">
-    <input type="text" id="g2" placeholder="#2">
-    <input type="text" id="g3" placeholder="#3">
-  </div>
+      <form>
+        <div>
+          <label for="verse">Standout Verse:</label><br />
+          <input type="text" id="verse" placeholder="E.g. Romans 8:28" />
+        </div>
 
-  <button class="btn">Save Entry</button>
+        <div>
+          <label for="reflection">Reflection:</label><br />
+          <textarea id="reflection" rows="4" placeholder="What is God showing you today?"></textarea>
+        </div>
 
-  <script>
-    document.getElementById("oldReading").textContent = localStorage.getItem("oldTestament") || "Not selected yet";
-    document.getElementById("newReading").textContent = localStorage.getItem("newTestament") || "Not selected yet";
+        <div>
+          <label>Gratitude (3 items):</label><br />
+          <input type="text" placeholder="I'm thankful for... #1" /><br />
+          <input type="text" placeholder="#2" /><br />
+          <input type="text" placeholder="#3" />
+        </div>
 
-    let interval;
-    let remaining = 300;
-    let isPaused = true;
+        <div style="margin-top: 1rem;">
+          <button type="submit">Save Entry</button>
+        </div>
+      </form>
+    </div>
 
-    function startTimer() {
-      if (!isPaused) return;
-      isPaused = false;
-      interval = setInterval(() => {
-        if (remaining <= 0) {
-          clearInterval(interval);
-          new Audio("https://www.soundjay.com/button/beep-07.wav").play();
-          return;
-        }
-        remaining--;
+    <script>
+      let countdown;
+      let timeLeft = 300;
+      let running = false;
+
+      function updateDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById("timer").textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+      }
+
+      function startTimer() {
+        if (running) return;
+        running = true;
+        countdown = setInterval(() => {
+          if (timeLeft <= 0) {
+            clearInterval(countdown);
+            alert("Reflection time is over.");
+            return;
+          }
+          timeLeft--;
+          updateDisplay();
+        }, 1000);
+      }
+
+      function pauseTimer() {
+        running = false;
+        clearInterval(countdown);
+      }
+
+      // Auto-populate scripture from localStorage
+      window.addEventListener("DOMContentLoaded", () => {
+        const old = localStorage.getItem("oldTestamentReading") || "Not selected yet";
+        const newReading = localStorage.getItem("newTestamentReading") || "Not selected yet";
+        document.getElementById("journalOldTestament").textContent = old;
+        document.getElementById("journalNewTestament").textContent = newReading;
         updateDisplay();
-      }, 1000);
-    }
-
-    function pauseTimer() {
-      clearInterval(interval);
-      isPaused = true;
-    }
-
-    function updateDisplay() {
-      const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
-      const seconds = String(remaining % 60).padStart(2, '0');
-      document.getElementById("timer").textContent = `${minutes}:${seconds}`;
-    }
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>
