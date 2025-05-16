@@ -75,6 +75,7 @@
         border-radius: 8px;
         border: 1px solid #ccc;
         text-align: left;
+        white-space: pre-line;
       }
     </style>
   </head>
@@ -121,24 +122,55 @@
 
       function generatePrayer() {
         const selected = [...document.querySelectorAll(".emotion.selected")].map(
-          (el) => el.textContent
+          (el) => el.textContent.toLowerCase()
         );
         const situation = document.getElementById("situation").value.trim();
 
-        let prayer = "Heavenly Father,\n\n";
+        const templates = {
+          anxious: "Lord, I am filled with anxiety. Calm my restless heart and steady my mind.",
+          grateful: "God, thank You for all the blessings I often overlook. Help me live in gratitude.",
+          confused: "Father, I don't understand what's happening. Please be my clarity and guide.",
+          hopeful: "Lord, thank You for hope. Keep my eyes fixed on Your promises.",
+          angry: "God, I bring You my anger. Help me respond with grace and self-control.",
+          joyful: "Father, my heart rejoices! Thank You for the joy that lifts me.",
+          lonely: "God, I feel alone. Remind me You are near and never abandon me.",
+          guilty: "Lord, I confess my wrongs. Cover me with mercy and make me new.",
+          tired: "Father, I am weary. Fill me with strength and renew my spirit.",
+          peaceful: "Lord, thank You for the stillness in this moment. Let me dwell in it.",
+          overwhelmed: "God, I have too much on my heart. Carry what I can't.",
+          thankful: "Thank You, Lord, for all that You've done, seen, and provided."
+        };
 
-        if (selected.length > 0) {
-          prayer += `You know that I am feeling ${selected.join(", ").toLowerCase()}. Please meet me in those emotions and give me your peace.\n\n`;
-        } else {
-          prayer += "You know how I feel even when I can't express it.\n\n";
-        }
+        const intros = [
+          "Heavenly Father,",
+          "Gracious God,",
+          "Dear Lord,",
+          "Almighty and loving God,"
+        ];
+
+        const closings = [
+          "In Jesus’ name, Amen.",
+          "I trust You. Amen.",
+          "With hope in my heart, Amen.",
+          "I rest in Your presence, Amen."
+        ];
+
+        const intro = intros[Math.floor(Math.random() * intros.length)];
+        const closing = closings[Math.floor(Math.random() * closings.length)];
+
+        let prayer = `${intro}\n\n`;
+
+        selected.forEach((emotion) => {
+          if (templates[emotion]) {
+            prayer += `${templates[emotion]}\n\n`;
+          }
+        });
 
         if (situation) {
-          prayer += `I lift up this situation to You: ${situation}. Give me wisdom, strength, and clarity to move forward with faith.\n\n`;
+          prayer += `Lord, regarding what I'm going through: ${situation}. Give me discernment and peace in this.\n\n`;
         }
 
-        prayer += "Remind me that I am not alone and that You are with me. Help me to trust You, even when I do not understand. Thank You for Your constant love.\n\nIn Jesus' name, Amen.";
-
+        prayer += closing;
         document.getElementById("generatedPrayer").textContent = prayer;
       }
     </script>
