@@ -16,14 +16,18 @@
     }
 
     nav {
+      margin-bottom: 2rem;
+    }
+
+    #nav-wrapper {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin-bottom: 2rem;
       flex-wrap: wrap;
     }
 
-    nav a {
+    #nav-wrapper a,
+    #mobile-menu a {
       text-decoration: none;
       padding: 0.5rem 1rem;
       background-color: #1e293b;
@@ -32,36 +36,28 @@
       font-weight: 500;
     }
 
-    #mobile-toggle {
+    #hamburger {
       display: none;
-      background-color: #1e293b;
-      color: white;
+      font-size: 1.5rem;
+      background: none;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-weight: 500;
+      color: #1e293b;
       cursor: pointer;
+      margin-bottom: 1rem;
     }
 
     #mobile-menu {
       display: none;
       flex-direction: column;
       gap: 0.5rem;
-      width: 100%;
-      margin-top: 1rem;
     }
 
     @media (max-width: 640px) {
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      #nav-links {
+      #nav-wrapper {
         display: none;
       }
 
-      #mobile-toggle {
+      #hamburger {
         display: block;
       }
 
@@ -115,8 +111,8 @@
 </head>
 <body>
   <nav>
-    <button id="mobile-toggle" onclick="toggleMobileMenu()">Menu</button>
-    <div id="nav-links">
+    <button id="hamburger" onclick="toggleMobileMenu()">☰</button>
+    <div id="nav-wrapper">
       <a href="index.html">Home</a>
       <a href="journal.html">Journal</a>
       <a href="prayer-generator.html">Prayer Generator</a>
@@ -155,12 +151,45 @@
   <div id="output"></div>
 
   <script>
+    // Mobile nav toggle logic
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('show');
+      const button = document.getElementById('hamburger');
+
+      if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        button.textContent = '☰'; // Hamburger icon
+      } else {
+        menu.classList.add('show');
+        button.textContent = '✕'; // Close icon
+      }
     }
 
-    // Your existing prayer generation logic continues here...
+    let selectedEmotion = "";
+
+    document.querySelectorAll('.emotion-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedEmotion = card.innerText.toLowerCase();
+      });
+    });
+
+    function generatePrayer() {
+      const outputDiv = document.getElementById("output");
+      const situation = document.getElementById("situation").value.trim();
+
+      if (!selectedEmotion) {
+        outputDiv.innerText = "Please select an emotion.";
+        return;
+      }
+
+      outputDiv.innerText = "Generating prayer...";
+
+      setTimeout(() => {
+        outputDiv.innerText = `Dear God, I feel ${selectedEmotion}. Help me with what I'm facing: ${situation}. Amen.`;
+      }, 800);
+    }
   </script>
 </body>
 </html>
