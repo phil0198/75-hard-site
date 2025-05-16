@@ -20,11 +20,18 @@ function spinWheel() {
   const old = oldTestamentBooks[Math.floor(Math.random() * oldTestamentBooks.length)];
   const newBook = newTestamentBooks[Math.floor(Math.random() * newTestamentBooks.length)];
 
+  // Update the visible text on the homepage
   document.getElementById("old-testament").textContent = `Old Testament:\n${old}`;
   document.getElementById("new-testament").textContent = `New Testament:\n${newBook}`;
 
+  // Save to localStorage so the journal page can use it
+  localStorage.setItem("oldTestament", old);
+  localStorage.setItem("newTestament", newBook);
+
+  // Trigger spin animation
   const wheel = document.getElementById("wheel");
   wheel.classList.remove("spin");
-  void wheel.offsetWidth; // reset animation
+  void wheel.offsetWidth; // forces reflow
   wheel.classList.add("spin");
 }
+
