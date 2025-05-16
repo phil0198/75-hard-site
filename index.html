@@ -1,141 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>75 Hard Bible Edition – Home</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>75 Hard – Bible Edition</title>
   <style>
-    .wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 2rem auto;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      background: #f9fafb;
+      color: #111827;
+      max-width: 700px;
+      margin: auto;
+      text-align: center;
     }
-
-    .wheel {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: conic-gradient(
-        #f87171 0% 12.5%,
-        #facc15 12.5% 25%,
-        #34d399 25% 37.5%,
-        #60a5fa 37.5% 50%,
-        #c084fc 50% 62.5%,
-        #f472b6 62.5% 75%,
-        #fb923c 75% 87.5%,
-        #4ade80 87.5% 100%
-      );
-      border: 10px solid #ccc;
-      box-sizing: border-box;
-      transition: transform 2s ease-out;
-    }
-
-    .pointer {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -160px);
-      width: 0;
-      height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-bottom: 20px solid #333;
-    }
-
     .btn {
       display: inline-block;
-      margin: 1rem;
+      margin: 1rem 0.5rem 0;
       padding: 0.75rem 1.5rem;
       background-color: #3b82f6;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       text-decoration: none;
+      font-weight: 600;
     }
-
-    .results {
+    .btn:hover {
+      background-color: #2563eb;
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    .wheel-section {
+      background-color: #eef2ff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      margin-bottom: 1rem;
+    }
+    .result {
       margin-top: 1rem;
       font-size: 1.2rem;
       font-weight: bold;
     }
-
-    @media (max-width: 480px) {
-      .wheel-container {
-        width: 200px;
-        height: 200px;
-      }
-
-      .btn {
-        width: 80%;
-        font-size: 1rem;
-      }
-
-      .results {
-        font-size: 1rem;
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>75 Hard – Bible Edition</h1>
-    <p class="subtitle">Spin the wheel to receive your daily Bible readings!</p>
+  <h1>75 Hard – Bible Edition</h1>
+  <p class="subtitle">Spin the wheel to receive your daily Bible readings!</p>
 
-    <div id="welcome"></div>
-
-    <div class="wheel-container">
-      <div class="pointer"></div>
-      <div class="wheel" id="colorWheel"></div>
-    </div>
-
-    <button class="btn" onclick="spinColorWheel()">Spin the Wheel</button>
-    <a href="journal.html" class="btn">Go to Journal</a>
-    <a href="login.html" class="btn">Sign In</a>
-
-    <div class="results">
-      <p>Old Testament: <span id="otResult">–</span></p>
-      <p>New Testament: <span id="ntResult">–</span></p>
-    </div>
+  <div class="wheel-section">
+    <h2>Old Testament</h2>
+    <button class="btn" onclick="spin('ot')">Spin OT Wheel</button>
+    <div class="result" id="otResult">Old Testament: Not selected</div>
   </div>
 
+  <div class="wheel-section">
+    <h2>New Testament</h2>
+    <button class="btn" onclick="spin('nt')">Spin NT Wheel</button>
+    <div class="result" id="ntResult">New Testament: Not selected</div>
+  </div>
+
+  <a href="journal.html" class="btn">Go to Journal</a>
+
   <script>
-    const spinSound = new Audio("https://www.soundjay.com/button/sounds/button-16.mp3");
+    const booksOT = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel"];
+    const booksNT = ["Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians"];
 
-    function spinColorWheel() {
-      const wheel = document.getElementById("colorWheel");
-      const degrees = 360 * 3 + Math.floor(Math.random() * 360);
-      wheel.style.transform = `rotate(${degrees}deg)`;
-      spinSound.play();
+    function spin(type) {
+      const books = type === 'ot' ? booksOT : booksNT;
+      const book = books[Math.floor(Math.random() * books.length)];
+      const chapter = Math.floor(Math.random() * 50) + 1;
+      const result = `${book} ${chapter}`;
 
-      const oldBooks = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"];
-      const newBooks = ["Matthew", "Mark", "Luke", "John", "Acts"];
-
-      const old = oldBooks[Math.floor(Math.random() * oldBooks.length)];
-      const newBook = newBooks[Math.floor(Math.random() * newBooks.length)];
-
-      const oldChapter = Math.floor(Math.random() * 50) + 1;
-      const newChapter = Math.floor(Math.random() * 28) + 1;
-
-      const oldResult = `${old} ${oldChapter}`;
-      const newResult = `${newBook} ${newChapter}`;
-
-      localStorage.setItem("oldTestament", oldResult);
-      localStorage.setItem("newTestament", newResult);
-
-      document.getElementById("otResult").textContent = oldResult;
-      document.getElementById("ntResult").textContent = newResult;
-    }
-
-    // Show welcome message if signed in
-    const user = localStorage.getItem("user");
-    if (user) {
-      const welcome = document.createElement("p");
-      welcome.textContent = `Welcome, ${user}!`;
-      welcome.style.fontWeight = "bold";
-      document.getElementById("welcome").appendChild(welcome);
+      document.getElementById(`${type}Result`).textContent = `${type === 'ot' ? 'Old' : 'New'} Testament: ${result}`;
+      localStorage.setItem(type === 'ot' ? 'oldTestament' : 'newTestament', result);
     }
   </script>
 </body>
