@@ -151,21 +151,123 @@
   <div id="output"></div>
 
   <script>
-    // Mobile nav toggle logic
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       const button = document.getElementById('hamburger');
 
       if (menu.classList.contains('show')) {
         menu.classList.remove('show');
-        button.textContent = '☰'; // Hamburger icon
+        button.textContent = '☰';
       } else {
         menu.classList.add('show');
-        button.textContent = '✕'; // Close icon
+        button.textContent = '✕';
       }
     }
 
     let selectedEmotion = "";
+
+    const openings = [
+      "Gracious Father,",
+      "Heavenly Lord,",
+      "Father in Heaven,",
+      "Abba, I come to You today,",
+      "Lord God Almighty,"
+    ];
+
+    const closings = [
+      "In Jesus' name I pray, Amen.",
+      "I trust You and place this in Your hands. Amen.",
+      "May Your will be done. Amen.",
+      "Through Christ our Lord, Amen.",
+      "Let Your peace guard my heart. Amen."
+    ];
+
+    const pastoralLines = {
+      anxious: [
+        "Still my racing heart and anchor me in Your peace that surpasses understanding.",
+        "When I cannot control what’s around me, remind me You are always in control.",
+        "Calm my anxious thoughts and draw me near to You.",
+        "Let me rest in the assurance that You go before me.",
+        "Help me breathe deeply and remember You hold it all."
+      ],
+      lonely: [
+        "Remind me You are the friend who sticks closer than a brother.",
+        "Surround me with Your presence and lead me into deeper community.",
+        "Let me feel Your nearness when others feel far away.",
+        "Draw me close and remind me I am not forgotten.",
+        "Comfort me with the truth that I am fully known and fully loved."
+      ],
+      hurt: [
+        "Mend the places in me that ache, and help me forgive where I've been wounded.",
+        "Let Your love speak louder than the pain.",
+        "Heal my heart and steady my soul.",
+        "Bring light into the broken places of my life.",
+        "Let my pain point me to Your presence."
+      ],
+      tired: [
+        "Give me strength where I am weak and rest for my soul.",
+        "Let me find renewal not in escape, but in abiding with You.",
+        "Help me slow down and breathe in Your peace.",
+        "Sustain me through the weariness.",
+        "Teach me to rest in Your presence, not just in sleep."
+      ],
+      grateful: [
+        "Thank You for daily mercies I don’t deserve and blessings I often overlook.",
+        "Let a spirit of thanksgiving mark my every word and action.",
+        "Make me mindful of all the good You’ve done.",
+        "Keep my heart soft and full of praise.",
+        "Help me to never grow numb to Your kindness."
+      ],
+      confused: [
+        "Speak truth into the noise and help me walk by faith, not by sight.",
+        "Even when I don't understand, help me trust that You are good.",
+        "Shine light on the path before me.",
+        "Give me discernment and a steady heart.",
+        "Lead me through the questions into clarity."
+      ],
+      angry: [
+        "Guard my mouth and my heart; help me to be slow to anger and quick to forgive.",
+        "Let holy patience and perspective rise above my irritation.",
+        "Soften my spirit and help me seek peace.",
+        "Help me respond with grace, not just emotion.",
+        "Redirect my anger into something that brings life."
+      ],
+      joyful: [
+        "Let my joy overflow in praise and be contagious to those around me.",
+        "Root my joy not in circumstances, but in Christ.",
+        "Help me celebrate Your goodness freely.",
+        "Let laughter and praise flow from my spirit.",
+        "Fill my days with songs of thanksgiving."
+      ],
+      burdened: [
+        "Help me lay down every weight and take up Your yoke, which is easy and light.",
+        "Let me not grow weary in doing good, for a harvest is coming.",
+        "Lift what feels too heavy for me to carry.",
+        "Give me courage to face what overwhelms me.",
+        "Remind me that I’m never alone in the struggle."
+      ],
+      hopeful: [
+        "Fan into flame the hope You’ve planted in me.",
+        "Help me cling to Your promises even when I don’t yet see the outcome.",
+        "Let hope be the anthem of my soul.",
+        "Keep me grounded in Your faithfulness.",
+        "Renew my hope with every breath."
+      ],
+      lost: [
+        "When the way forward is unclear, be my Shepherd and guide.",
+        "Draw me back from distraction and help me hear Your voice again.",
+        "Meet me in the wilderness and lead me home.",
+        "Show me that I'm never too far for You to find me.",
+        "Walk with me through the fog until clarity comes."
+      ],
+      content: [
+        "Teach me to be satisfied with Your presence above all.",
+        "Let me delight in the simple things, knowing they are gifts from You.",
+        "Help me embrace today with gratitude.",
+        "Free me from striving and help me rest in enough.",
+        "Keep me grounded in what truly matters."
+      ]
+    };
 
     document.querySelectorAll('.emotion-card').forEach(card => {
       card.addEventListener('click', () => {
@@ -187,7 +289,80 @@
       outputDiv.innerText = "Generating prayer...";
 
       setTimeout(() => {
-        outputDiv.innerText = `Dear God, I feel ${selectedEmotion}. Help me with what I'm facing: ${situation}. Amen.`;
+        const opening = openings[Math.floor(Math.random() * openings.length)];
+        const closing = closings[Math.floor(Math.random() * closings.length)];
+        const line = (pastoralLines[selectedEmotion] || [])[Math.floor(Math.random() * (pastoralLines[selectedEmotion]?.length || 1))] || "";
+
+        const reminders = [
+          "Let Your Word speak louder than my fears.",
+          "Speak peace to my soul and anchor me in Your truth.",
+          "Let Your truth quiet my spirit and steady my thoughts.",
+          "Help me remember who You are and what You’ve spoken.",
+          "Steady me with Scripture and strengthen my heart.",
+          "May Your voice rise above the noise around me.",
+          "Guide me back to Your Word when my heart wavers."
+        ];
+        const reminderLine = reminders[Math.floor(Math.random() * reminders.length)];
+
+        let prayerForOther = "";
+
+        const match = situation.match(/pray for ([A-Z][a-z]+)(.*)/i);
+        if (match) {
+          const name = match[1];
+          const detail = match[2].trim();
+
+          const blessings = {
+            general: [
+              `Be near to ${name}, meet their need, and strengthen their spirit.`,
+              `Cover ${name} with Your grace and remind them of Your nearness.`,
+              `Surround ${name} with Your love and bring peace to their soul.`
+            ],
+            healing: [
+              `Bring healing to ${name} and peace to their body and mind.`,
+              `Restore strength to ${name} and let Your healing flow through them.`,
+              `Touch ${name} with Your healing hands and bring them comfort.`
+            ],
+            peace: [
+              `Calm the heart of ${name} and let Your peace rule over their thoughts.`,
+              `Steady ${name} in Your peace that surpasses understanding.`,
+              `Quiet ${name}'s spirit and bring rest to their mind.`
+            ],
+            guidance: [
+              `Guide ${name}'s steps and speak clearly to their heart.`,
+              `Direct ${name} with Your wisdom and steady their path.`,
+              `Be a lamp to ${name}'s feet and a light to their path.`
+            ],
+            job: [
+              `Provide for ${name} and open new doors with Your perfect timing.`,
+              `Bless ${name} with meaningful work and financial provision.`,
+              `Make a way for ${name} where there seems to be none.`
+            ]
+          };
+
+          let blessing = blessings.general[Math.floor(Math.random() * blessings.general.length)];
+
+          if (/healing|sick|health|recover/i.test(detail)) {
+            blessing = blessings.healing[Math.floor(Math.random() * blessings.healing.length)];
+          } else if (/peace|anxiety|fear/i.test(detail)) {
+            blessing = blessings.peace[Math.floor(Math.random() * blessings.peace.length)];
+          } else if (/guidance|direction|lost/i.test(detail)) {
+            blessing = blessings.guidance[Math.floor(Math.random() * blessings.guidance.length)];
+          } else if (/job|work|employment/i.test(detail)) {
+            blessing = blessings.job[Math.floor(Math.random() * blessings.job.length)];
+          }
+
+          prayerForOther = `\n\nAnd Lord, I lift up ${name} to You. ${blessing}`;
+        }
+
+        const prayer = `${opening}
+
+Today I come to You feeling ${selectedEmotion}. ${line}
+
+${reminderLine}${prayerForOther}
+
+${closing}`;
+
+        outputDiv.innerText = prayer;
       }, 800);
     }
   </script>
