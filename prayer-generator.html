@@ -298,15 +298,41 @@
           const name = match[1];
           const detail = match[2].trim();
 
-          let blessing = `Be near to ${name}, meet their need, and strengthen their spirit.`;
-          if (/healing|sick|health|recover/i.test(detail)) {
-            blessing = `Bring healing to ${name} and peace to their body and mind.`;
-          } else if (/peace|anxiety|fear/i.test(detail)) {
-            blessing = `Calm the heart of ${name} and let Your peace rule over their thoughts.`;
-          } else if (/guidance|direction|lost/i.test(detail)) {
-            blessing = `Guide ${name}'s steps and speak clearly to their heart.`;
-          } else if (/job|work|employment/i.test(detail)) {
-            blessing = `Provide for ${name} and open new doors with Your perfect timing.`;
+          const generalBlessings = [
+          `Be near to \${name}, meet their need, and strengthen their spirit.`,
+          `Cover \${name} with Your grace and remind them of Your nearness.`,
+          `Surround \${name} with Your love and bring peace to their soul.`
+        ];
+        const healingBlessings = [
+          `Bring healing to \${name} and peace to their body and mind.`,
+          `Restore strength to \${name} and let Your healing flow through them.`,
+          `Touch \${name} with Your healing hands and bring them comfort.`
+        ];
+        const peaceBlessings = [
+          `Calm the heart of \${name} and let Your peace rule over their thoughts.`,
+          `Steady \${name} in Your peace that surpasses understanding.`,
+          `Quiet \${name}'s spirit and bring rest to their mind.`
+        ];
+        const guidanceBlessings = [
+          `Guide \${name}'s steps and speak clearly to their heart.`,
+          `Direct \${name} with Your wisdom and steady their path.`,
+          `Be a lamp to \${name}'s feet and a light to their path.`
+        ];
+        const jobBlessings = [
+          `Provide for \${name} and open new doors with Your perfect timing.`,
+          `Bless \${name} with meaningful work and financial provision.`,
+          `Make a way for \${name} where there seems to be none.`
+        ];
+
+        let blessing = generalBlessings[Math.floor(Math.random() * generalBlessings.length)];
+        if (/healing|sick|health|recover/i.test(detail)) {
+          blessing = healingBlessings[Math.floor(Math.random() * healingBlessings.length)];
+        } else if (/peace|anxiety|fear/i.test(detail)) {
+          blessing = peaceBlessings[Math.floor(Math.random() * peaceBlessings.length)];
+        } else if (/guidance|direction|lost/i.test(detail)) {
+          blessing = guidanceBlessings[Math.floor(Math.random() * guidanceBlessings.length)];
+        } else if (/job|work|employment/i.test(detail)) {
+          blessing = jobBlessings[Math.floor(Math.random() * jobBlessings.length)];
           }
 
           prayerForOther = `
