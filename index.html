@@ -143,29 +143,75 @@
   </div>
 
   <script>
-    const dailyVerses = [
-      "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
-      "Philippians 4:13 — I can do all things through Christ who strengthens me.",
-      "John 3:16 — For God so loved the world...",
-      "Romans 8:28 — And we know that in all things God works for the good...",
-      "Isaiah 40:31 — But those who hope in the Lord will renew their strength."
+    const oldTestamentBooks = [
+      "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+      "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+      "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra",
+      "Nehemiah", "Esther", "Job", "Psalms", "Proverbs",
+      "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
+      "Ezekiel", "Daniel", "Hosea", "Joel", "Amos",
+      "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+      "Zephaniah", "Haggai", "Zechariah", "Malachi"
     ];
 
-    const today = new Date();
-    const start = new Date(today.getFullYear(), 0, 0);
-    const diff = today - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
+    const newTestamentBooks = [
+      "Matthew", "Mark", "Luke", "John", "Acts",
+      "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+      "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy",
+      "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
+      "1 Peter", "2 Peter", "1 John", "2 John", "3 John",
+      "Jude", "Revelation"
+    ];
 
-    const verseText = dailyVerses[dayOfYear % dailyVerses.length] || "Scripture unavailable.";
-    document.getElementById("dailyVerse").innerText = `Scripture of the Day: ${verseText}`;
+    function drawWheel(canvasId, books) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      const radius = canvas.width / 2;
+      const center = radius;
+      const arc = (2 * Math.PI) / books.length;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      books.forEach((book, i) => {
+        const angle = i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${(i / books.length) * 360}, 70%, 70%)`;
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, angle, angle + arc);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(book, radius - 10, 4);
+        ctx.restore();
+      });
+    }
 
     function spinWheel(type) {
-      const books = type === 'old' ? ['Genesis 1', 'Exodus 3', 'Psalms 23'] : ['Matthew 5', 'John 3', 'Romans 8'];
-      const result = books[Math.floor(Math.random() * books.length)];
-      document.getElementById(type + 'Result').innerText = result;
-      sessionStorage.setItem(type === 'old' ? 'oldTestamentResult' : 'newTestamentResult', result);
+      const books = type === "old" ? oldTestamentBooks : newTestamentBooks;
+      const randomIndex = Math.floor(Math.random() * books.length);
+      const chosenBook = books[randomIndex];
+      const chosenChapter = Math.ceil(Math.random() * 30);
+      const displayText = `${chosenBook} ${chosenChapter}`;
+
+      document.getElementById(`${type}Result`).textContent = displayText;
+      sessionStorage.setItem(`${type}TestamentResult`, displayText);
     }
+
+    window.onload = function () {
+      drawWheel("oldWheel", oldTestamentBooks);
+      drawWheel("newWheel", newTestamentBooks);
+
+      const oldSaved = sessionStorage.getItem("oldTestamentResult");
+      const newSaved = sessionStorage.getItem("newTestamentResult");
+
+      if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
+      if (newSaved) document.getElementById("newResult").textContent = newSaved;
+    };
   </script>
 </body>
 </html>
