@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily Journal</title>
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -14,12 +14,20 @@
       max-width: 700px;
       margin: auto;
     }
-    nav {
+
+    /* Navigation */
+    .nav-container {
       display: flex;
-      justify-content: center;
-      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 2rem;
     }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
     nav a {
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -28,19 +36,54 @@
       border-radius: 6px;
       font-weight: 500;
     }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #1e293b;
+      margin: 4px 0;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
     h1 {
       text-align: center;
     }
+
     label {
       font-weight: 600;
     }
+
     textarea, input {
       width: 100%;
       padding: 0.75rem;
       margin-bottom: 1rem;
       border-radius: 6px;
       border: 1px solid #ccc;
+      background: white;
     }
+
     button {
       padding: 0.75rem 1.5rem;
       background-color: #1e40af;
@@ -49,19 +92,60 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    .verse-display {
+      background: #eef2ff;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .timer-section {
+      background: #e0f2fe;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 2rem;
+    }
+
+    .timer-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem 0;
     }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="journal.html">Journal</a>
-    <a href="prayer-generator.html">Prayer Generator</a>
-    <a href="past-entries.html">Past Entries</a>
-    <a href="scripture-search.html">Scripture Search</a>
-  </nav>
+
+  <div class="nav-container">
+    <div class="hamburger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <nav class="nav-links" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="journal.html">Journal</a>
+      <a href="prayer-generator.html">Prayer Generator</a>
+      <a href="past-entries.html">Past Entries</a>
+      <a href="scripture-search.html">Scripture Search</a>
+    </nav>
+  </div>
 
   <h1>Today's Journal</h1>
+
+  <div class="verse-display" id="verseDisplay">
+    Loading your chapters...
+  </div>
+
+  <div class="timer-section">
+    <label for="timerInput">Set Timer (seconds):</label>
+    <input type="number" id="timerInput" placeholder="Enter time in seconds">
+    <div class="timer-display" id="timerDisplay">00:00</div>
+    <button onclick="startTimer()">Start / Pause</button>
+  </div>
 
   <label for="oldTestament">Old Testament Book & Chapter</label>
   <input type="text" id="oldTestament" placeholder="e.g. Genesis 1">
@@ -84,36 +168,77 @@
 
   <button onclick="saveEntry()">Save Entry</button>
 
+  <audio id="timerSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
   <script>
-  // Prepopulate fields from sessionStorage if available
-  window.addEventListener("DOMContentLoaded", () => {
-    const old = sessionStorage.getItem("oldTestamentResult");
-    const newT = sessionStorage.getItem("newTestamentResult");
-    if (old) document.getElementById("oldTestament").value = old;
-    if (newT) document.getElementById("newTestament").value = newT;
-  });
+    let timer = null;
+    let remaining = 0;
 
-  function saveEntry() {
-    const entry = {
-      date: new Date().toLocaleDateString(),
-      oldTestament: document.getElementById("oldTestament").value,
-      newTestament: document.getElementById("newTestament").value,
-      verse: document.getElementById("verse").value,
-      reflection: document.getElementById("reflection").value,
-      gratitude: [
-        document.getElementById("grat1").value,
-        document.getElementById("grat2").value,
-        document.getElementById("grat3").value,
-      ]
-    };
+    function toggleMenu() {
+      document.getElementById("mobileNav").classList.toggle("show");
+    }
 
-    let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
-    entries.push(entry);
-    localStorage.setItem("journalEntries", JSON.stringify(entries));
-    alert("Journal entry saved!");
+    function startTimer() {
+      const input = document.getElementById("timerInput").value;
+      if (input && !timer) {
+        remaining = parseInt(input);
+        timer = setInterval(() => {
+          if (remaining <= 0) {
+            clearInterval(timer);
+            timer = null;
+            document.getElementById("timerDisplay").textContent = "Time’s up!";
+            document.getElementById("timerSound").play();
+          } else {
+            document.getElementById("timerDisplay").textContent = formatTime(remaining);
+            remaining--;
+          }
+        }, 1000);
+      } else {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
 
-    document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
-  }
-</script>
+    function formatTime(seconds) {
+      const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const old = sessionStorage.getItem("oldTestamentResult");
+      const newT = sessionStorage.getItem("newTestamentResult");
+      if (old) {
+        document.getElementById("oldTestament").value = old;
+        document.getElementById("verseDisplay").innerHTML = `<strong>Today's Old Testament:</strong> ${old}`;
+      }
+      if (newT) {
+        document.getElementById("newTestament").value = newT;
+        document.getElementById("verseDisplay").innerHTML += `<br><strong>Today's New Testament:</strong> ${newT}`;
+      }
+    });
+
+    function saveEntry() {
+      const entry = {
+        date: new Date().toLocaleDateString(),
+        oldTestament: document.getElementById("oldTestament").value,
+        newTestament: document.getElementById("newTestament").value,
+        verse: document.getElementById("verse").value,
+        reflection: document.getElementById("reflection").value,
+        gratitude: [
+          document.getElementById("grat1").value,
+          document.getElementById("grat2").value,
+          document.getElementById("grat3").value,
+        ]
+      };
+
+      let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+      entries.push(entry);
+      localStorage.setItem("journalEntries", JSON.stringify(entries));
+      alert("Journal entry saved!");
+      document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+      document.getElementById("timerDisplay").textContent = "00:00";
+    }
+  </script>
 </body>
 </html>
