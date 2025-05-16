@@ -82,7 +82,6 @@
       margin-top: 2rem;
     }
   </style>
-  <script src="dailyVerses.js"></script>
 </head>
 <body>
   <nav>
@@ -96,7 +95,7 @@
   <h1>75 Hard – Bible Edition</h1>
   <p>Spin each wheel to receive your daily Bible readings!</p>
 
-  <div class="scripture-of-day" id="dailyVerse"></div>
+  <div class="scripture-of-day" id="dailyVerse">Loading scripture of the day...</div>
 
   <div class="wheel-container">
     <div class="wheel-section">
@@ -113,14 +112,25 @@
     </div>
   </div>
 
+  <script src="wheel.js"></script>
   <script>
-    // Display a scripture of the day from the 365 list
+    const dailyVerses = [
+      "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
+      "Philippians 4:13 — I can do all things through Christ who strengthens me.",
+      "John 3:16 — For God so loved the world...",
+      // Add up to 365 total entries here in real implementation...
+      "Romans 8:28 — And we know that in all things God works for the good...",
+      "Isaiah 40:31 — But those who hope in the Lord will renew their strength."
+    ];
+
     const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
-    const verseText = window.dailyVerses ? window.dailyVerses[dayOfYear % window.dailyVerses.length] : "Scripture unavailable.";
+    const start = new Date(today.getFullYear(), 0, 0);
+    const diff = today - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+
+    const verseText = dailyVerses[dayOfYear % dailyVerses.length] || "Scripture unavailable.";
     document.getElementById("dailyVerse").innerText = `Scripture of the Day: ${verseText}`;
   </script>
-
-  <script src="wheel.js"></script>
 </body>
 </html>
