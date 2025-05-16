@@ -3,71 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Journal – 75 Hard Bible Edition</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Journal Entry – 75 Hard Bible Edition</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    .btn {
+      display: inline-block;
+      margin: 1rem 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .timer {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Daily Journal</h1>
-    <p class="subtitle">Reflect on today's Scripture and what it means to you.</p>
+  <a href="index.html" class="btn">← Back to Home</a>
+  <h1>Daily Journal</h1>
+  <p><strong>Old Testament:</strong> <span id="oldReading">...</span></p>
+  <p><strong>New Testament:</strong> <span id="newReading">...</span></p>
 
-    <div id="reading-display" class="reading-box">
-      <p><strong>Old Testament:</strong> <span id="journal-old"></span></p>
-      <p><strong>New Testament:</strong> <span id="journal-new"></span></p>
-    </div>
+  <div class="timer" id="timer">05:00</div>
+  <button class="btn" onclick="startTimer()">Start</button>
+  <button class="btn" onclick="pauseTimer()">Pause</button>
 
-    <div class="timer-box">
-      <p><strong>5-Minute Reflection Timer</strong></p>
-      <p id="timer">5:00</p>
-      <button onclick="startTimer()">Start Timer</button>
-      <button onclick="stopTimer()">Stop Timer</button>
-    </div>
-
-    <form class="journal-form">
-      <label for="verse">Standout Verse:</label>
-      <input type="text" id="verse" name="verse" required>
-
-      <label for="reflection">Reflection:</label>
-      <textarea id="reflection" name="reflection" rows="4" required></textarea>
-
-      <label for="gratitude">Gratitude (3 items):</label>
-      <input type="text" name="gratitude" placeholder="I'm thankful for... #1" required>
-      <input type="text" name="gratitude" placeholder="#2" required>
-      <input type="text" name="gratitude" placeholder="#3" required>
-
-      <button type="submit">Save Entry</button>
-    </form>
-  </div>
+  <h2>Reflection</h2>
+  <input type="text" placeholder="Meaningful Verse" id="verse">
+  <textarea placeholder="Your reflection..." id="reflection"></textarea>
+  <h3>Gratitude</h3>
+  <input type="text" placeholder="1." id="g1">
+  <input type="text" placeholder="2." id="g2">
+  <input type="text" placeholder="3." id="g3">
 
   <script>
-    // Load readings from localStorage
-    document.getElementById("journal-old").textContent = localStorage.getItem("oldTestament") || "";
-    document.getElementById("journal-new").textContent = localStorage.getItem("newTestament") || "";
+    document.getElementById("oldReading").textContent = localStorage.getItem("oldTestament") || "Not selected yet";
+    document.getElementById("newReading").textContent = localStorage.getItem("newTestament") || "Not selected yet";
 
-    // 5-minute countdown timer
-    let countdown;
+    let interval;
+    let remaining = 300;
+    let isPaused = true;
+
     function startTimer() {
-      let time = 300;
-      const timerEl = document.getElementById("timer");
-
-      clearInterval(countdown);
-      countdown = setInterval(() => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        time--;
-
-        if (time < 0) {
-          clearInterval(countdown);
-          timerEl.textContent = "Time's up!";
+      if (!isPaused) return;
+      isPaused = false;
+      interval = setInterval(() => {
+        if (remaining <= 0) {
+          clearInterval(interval);
           new Audio("https://www.soundjay.com/button/beep-07.wav").play();
+          return;
         }
+        remaining--;
+        updateDisplay();
       }, 1000);
     }
 
-    function stopTimer() {
-      clearInterval(countdown);
-      document.getElementById("timer").textContent = "5:00";
+    function pauseTimer() {
+      clearInterval(interval);
+      isPaused = true;
+    }
+
+    function updateDisplay() {
+      const minutes = String(Math.floor(remaining / 60)).padStart(2, '0');
+      const seconds = String(remaining % 60).padStart(2, '0');
+      document.getElementById("timer").textContent = `${minutes}:${seconds}`;
     }
   </script>
 </body>
