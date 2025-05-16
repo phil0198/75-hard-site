@@ -10,7 +10,7 @@
       padding: 2rem;
       background: #f9fafb;
       color: #111827;
-      max-width: 700px;
+      max-width: 1200px;
       margin: auto;
       text-align: center;
     }
@@ -38,40 +38,72 @@
       color: #6b7280;
       margin-bottom: 2rem;
     }
+    .wheels-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 2rem;
+    }
     .wheel-section {
       background-color: #eef2ff;
       padding: 1.5rem;
       border-radius: 8px;
-      margin-bottom: 2rem;
+      flex: 1 1 40%;
+      min-width: 300px;
     }
-    select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
-      margin-bottom: 1rem;
+    .wheel {
+      margin: 1rem auto;
+      border-radius: 50%;
+      border: 8px solid #ccc;
+      width: 240px;
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 2s ease-out;
+    }
+    .wheel span {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      pointer-events: none;
     }
     .result {
       margin-top: 1rem;
       font-size: 1.2rem;
       font-weight: bold;
     }
+    @media (max-width: 768px) {
+      .wheels-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>75 Hard – Bible Edition</h1>
-  <p class="subtitle">Spin the wheel to receive your daily Bible readings!</p>
+  <p class="subtitle">Spin the wheels to receive your daily Bible readings!</p>
 
-  <div class="wheel-section">
-    <h2>Old Testament</h2>
-    <button class="btn" onclick="spin('ot')">Spin OT Wheel</button>
-    <div class="result" id="otResult">Old Testament: Not selected</div>
-  </div>
+  <div class="wheels-wrapper">
+    <div class="wheel-section">
+      <h2>Old Testament</h2>
+      <div class="wheel" id="otWheel"></div>
+      <button class="btn" onclick="spin('ot')">Spin OT Wheel</button>
+      <div class="result" id="otResult">Old Testament: Not selected</div>
+    </div>
 
-  <div class="wheel-section">
-    <h2>New Testament</h2>
-    <button class="btn" onclick="spin('nt')">Spin NT Wheel</button>
-    <div class="result" id="ntResult">New Testament: Not selected</div>
+    <div class="wheel-section">
+      <h2>New Testament</h2>
+      <div class="wheel" id="ntWheel"></div>
+      <button class="btn" onclick="spin('nt')">Spin NT Wheel</button>
+      <div class="result" id="ntResult">New Testament: Not selected</div>
+    </div>
   </div>
 
   <a href="journal.html" class="btn">Go to Journal</a>
@@ -80,8 +112,27 @@
     const booksOT = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel"];
     const booksNT = ["Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians"];
 
+    function populateWheel(id, books) {
+      const wheel = document.getElementById(id);
+      wheel.innerHTML = "";
+      const angle = 360 / books.length;
+      books.forEach((book, i) => {
+        const span = document.createElement('span');
+        span.style.transform = `rotate(${i * angle}deg) translateY(-100px) rotate(${-i * angle}deg)`;
+        span.textContent = book;
+        wheel.appendChild(span);
+      });
+    }
+
+    populateWheel("otWheel", booksOT);
+    populateWheel("ntWheel", booksNT);
+
     function spin(type) {
       const books = type === 'ot' ? booksOT : booksNT;
+      const wheel = document.getElementById(`${type}Wheel`);
+      const deg = 360 * 5 + Math.floor(Math.random() * 360);
+      wheel.style.transform = `rotate(${deg}deg)`;
+
       const book = books[Math.floor(Math.random() * books.length)];
       const chapter = Math.floor(Math.random() * 50) + 1;
       const result = `${book} ${chapter}`;
