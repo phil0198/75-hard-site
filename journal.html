@@ -20,6 +20,7 @@
       <p><strong>5-Minute Reflection Timer</strong></p>
       <p id="timer">5:00</p>
       <button onclick="startTimer()">Start Timer</button>
+      <button onclick="stopTimer()">Stop Timer</button>
     </div>
 
     <form class="journal-form">
@@ -62,6 +63,11 @@
           new Audio("https://www.soundjay.com/button/beep-07.wav").play();
         }
       }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(countdown);
+      document.getElementById("timer").textContent = "5:00";
     }
   </script>
 </body>
