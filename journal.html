@@ -1,147 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daily Journal</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9faff;
-        margin: 0;
-        padding: 2rem;
-        text-align: center;
-      }
-      nav {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-      }
-      nav a {
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        background-color: #1e293b;
-        color: white;
-        border-radius: 6px;
-      }
-      .journal-box {
-        background-color: #eef0ff;
-        padding: 2rem;
-        border-radius: 12px;
-        max-width: 700px;
-        margin: 0 auto;
-      }
-      .timer-controls {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-      input, textarea {
-        width: 90%;
-        margin-top: 1rem;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-      }
-      button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        border: none;
-        border-radius: 6px;
-        background-color: #4f46e5;
-        color: white;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="journal.html">Journal</a>
-      <a href="prayer-generator.html">Prayer Generator</a>
-      <a href="past-entries.html">Past Entries</a>
-    </nav>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Journal</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background-color: #1e293b;
+      color: white;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      font-weight: 600;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      background-color: #1e40af;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+  </nav>
 
-    <h1>Daily Journal</h1>
-    <p>Reflect on today's Scripture and what it means to you.</p>
+  <h1>Today's Journal</h1>
 
-    <div class="journal-box">
-      <p><strong>Old Testament:</strong> <span id="journalOldTestament">Not selected yet</span></p>
-      <p><strong>New Testament:</strong> <span id="journalNewTestament">Not selected yet</span></p>
-      <p><strong>5-Minute Reflection Timer</strong></p>
-      <h2 id="timer">5:00</h2>
+  <label for="oldTestament">Old Testament Book & Chapter</label>
+  <input type="text" id="oldTestament" placeholder="e.g. Genesis 1">
 
-      <div class="timer-controls">
-        <button onclick="startTimer()">Start Timer</button>
-        <button onclick="pauseTimer()">Pause Timer</button>
-      </div>
+  <label for="newTestament">New Testament Book & Chapter</label>
+  <input type="text" id="newTestament" placeholder="e.g. Matthew 5">
 
-      <form>
-        <div>
-          <label for="verse">Standout Verse:</label><br />
-          <input type="text" id="verse" placeholder="E.g. Romans 8:28" />
-        </div>
+  <label for="verse">Meaningful Verse</label>
+  <input type="text" id="verse" placeholder="Type your standout verse">
 
-        <div>
-          <label for="reflection">Reflection:</label><br />
-          <textarea id="reflection" rows="4" placeholder="What is God showing you today?"></textarea>
-        </div>
+  <label for="reflection">Reflection</label>
+  <textarea id="reflection" rows="4" placeholder="Your thoughts..."></textarea>
 
-        <div>
-          <label>Gratitude (3 items):</label><br />
-          <input type="text" placeholder="I'm thankful for... #1" /><br />
-          <input type="text" placeholder="#2" /><br />
-          <input type="text" placeholder="#3" />
-        </div>
+  <label for="grat1">Gratitude 1</label>
+  <input type="text" id="grat1">
+  <label for="grat2">Gratitude 2</label>
+  <input type="text" id="grat2">
+  <label for="grat3">Gratitude 3</label>
+  <input type="text" id="grat3">
 
-        <div style="margin-top: 1rem;">
-          <button type="submit">Save Entry</button>
-        </div>
-      </form>
-    </div>
+  <button onclick="saveEntry()">Save Entry</button>
 
-    <script>
-      let countdown;
-      let timeLeft = 300;
-      let running = false;
+  <script>
+    function saveEntry() {
+      const entry = {
+        date: new Date().toLocaleDateString(),
+        oldTestament: document.getElementById("oldTestament").value,
+        newTestament: document.getElementById("newTestament").value,
+        verse: document.getElementById("verse").value,
+        reflection: document.getElementById("reflection").value,
+        gratitude: [
+          document.getElementById("grat1").value,
+          document.getElementById("grat2").value,
+          document.getElementById("grat3").value,
+        ]
+      };
 
-      function updateDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById("timer").textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
-      }
+      let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+      entries.push(entry);
+      localStorage.setItem("journalEntries", JSON.stringify(entries));
+      alert("Journal entry saved!");
 
-      function startTimer() {
-        if (running) return;
-        running = true;
-        countdown = setInterval(() => {
-          if (timeLeft <= 0) {
-            clearInterval(countdown);
-            alert("Reflection time is over.");
-            return;
-          }
-          timeLeft--;
-          updateDisplay();
-        }, 1000);
-      }
-
-      function pauseTimer() {
-        running = false;
-        clearInterval(countdown);
-      }
-
-      // Auto-populate scripture from localStorage
-      window.addEventListener("DOMContentLoaded", () => {
-        const old = localStorage.getItem("oldTestamentReading") || "Not selected yet";
-        const newReading = localStorage.getItem("newTestamentReading") || "Not selected yet";
-        document.getElementById("journalOldTestament").textContent = old;
-        document.getElementById("journalNewTestament").textContent = newReading;
-        updateDisplay();
-      });
-    </script>
-  </body>
+      document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
+    }
+  </script>
+</body>
 </html>
