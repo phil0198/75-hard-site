@@ -1,178 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prayer Generator</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9faff;
-        margin: 0;
-        padding: 2rem;
-        text-align: center;
-      }
-      nav {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-      }
-      nav a {
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        background-color: #1e293b;
-        color: white;
-        border-radius: 6px;
-      }
-      .container {
-        max-width: 700px;
-        margin: 0 auto;
-        background-color: #eef0ff;
-        padding: 2rem;
-        border-radius: 12px;
-      }
-      .emotion-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-      }
-      .emotion {
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background: #fff;
-        cursor: pointer;
-      }
-      .emotion.selected {
-        background-color: #c7d2fe;
-        border-color: #4f46e5;
-      }
-      textarea {
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        margin-top: 1rem;
-      }
-      button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        border: none;
-        border-radius: 6px;
-        background-color: #4f46e5;
-        color: white;
-        cursor: pointer;
-        margin-top: 1rem;
-      }
-      #generatedPrayer {
-        margin-top: 2rem;
-        background: #fff;
-        padding: 1rem;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        text-align: left;
-        white-space: pre-line;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="journal.html">Journal</a>
-      <a href="prayer-generator.html">Prayer Generator</a>
-      <a href="past-entries.html">Past Entries</a>
-    </nav>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prayer Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background-color: #1e293b;
+      color: white;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    h1 {
+      text-align: center;
+    }
+    .emotion-card {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      margin: 0.5rem;
+      background: #e0e7ff;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .emotion-card.selected {
+      background: #4338ca;
+      color: white;
+    }
+    textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #1e40af;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 2rem;
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+  </nav>
 
-    <h1>Prayer Generator</h1>
-    <p>Select how you're feeling and describe your situation.</p>
+  <h1>Prayer Generator</h1>
+  <p>Select how you feel:</p>
+  <div id="emotions">
+    <span class="emotion-card">Anxious</span>
+    <span class="emotion-card">Grateful</span>
+    <span class="emotion-card">Lost</span>
+    <span class="emotion-card">Hopeful</span>
+    <span class="emotion-card">Tired</span>
+    <span class="emotion-card">Hurt</span>
+    <span class="emotion-card">Joyful</span>
+    <span class="emotion-card">Burdened</span>
+    <span class="emotion-card">Angry</span>
+    <span class="emotion-card">Content</span>
+    <span class="emotion-card">Lonely</span>
+    <span class="emotion-card">Confused</span>
+  </div>
 
-    <div class="container">
-      <div class="emotion-grid" id="emotionGrid">
-        <div class="emotion">Anxious</div>
-        <div class="emotion">Grateful</div>
-        <div class="emotion">Confused</div>
-        <div class="emotion">Hopeful</div>
-        <div class="emotion">Angry</div>
-        <div class="emotion">Joyful</div>
-        <div class="emotion">Lonely</div>
-        <div class="emotion">Guilty</div>
-        <div class="emotion">Tired</div>
-        <div class="emotion">Peaceful</div>
-        <div class="emotion">Overwhelmed</div>
-        <div class="emotion">Thankful</div>
-      </div>
+  <textarea id="situation" rows="4" placeholder="Describe your situation..."></textarea>
+  <button onclick="generatePrayer()">Generate Prayer</button>
 
-      <textarea id="situation" rows="4" placeholder="Describe what's on your heart..."></textarea>
-      <button onclick="generatePrayer()">Generate Prayer</button>
+  <div id="output"></div>
 
-      <div id="generatedPrayer"></div>
-    </div>
-
-    <script>
-      const emotions = document.querySelectorAll(".emotion");
-      emotions.forEach((el) => {
-        el.addEventListener("click", () => {
-          el.classList.toggle("selected");
-        });
+  <script>
+    document.querySelectorAll('.emotion-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('selected');
       });
+    });
 
-      function generatePrayer() {
-        const selected = [...document.querySelectorAll(".emotion.selected")].map(
-          (el) => el.textContent.toLowerCase()
-        );
-        const situation = document.getElementById("situation").value.trim();
+    function generatePrayer() {
+      const emotions = Array.from(document.querySelectorAll('.emotion-card.selected'))
+        .map(card => card.innerText.toLowerCase());
+      const situation = document.getElementById("situation").value.trim();
 
-        const templates = {
-          anxious: "Lord, I am filled with anxiety. Calm my restless heart and steady my mind.",
-          grateful: "God, thank You for all the blessings I often overlook. Help me live in gratitude.",
-          confused: "Father, I don't understand what's happening. Please be my clarity and guide.",
-          hopeful: "Lord, thank You for hope. Keep my eyes fixed on Your promises.",
-          angry: "God, I bring You my anger. Help me respond with grace and self-control.",
-          joyful: "Father, my heart rejoices! Thank You for the joy that lifts me.",
-          lonely: "God, I feel alone. Remind me You are near and never abandon me.",
-          guilty: "Lord, I confess my wrongs. Cover me with mercy and make me new.",
-          tired: "Father, I am weary. Fill me with strength and renew my spirit.",
-          peaceful: "Lord, thank You for the stillness in this moment. Let me dwell in it.",
-          overwhelmed: "God, I have too much on my heart. Carry what I can't.",
-          thankful: "Thank You, Lord, for all that You've done, seen, and provided."
-        };
+      const emotionSummary = emotions.length
+        ? `They feel ${emotions.join(', ')}.`
+        : '';
 
-        const intros = [
-          "Heavenly Father,",
-          "Gracious God,",
-          "Dear Lord,",
-          "Almighty and loving God,"
-        ];
+      const prompt = `
+Write a heartfelt, pastoral-style prayer. ${emotionSummary}
+The person is going through a difficult situation and shared this context: "${situation}".
+Do NOT repeat their exact words. Instead, craft a comforting, wise, and hopeful prayer that reflects the emotions and struggles implied.
+Invoke God’s presence, peace, and assurance in an authentic voice.
+`;
 
-        const closings = [
-          "In Jesus’ name, Amen.",
-          "I trust You. Amen.",
-          "With hope in my heart, Amen.",
-          "I rest in Your presence, Amen."
-        ];
+      // Simulate AI response
+      document.getElementById("output").innerText = "Generating prayer...";
 
-        const intro = intros[Math.floor(Math.random() * intros.length)];
-        const closing = closings[Math.floor(Math.random() * closings.length)];
+      setTimeout(() => {
+        document.getElementById("output").innerText =
+          `Dear Heavenly Father,
 
-        let prayer = `${intro}\n\n`;
+You see my heart and the weight I carry. In this season of ${emotions.join(', ')}, draw near to me. Give me strength to endure, wisdom to navigate, and peace that surpasses all understanding. Help me trust You more, lean not on my own understanding, and find comfort in Your Word.
 
-        selected.forEach((emotion) => {
-          if (templates[emotion]) {
-            prayer += `${templates[emotion]}\n\n`;
-          }
-        });
-
-        if (situation) {
-          prayer += `Lord, regarding what I'm going through: ${situation}. Give me discernment and peace in this.\n\n`;
-        }
-
-        prayer += closing;
-        document.getElementById("generatedPrayer").textContent = prayer;
-      }
-    </script>
-  </body>
+Amen.`;
+      }, 1000);
+    }
+  </script>
+</body>
 </html>
