@@ -49,16 +49,30 @@
   </style>
 </head>
 <body>
-  <h1>Create Account</h1>
-  <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #4b5563;">
-    You must create an account to save your journal entries and track your streak.
-  </p>
-  <input type="email" id="email" placeholder="Email" required />
-  <input type="password" id="password" placeholder="Password" required />
-  <button onclick="registerUser()">Register</button>
-  <p>Already have an account? <a href="login.html">Log in</a></p>
+  <div id="authContainer"></div>
 
   <script>
+    const user = JSON.parse(localStorage.getItem("userCredentials"));
+
+    if (user) {
+      document.getElementById("authContainer").innerHTML = `
+        <h1>Welcome Back</h1>
+        <p>You already have an account.</p>
+        <a href="profile.html" style="display:inline-block; margin-top: 1rem; font-weight: 600;">Go to Profile</a>
+      `;
+    } else {
+      document.getElementById("authContainer").innerHTML = `
+        <h1>Create Account</h1>
+        <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #4b5563;">
+          You must create an account to save your journal entries and track your streak.
+        </p>
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button onclick="registerUser()">Register</button>
+        <p>Already have an account? <a href="login.html">Log in</a></p>
+      `;
+    }
+
     function registerUser() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
