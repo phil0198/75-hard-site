@@ -135,11 +135,11 @@
     <a href="past-entries.html">Past Entries</a>
     <a href="scripture-search.html">Scripture Search</a>
     <a href="streak.html">Streak Tracker</a>
-    <a href="register.html">Create Account</a>
+    <a href="register.html" id="accountLink">Create Account</a>
   </nav>
 
   <div class="mobile-nav">
-    <select class="mobile-dropdown" onchange="location = this.value;">
+    <select class="mobile-dropdown" onchange="location = this.value;" id="mobileAccountSelect">
       <option disabled selected>Navigate to...</option>
       <option value="index.html">Home</option>
       <option value="journal.html">Journal</option>
@@ -316,6 +316,31 @@
 
     loadStreakBadge();
   };
+</script>
+
+<script>
+  // Dynamic nav update: change "Create Account" to "Profile" if user exists
+  window.addEventListener('DOMContentLoaded', () => {
+    const userExists = localStorage.getItem("userCredentials") !== null;
+    if (userExists) {
+      const accountLink = document.getElementById('accountLink');
+      if (accountLink) {
+        accountLink.textContent = "Profile";
+        accountLink.href = "profile.html";
+      }
+      const mobileSelect = document.getElementById('mobileAccountSelect');
+      if (mobileSelect) {
+        const options = mobileSelect.options;
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].value === "register.html") {
+            options[i].text = "Profile";
+            options[i].value = "profile.html";
+            break;
+          }
+        }
+      }
+    }
+  });
 </script>
 </body>
 </html>
