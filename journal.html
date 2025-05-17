@@ -91,6 +91,7 @@
     <a href="prayer-generator.html">Prayer Generator</a>
     <a href="past-entries.html">Past Entries</a>
     <a href="scripture-search.html">Scripture Search</a>
+    <a href="streak.html">Streak Tracker</a>
   </nav>
   <div class="mobile-nav">
     <select class="mobile-dropdown" onchange="location = this.value;">
@@ -100,6 +101,7 @@
       <option value="prayer-generator.html">Prayer Generator</option>
       <option value="past-entries.html">Past Entries</option>
       <option value="scripture-search.html">Scripture Search</option>
+      <option value="streak.html">Streak Tracker</option>
     </select>
   </div>
 
@@ -147,8 +149,10 @@
     });
 
     function saveEntry() {
+      const today = new Date().toISOString().split("T")[0];
+
       const entry = {
-        date: new Date().toLocaleDateString(),
+        date: today,
         oldTestament: document.getElementById("oldTestament").value,
         newTestament: document.getElementById("newTestament").value,
         verse: document.getElementById("verse").value,
@@ -161,11 +165,45 @@
       };
 
       let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
-      entries.push(entry);
-      localStorage.setItem("journalEntries", JSON.stringify(entries));
 
-      alert("Journal entry saved!");
+      const existingIndex = entries.findIndex(e => e.date === today);
+      if (existingIndex !== -1) {
+        entries[existingIndex] = entry; // overwrite same-day entry
+      } else {
+        entries.push(entry);
+      }
+
+      localStorage.setItem("journalEntries", JSON.stringify(entries));
+      markStreakDayComplete();
+
+      alert("Journal entry saved and streak updated!");
       document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+    }
+
+    function markStreakDayComplete() {
+      const today = new Date().toISOString().split("T")[0];
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const lastDate = new Date(streakData.lastDate);
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const wasYesterday =
+        lastDate.toISOString().split("T")[0] ===
+        yesterday.toISOString().split("T")[0];
+
+      if (streakData.lastDate === today) return;
+
+      if (wasYesterday || !streakData.lastDate) {
+        streakData.streak += 1;
+      } else {
+        streakData.streak = 1;
+      }
+
+      streakData.lastDate = today;
+      localStorage.setItem("streakData", JSON.stringify(streakData));
     }
   </script>
 </body>
