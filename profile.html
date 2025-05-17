@@ -37,25 +37,47 @@
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: left;
     }
     h1 {
       margin-bottom: 1rem;
+      text-align: center;
     }
-    .user-info {
-      text-align: left;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
     }
-    button.logout-btn {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
       font-size: 1rem;
     }
-    button.logout-btn:hover {
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    button#saveBtn {
+      background-color: #2563eb;
+      color: white;
+    }
+    button#saveBtn:hover {
+      background-color: #1e40af;
+    }
+    button#logoutBtn {
+      background-color: #ef4444;
+      color: white;
+      float: right;
+    }
+    button#logoutBtn:hover {
       background-color: #dc2626;
     }
   </style>
@@ -73,32 +95,57 @@
 
   <div class="profile-container">
     <h1>Your Profile</h1>
-    <div class="user-info" id="userInfo">
-      <!-- User info will be displayed here -->
-      Loading user information...
-    </div>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
+    <form id="profileForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+
+      <button type="submit" id="saveBtn">Save Changes</button>
+      <button type="button" id="logoutBtn">Logout</button>
+    </form>
   </div>
 
   <script>
     // Load user info from localStorage
-    const userInfoDiv = document.getElementById('userInfo');
     const userCredentials = JSON.parse(localStorage.getItem('userCredentials'));
 
     if (!userCredentials) {
-      // No user data found, redirect to register/login page
-      window.location.href = 'register.html';
-    } else {
-      userInfoDiv.innerHTML = `
-        <p><strong>Username:</strong> ${userCredentials.username}</p>
-        <p><strong>Email:</strong> ${userCredentials.email}</p>
-      `;
+      window.location.href = 'register.html'; // redirect if no user info
     }
 
-    // Logout function clears storage and redirects
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const profileForm = document.getElementById('profileForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Pre-fill form fields
+    usernameInput.value = userCredentials.username || '';
+    emailInput.value = userCredentials.email || '';
+
+    // Save changes
+    profileForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const updatedUsername = usernameInput.value.trim();
+      const updatedEmail = emailInput.value.trim();
+
+      if (updatedUsername && updatedEmail) {
+        const updatedCredentials = {
+          username: updatedUsername,
+          email: updatedEmail
+        };
+        localStorage.setItem('userCredentials', JSON.stringify(updatedCredentials));
+        alert('Profile updated successfully!');
+      } else {
+        alert('Please fill out all fields.');
+      }
+    });
+
+    // Logout button clears data and redirects to homepage
+    logoutBtn.addEventListener('click', function() {
       localStorage.removeItem('userCredentials');
-      window.location.href = 'index.html'; // or 'login.html' if you have it
+      window.location.href = 'index.html';
     });
   </script>
 </body>
