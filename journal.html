@@ -103,7 +103,10 @@
     </select>
   </div>
   <h1>Today's Journal</h1>
-  <div class="verse-display" id="verseDisplay">Loading your chapters...</div>
+  <div class="verse-display" id="verseDisplay">
+    <p><strong>Today's Old Testament:</strong> <a href="#" id="oldTestamentLink" target="_blank" rel="noopener noreferrer">Loading...</a></p>
+    <p><strong>Today's New Testament:</strong> <a href="#" id="newTestamentLink" target="_blank" rel="noopener noreferrer">Loading...</a></p>
+  </div>
   <label for="oldTestament">Old Testament Book & Chapter</label>
   <input type="text" id="oldTestament" placeholder="e.g. Genesis 1">
   <label for="newTestament">New Testament Book & Chapter</label>
@@ -123,16 +126,30 @@
     window.addEventListener("DOMContentLoaded", () => {
       const old = sessionStorage.getItem("oldTestamentResult");
       const newT = sessionStorage.getItem("newTestamentResult");
-      let display = '';
+
+      function getBibleGatewayUrl(verse) {
+        return `https://www.biblegateway.com/passage/?search=${encodeURIComponent(verse)}&version=ESV`;
+      }
+
       if (old) {
         document.getElementById("oldTestament").value = old;
-        display += `<strong>Today's Old Testament:</strong> ${old}`;
+        const oldLink = document.getElementById("oldTestamentLink");
+        oldLink.textContent = old;
+        oldLink.href = getBibleGatewayUrl(old);
+      } else {
+        document.getElementById("oldTestamentLink").textContent = "No Old Testament loaded";
+        document.getElementById("oldTestamentLink").href = "#";
       }
+
       if (newT) {
         document.getElementById("newTestament").value = newT;
-        display += `<br><strong>Today's New Testament:</strong> ${newT}`;
+        const newLink = document.getElementById("newTestamentLink");
+        newLink.textContent = newT;
+        newLink.href = getBibleGatewayUrl(newT);
+      } else {
+        document.getElementById("newTestamentLink").textContent = "No New Testament loaded";
+        document.getElementById("newTestamentLink").href = "#";
       }
-      document.getElementById("verseDisplay").innerHTML = display || "No chapters loaded.";
 
       const currentPage = document.body.getAttribute("data-page");
       document.querySelectorAll("nav a").forEach(link => {
