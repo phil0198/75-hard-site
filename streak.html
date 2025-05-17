@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Streak Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #1f2937;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background-color: #1e293b;
+      color: white;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      background-color: #334155;
+    }
+
+    .streak-container {
+      background-color: #e0e7ff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .streak-container h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .streak-count {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #1e40af;
+    }
+
+    .btn {
+      margin-top: 1.5rem;
+      background-color: #1e40af;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background-color: #1c3aa9;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+    <a href="streak.html">Streak Tracker</a>
+  </nav>
+
+  <h1>Daily Streak Tracker</h1>
+
+  <div class="streak-container">
+    <h2>Current Streak</h2>
+    <div class="streak-count" id="streakBox">Loading...</div>
+    <button class="btn" onclick="markToday()">Mark Today as Complete</button>
+  </div>
+
+  <script>
+    const streakBox = document.getElementById("streakBox");
+
+    function getToday() {
+      const today = new Date();
+      return today.toISOString().split("T")[0];
+    }
+
+    function loadStreak() {
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const today = getToday();
+
+      if (streakData.lastDate !== today) {
+        const lastDate = new Date(streakData.lastDate);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const wasYesterday =
+          lastDate.toISOString().split("T")[0] ===
+          yesterday.toISOString().split("T")[0];
+
+        if (!wasYesterday && streakData.lastDate !== null) {
+          streakData.streak = 0;
+        }
+      }
+
+      localStorage.setItem("streakData", JSON.stringify(streakData));
+      streakBox.innerText = `${streakData.streak} day${streakData.streak !== 1 ? "s" : ""}`;
+    }
+
+    function markToday() {
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const today = getToday();
+      if (streakData.lastDate === today) {
+        alert("You've already marked today!");
+        return;
+      }
+
+      const lastDate = new Date(streakData.lastDate);
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const wasYesterday =
+        lastDate.toISOString().split("T")[0] ===
+        yesterday.toISOString().split("T")[0];
+
+      if (wasYesterday || streakData.lastDate === null) {
+        streakData.streak += 1;
+      } else {
+        streakData.streak = 1;
+      }
+
+      streakData.lastDate = today;
+      localStorage.setItem("streakData", JSON.stringify(streakData));
+      loadStreak();
+    }
+
+    loadStreak();
+  </script>
+</body>
+</html>
