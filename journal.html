@@ -32,9 +32,7 @@
       display: none;
     }
     @media (max-width: 640px) {
-      nav {
-        display: none;
-      }
+      nav { display: none; }
       .mobile-nav {
         display: block;
         margin-bottom: 2rem;
@@ -84,14 +82,14 @@
     }
   </style>
 </head>
-<body>
+<body data-page="journal">
   <nav>
-    <a href="index.html">Home</a>
-    <a href="journal.html">Journal</a>
-    <a href="prayer-generator.html">Prayer Generator</a>
-    <a href="past-entries.html">Past Entries</a>
-    <a href="scripture-search.html">Scripture Search</a>
-    <a href="streak.html">Streak Tracker</a>
+    <a href="index.html" data-link="home">Home</a>
+    <a href="journal.html" data-link="journal">Journal</a>
+    <a href="prayer-generator.html" data-link="prayer-generator">Prayer Generator</a>
+    <a href="past-entries.html" data-link="past-entries">Past Entries</a>
+    <a href="scripture-search.html" data-link="scripture-search">Scripture Search</a>
+    <a href="streak.html" data-link="streak">Streak Tracker</a>
   </nav>
   <div class="mobile-nav">
     <select class="mobile-dropdown" onchange="location = this.value;">
@@ -104,38 +102,28 @@
       <option value="streak.html">Streak Tracker</option>
     </select>
   </div>
-
   <h1>Today's Journal</h1>
-
   <div class="verse-display" id="verseDisplay">Loading your chapters...</div>
-
   <label for="oldTestament">Old Testament Book & Chapter</label>
   <input type="text" id="oldTestament" placeholder="e.g. Genesis 1">
-
   <label for="newTestament">New Testament Book & Chapter</label>
   <input type="text" id="newTestament" placeholder="e.g. Matthew 5">
-
   <label for="verse">Meaningful Verse</label>
   <input type="text" id="verse" placeholder="Type your standout verse">
-
   <label for="reflection">Reflection</label>
   <textarea id="reflection" rows="4" placeholder="Your thoughts..."></textarea>
-
   <label for="grat1">Gratitude 1</label>
   <input type="text" id="grat1">
   <label for="grat2">Gratitude 2</label>
   <input type="text" id="grat2">
   <label for="grat3">Gratitude 3</label>
   <input type="text" id="grat3">
-
   <button onclick="saveEntry()">Save Entry</button>
-
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const old = sessionStorage.getItem("oldTestamentResult");
       const newT = sessionStorage.getItem("newTestamentResult");
       let display = '';
-
       if (old) {
         document.getElementById("oldTestament").value = old;
         display += `<strong>Today's Old Testament:</strong> ${old}`;
@@ -144,13 +132,18 @@
         document.getElementById("newTestament").value = newT;
         display += `<br><strong>Today's New Testament:</strong> ${newT}`;
       }
-
       document.getElementById("verseDisplay").innerHTML = display || "No chapters loaded.";
+
+      const currentPage = document.body.getAttribute("data-page");
+      document.querySelectorAll("nav a").forEach(link => {
+        if (link.getAttribute("data-link") === currentPage) {
+          link.style.display = "none";
+        }
+      });
     });
 
     function saveEntry() {
       const today = new Date().toISOString().split("T")[0];
-
       const entry = {
         date: today,
         oldTestament: document.getElementById("oldTestament").value,
@@ -163,19 +156,15 @@
           document.getElementById("grat3").value
         ]
       };
-
       let entries = JSON.parse(localStorage.getItem("journalEntries")) || [];
-
       const existingIndex = entries.findIndex(e => e.date === today);
       if (existingIndex !== -1) {
-        entries[existingIndex] = entry; // overwrite same-day entry
+        entries[existingIndex] = entry;
       } else {
         entries.push(entry);
       }
-
       localStorage.setItem("journalEntries", JSON.stringify(entries));
       markStreakDayComplete();
-
       alert("Journal entry saved and streak updated!");
       document.querySelectorAll("input, textarea").forEach(el => el.value = "");
     }
@@ -186,22 +175,16 @@
         streak: 0,
         lastDate: null
       };
-
       const lastDate = new Date(streakData.lastDate);
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      const wasYesterday =
-        lastDate.toISOString().split("T")[0] ===
-        yesterday.toISOString().split("T")[0];
-
+      const wasYesterday = lastDate.toISOString().split("T")[0] === yesterday.toISOString().split("T")[0];
       if (streakData.lastDate === today) return;
-
       if (wasYesterday || !streakData.lastDate) {
         streakData.streak += 1;
       } else {
         streakData.streak = 1;
       }
-
       streakData.lastDate = today;
       localStorage.setItem("streakData", JSON.stringify(streakData));
     }
