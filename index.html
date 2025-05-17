@@ -13,12 +13,14 @@
       padding: 2rem;
       text-align: center;
     }
+
     nav {
       display: flex;
       justify-content: center;
       gap: 1rem;
       margin-bottom: 2rem;
     }
+
     nav a {
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -27,12 +29,15 @@
       border-radius: 6px;
       font-weight: 500;
     }
+
     nav a:hover {
       background-color: #334155;
     }
+
     .mobile-nav {
       display: none;
     }
+
     select.mobile-dropdown {
       width: 100%;
       max-width: 300px;
@@ -42,13 +47,34 @@
       border: 1px solid #ccc;
       margin-bottom: 2rem;
     }
+
     @media (max-width: 640px) {
-      nav { display: none; }
-      .mobile-nav { display: block; }
+      nav {
+        display: none;
+      }
+
+      .mobile-nav {
+        display: block;
+      }
     }
-    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
-    #streakBadge { font-size: 1rem; font-weight: 600; color: #1e40af; margin-bottom: 1.5rem; }
-    p { margin-bottom: 2rem; color: #4b5563; }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    #streakBadge {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      color: #4b5563;
+    }
+
     .wheel-container {
       display: flex;
       justify-content: space-around;
@@ -56,18 +82,24 @@
       align-items: flex-start;
       margin-top: 2rem;
     }
+
     .wheel-section {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
-    canvas { margin-bottom: 1rem; }
+
+    canvas {
+      margin-bottom: 1rem;
+    }
+
     .result-text {
       margin-top: 1rem;
       font-weight: bold;
       color: #1e293b;
       font-size: 1.1rem;
     }
+
     .scripture-of-day {
       max-width: 600px;
       margin: 0 auto;
@@ -78,6 +110,7 @@
       font-style: italic;
       margin-top: 2rem;
     }
+
     .spin-btn {
       background-color: #1e40af;
       color: white;
@@ -88,18 +121,22 @@
       font-size: 1rem;
       margin-top: 1rem;
     }
-    .spin-btn:hover { background-color: #1d4ed8; }
+
+    .spin-btn:hover {
+      background-color: #1d4ed8;
+    }
   </style>
 </head>
-<body data-page="home">
+<body>
   <nav>
-    <a href="index.html" data-link="home">Home</a>
-    <a href="journal.html" data-link="journal">Journal</a>
-    <a href="prayer-generator.html" data-link="prayer-generator">Prayer Generator</a>
-    <a href="past-entries.html" data-link="past-entries">Past Entries</a>
-    <a href="scripture-search.html" data-link="scripture-search">Scripture Search</a>
-    <a href="streak.html" data-link="streak">Streak Tracker</a>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+    <a href="streak.html">Streak Tracker</a>
   </nav>
+
   <div class="mobile-nav">
     <select class="mobile-dropdown" onchange="location = this.value;">
       <option disabled selected>Navigate to...</option>
@@ -111,6 +148,7 @@
       <option value="streak.html">Streak Tracker</option>
     </select>
   </div>
+
   <h1>75 Hard – Bible Edition</h1>
   <div id="streakBadge">🔥 Loading streak...</div>
   <p>
@@ -118,10 +156,12 @@
     Then journal your reflections and track your consistency using the <a href="streak.html" style="color:#1e40af; font-weight:600; text-decoration:underline;">Streak Tracker</a>.<br>
     Build your streak. Stay faithful. Grow deeper.
   </p>
+
   <div class="scripture-of-day" id="dailyVerse">
     <span id="verseText">Loading scripture of the day...</span><br>
     <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: underline; font-size: 0.9rem;">Learn more</a>
   </div>
+
   <div class="wheel-container">
     <div class="wheel-section">
       <h2>Old Testament</h2>
@@ -129,6 +169,7 @@
       <button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
       <div id="oldResult" class="result-text"></div>
     </div>
+
     <div class="wheel-section">
       <h2>New Testament</h2>
       <canvas id="newWheel" width="300" height="300"></canvas>
@@ -136,46 +177,144 @@
       <div id="newResult" class="result-text"></div>
     </div>
   </div>
-  <script>
-    const verses = [
-  "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
-  "Philippians 4:13 — I can do all things through Christ who strengthens me.",
-  "John 3:16 — For God so loved the world that He gave His one and only Son...",
-  "Romans 8:28 — And we know that in all things God works for the good of those who love Him...",
-  "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
-  "Jeremiah 29:11 — 'For I know the plans I have for you,' declares the Lord...",
-  "Proverbs 3:5 — Trust in the Lord with all your heart and lean not on your own understanding.",
-  "Matthew 11:28 — Come to me, all who labor and are heavy laden, and I will give you rest.",
-  "Psalm 46:1 — God is our refuge and strength, an ever-present help in trouble.",
-  "James 1:2 — Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds.",
-  "1 Peter 5:7 — Cast all your anxiety on Him because He cares for you.",
-  "Romans 12:2 — Do not conform to the pattern of this world, but be transformed by the renewing of your mind.",
-  "Hebrews 11:1 — Now faith is confidence in what we hope for and assurance about what we do not see.",
-  "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness.",
-  "2 Timothy 1:7 — For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
-  "Psalm 118:24 — This is the day that the Lord has made; let us rejoice and be glad in it.",
-  "Matthew 6:33 — But seek first His kingdom and His righteousness, and all these things will be given to you as well.",
-  "Colossians 3:23 — Whatever you do, work at it with all your heart, as working for the Lord.",
-  "Joshua 1:9 — Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you.",
-  "Ephesians 2:8 — For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God.",
-  "Psalm 34:8 — Taste and see that the Lord is good; blessed is the one who takes refuge in Him.",
-  "Isaiah 41:10 — So do not fear, for I am with you; do not be dismayed, for I am your God.",
-  "1 Corinthians 10:13 — God is faithful; He will not let you be tempted beyond what you can bear.",
-  "Proverbs 18:10 — The name of the Lord is a fortified tower; the righteous run to it and are safe.",
-  "Philippians 1:6 — He who began a good work in you will carry it on to completion until the day of Christ Jesus.",
-  "Psalm 139:14 — I praise you because I am fearfully and wonderfully made.",
-  "Romans 15:13 — May the God of hope fill you with all joy and peace as you trust in Him.",
-  "1 John 4:19 — We love because He first loved us.",
-  "Lamentations 3:22–23 — Because of the Lord’s great love we are not consumed... His mercies are new every morning.",
-  "Matthew 28:20 — And surely I am with you always, to the very end of the age."
-];
 
-    const currentPage = document.body.getAttribute("data-page");
-    document.querySelectorAll("nav a").forEach(link => {
-      if (link.getAttribute("data-link") === currentPage) {
-        link.style.display = "none";
+  <script>
+    const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
+    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
+
+    const angles = { old: 0, new: 0 };
+    const spinning = { old: false, new: false };
+
+    function drawWheel(canvasId, books, rotation = 0) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      const radius = canvas.width / 2;
+      const center = radius;
+      const arc = (2 * Math.PI) / books.length;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      books.forEach((book, i) => {
+        const angle = i * arc + rotation;
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${(i / books.length) * 360}, 70%, 70%)`;
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, angle, angle + arc);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(book, radius - 10, 4);
+        ctx.restore();
+      });
+    }
+
+    function startSpin(type) {
+      if (spinning[type]) return;
+      const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
+      spinning[type] = true;
+
+      const arc = (2 * Math.PI) / books.length;
+      const stopAngle = 2 * Math.PI * 5 + Math.random() * 2 * Math.PI;
+      const duration = 6530;
+      const start = performance.now();
+      const initial = angles[type];
+
+      function animate(timestamp) {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        angles[type] = initial + (stopAngle - initial) * easeOutCubic(progress);
+        drawWheel(type + "Wheel", books, angles[type]);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinning[type] = false;
+          const finalAngle = angles[type] % (2 * Math.PI);
+          const index = Math.floor((books.length - (finalAngle / arc)) % books.length);
+          const book = books[index];
+          const chapter = Math.ceil(Math.random() * 30);
+          const result = `${book} ${chapter}`;
+          document.getElementById(`${type}Result`).textContent = result;
+          sessionStorage.setItem(`${type}TestamentResult`, result);
+        }
       }
-    });
+
+      requestAnimationFrame(animate);
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function loadStreakBadge() {
+      const badge = document.getElementById("streakBadge");
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const today = new Date().toISOString().split("T")[0];
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+      if (streakData.lastDate !== today && streakData.lastDate !== yesterdayStr) {
+        badge.textContent = "🔥 0-Day Streak";
+      } else {
+        badge.textContent = `🔥 ${streakData.streak}-Day Streak`;
+      }
+    }
+
+    window.onload = function () {
+      // Load scripture
+      const verses = [
+        "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
+        "Philippians 4:13 — I can do all things through Christ who strengthens me.",
+        "John 3:16 — For God so loved the world...",
+        "Romans 8:28 — And we know that in all things God works for the good...",
+        "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
+        "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
+        "Proverbs 3:5 — Trust in the Lord with all your heart...",
+        "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
+        "Psalm 46:1 — God is our refuge and strength...",
+        "James 1:2 — Consider it pure joy...",
+        "1 Peter 5:7 — Cast all your anxiety on him...",
+        "Romans 12:2 — Do not conform to the pattern of this world...",
+        "Hebrews 11:1 — Now faith is the assurance...",
+        "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
+        "2 Timothy 1:7 — For God gave us a spirit not of fear...",
+        "Psalm 118:24 — This is the day that the Lord has made...",
+        "Matthew 6:33 — But seek first the kingdom of God...",
+        "Colossians 3:23 — Whatever you do, work at it with all your heart...",
+        "Joshua 1:9 — Be strong and courageous...",
+        "Ephesians 2:8 — For by grace you have been saved through faith..."
+      ];
+
+      const today = new Date();
+      const start = new Date(today.getFullYear(), 0, 0);
+      const diff = today - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      const dayOfYear = Math.floor(diff / oneDay);
+      const fullVerse = verses[dayOfYear % verses.length];
+      const verseRef = fullVerse.split(' — ')[0];
+
+      document.getElementById("verseText").innerText = `Scripture of the Day: ${fullVerse}`;
+      document.getElementById("learnMoreLink").href = `https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(verseRef)}&version=ESV`;
+
+      drawWheel("oldWheel", oldTestamentBooks);
+      drawWheel("newWheel", newTestamentBooks);
+
+      const oldSaved = sessionStorage.getItem("oldTestamentResult");
+      const newSaved = sessionStorage.getItem("newTestamentResult");
+      if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
+      if (newSaved) document.getElementById("newResult").textContent = newSaved;
+
+      loadStreakBadge();
+    };
   </script>
 </body>
 </html>
