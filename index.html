@@ -45,6 +45,7 @@
       font-size: 1rem;
       border-radius: 6px;
       border: 1px solid #ccc;
+      margin-bottom: 2rem;
     }
 
     @media (max-width: 640px) {
@@ -54,13 +55,19 @@
 
       .mobile-nav {
         display: block;
-        margin-bottom: 2rem;
       }
     }
 
     h1 {
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    #streakBadge {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e40af;
+      margin-bottom: 1.5rem;
     }
 
     p {
@@ -127,6 +134,7 @@
     <a href="prayer-generator.html">Prayer Generator</a>
     <a href="past-entries.html">Past Entries</a>
     <a href="scripture-search.html">Scripture Search</a>
+    <a href="streak.html">Streak Tracker</a>
   </nav>
 
   <div class="mobile-nav">
@@ -137,11 +145,17 @@
       <option value="prayer-generator.html">Prayer Generator</option>
       <option value="past-entries.html">Past Entries</option>
       <option value="scripture-search.html">Scripture Search</option>
+      <option value="streak.html">Streak Tracker</option>
     </select>
   </div>
 
   <h1>75 Hard – Bible Edition</h1>
-  <p>Spin each wheel to receive your daily Bible readings!</p>
+  <div id="streakBadge">🔥 Loading streak...</div>
+  <p>
+    Start your daily spiritual challenge by spinning the Old and New Testament wheels to receive your Bible reading for the day.<br><br>
+    Then journal your reflections and track your consistency using the <a href="streak.html" style="color:#1e40af; font-weight:600; text-decoration:underline;">Streak Tracker</a>.<br>
+    Build your streak. Stay faithful. Grow deeper.
+  </p>
 
   <div class="scripture-of-day" id="dailyVerse">
     <span id="verseText">Loading scripture of the day...</span><br>
@@ -151,18 +165,14 @@
   <div class="wheel-container">
     <div class="wheel-section">
       <h2>Old Testament</h2>
-      <div style="position: relative; display: inline-block;">
-        <canvas id="oldWheel" width="300" height="300"></canvas>
-      </div>
+      <canvas id="oldWheel" width="300" height="300"></canvas>
       <button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
       <div id="oldResult" class="result-text"></div>
     </div>
 
     <div class="wheel-section">
       <h2>New Testament</h2>
-      <div style="position: relative; display: inline-block;">
-        <canvas id="newWheel" width="300" height="300"></canvas>
-      </div>
+      <canvas id="newWheel" width="300" height="300"></canvas>
       <button onclick="startSpin('new')" class="spin-btn">Spin New Testament</button>
       <div id="newResult" class="result-text"></div>
     </div>
@@ -240,7 +250,27 @@
       return 1 - Math.pow(1 - t, 3);
     }
 
+    function loadStreakBadge() {
+      const badge = document.getElementById("streakBadge");
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const today = new Date().toISOString().split("T")[0];
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+      if (streakData.lastDate !== today && streakData.lastDate !== yesterdayStr) {
+        badge.textContent = "🔥 0-Day Streak";
+      } else {
+        badge.textContent = `🔥 ${streakData.streak}-Day Streak`;
+      }
+    }
+
     window.onload = function () {
+      // Load scripture
       const verses = [
         "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
         "Philippians 4:13 — I can do all things through Christ who strengthens me.",
@@ -261,18 +291,9 @@
         "Matthew 6:33 — But seek first the kingdom of God...",
         "Colossians 3:23 — Whatever you do, work at it with all your heart...",
         "Joshua 1:9 — Be strong and courageous...",
-        "Ephesians 2:8 — For by grace you have been saved through faith...",
-        "Psalm 34:8 — Taste and see that the Lord is good...",
-        "Isaiah 41:10 — Do not fear, for I am with you...",
-        "1 Corinthians 10:13 — God is faithful...",
-        "Proverbs 18:10 — The name of the Lord is a strong tower...",
-        "Philippians 1:6 — He who began a good work in you...",
-        "Psalm 139:14 — I praise you because I am fearfully and wonderfully made...",
-        "Romans 15:13 — May the God of hope fill you with all joy and peace...",
-        "1 John 4:19 — We love because he first loved us.",
-        "Lamentations 3:22 — The steadfast love of the Lord never ceases...",
-        "Matthew 28:20 — I am with you always..."
+        "Ephesians 2:8 — For by grace you have been saved through faith..."
       ];
+
       const today = new Date();
       const start = new Date(today.getFullYear(), 0, 0);
       const diff = today - start;
@@ -291,6 +312,8 @@
       const newSaved = sessionStorage.getItem("newTestamentResult");
       if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
       if (newSaved) document.getElementById("newResult").textContent = newSaved;
+
+      loadStreakBadge();
     };
   </script>
 </body>
