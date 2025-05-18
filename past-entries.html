@@ -89,9 +89,9 @@
         const div = document.createElement("div");
         div.className = "entry";
         div.innerHTML = `
-          <h3>${entry.date}</h3>
-          <p><strong>Old Testament:</strong> ${entry.oldTestament}</p>
-          <p><strong>New Testament:</strong> ${entry.newTestament}</p>
+          <h3>${new Date(entry.date).toLocaleString()}</h3>
+          <p><strong>Old Testament:</strong> <a href="https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(entry.oldTestament)}&version=ESV" target="_blank">${entry.oldTestament}</a></p>
+          <p><strong>New Testament:</strong> <a href="https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(entry.newTestament)}&version=ESV" target="_blank">${entry.newTestament}</a></p>
           <p><strong>Standout Verse:</strong> ${entry.verse}</p>
           <p><strong>Reflection:</strong> ${entry.reflection}</p>
           <p><strong>Gratitude:</strong><br />
