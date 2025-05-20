@@ -152,37 +152,54 @@
   </div>
 
   <h1>75 Hard – Bible Edition</h1>
-<div id="streakBadge">🔥 Loading streak...</div>
-<p>
-  Start your daily spiritual challenge by spinning the Old and New Testament wheels to receive your Bible reading for the day.<br><br>
-  Then journal your reflections and track your consistency using the <a href="streak.html" style="color:#1e40af; font-weight:600; text-decoration:underline;">Streak Tracker</a>.<br>
-  Build your streak. Stay faithful. Grow deeper.
-</p>
+  <div id="streakBadge">🔥 Loading streak...</div>
+  <p>
+    Start your daily spiritual challenge by spinning the Old and New Testament wheels to receive your Bible reading for the day.<br><br>
+    Then journal your reflections and track your consistency using the <a href="streak.html" style="color:#1e40af; font-weight:600; text-decoration:underline;">Streak Tracker</a>.<br>
+    Build your streak. Stay faithful. Grow deeper.
+  </p>
 
-<div class="scripture-of-day" id="dailyVerse">
-  <span id="verseText">Loading scripture of the day...</span><br>
-  <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: underline; font-size: 0.9rem;">Learn more</a>
-</div>
-
-<div class="wheel-container">
-  <div class="wheel-section">
-    <h2>Old Testament</h2>
-    <canvas id="oldWheel" width="300" height="300"></canvas>
-    <button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
-    <div id="oldResult" class="result-text"></div>
+  <div class="scripture-of-day" id="dailyVerse">
+    <span id="verseText">Loading scripture of the day...</span><br>
+    <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top: 0.5rem; color: #1e40af; text-decoration: underline; font-size: 0.9rem;">Learn more</a>
   </div>
 
-  <div class="wheel-section">
-    <h2>New Testament</h2>
-    <canvas id="newWheel" width="300" height="300"></canvas>
-    <button onclick="startSpin('new')" class="spin-btn">Spin New Testament</button>
-    <div id="newResult" class="result-text"></div>
+  <div class="wheel-container">
+    <div class="wheel-section">
+      <h2>Old Testament</h2>
+      <canvas id="oldWheel" width="300" height="300"></canvas>
+      <button onclick="startSpin('old')" class="spin-btn">Spin Old Testament</button>
+      <div id="oldResult" class="result-text"></div>
+    </div>
+
+    <div class="wheel-section">
+      <h2>New Testament</h2>
+      <canvas id="newWheel" width="300" height="300"></canvas>
+      <button onclick="startSpin('new')" class="spin-btn">Spin New Testament</button>
+      <div id="newResult" class="result-text"></div>
+    </div>
   </div>
-</div>
 
 <script>
   const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
   const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
+
+  const bibleChapters = {
+    "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
+    "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
+    "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
+    "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
+    "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
+    "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
+    "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
+    "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
+    "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+    "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
+    "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6,
+    "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13, "James": 5,
+    "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
+    "Jude": 1, "Revelation": 22
+  };
 
   const angles = { old: 0, new: 0 };
   const spinning = { old: false, new: false };
@@ -214,11 +231,15 @@
     });
   }
 
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
   function startSpin(type) {
     if (spinning[type]) return;
+
     const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
     spinning[type] = true;
-
     const arc = (2 * Math.PI) / books.length;
     const stopAngle = 2 * Math.PI * 5 + Math.random() * 2 * Math.PI;
     const duration = 6530;
@@ -238,7 +259,7 @@
         const finalAngle = angles[type] % (2 * Math.PI);
         const index = Math.floor((books.length - (finalAngle / arc)) % books.length);
         const book = books[index];
-        const chapter = Math.ceil(Math.random() * 30);
+        const chapter = Math.ceil(Math.random() * bibleChapters[book]);
         const result = `${book} ${chapter}`;
         document.getElementById(`${type}Result`).textContent = result;
         sessionStorage.setItem(`${type}TestamentResult`, result);
@@ -246,10 +267,6 @@
     }
 
     requestAnimationFrame(animate);
-  }
-
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
   }
 
   function loadStreakBadge() {
@@ -316,10 +333,7 @@
 
     loadStreakBadge();
   };
-</script>
 
-<script>
-  // Dynamic nav update: change "Create Account" to "Profile" if user exists
   window.addEventListener('DOMContentLoaded', () => {
     const userExists = localStorage.getItem("userCredentials") !== null;
     if (userExists) {
