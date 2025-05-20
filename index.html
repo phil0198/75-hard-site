@@ -180,181 +180,199 @@
     </div>
   </div>
 
-<script>
-  const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
-  const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
+  <script>
+    const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
+    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
 
-  const bibleChapters = {
-    "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
-    "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
-    "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
-    "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
-    "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
-    "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
-    "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
-    "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
-    "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
-    "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
-    "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6,
-    "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13, "James": 5,
-    "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
-    "Jude": 1, "Revelation": 22
-  };
-
-  const angles = { old: 0, new: 0 };
-  const spinning = { old: false, new: false };
-
-  function drawWheel(canvasId, books, rotation = 0) {
-    const canvas = document.getElementById(canvasId);
-    const ctx = canvas.getContext("2d");
-    const radius = canvas.width / 2;
-    const center = radius;
-    const arc = (2 * Math.PI) / books.length;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    books.forEach((book, i) => {
-      const angle = i * arc + rotation;
-      ctx.beginPath();
-      ctx.fillStyle = `hsl(${(i / books.length) * 360}, 70%, 70%)`;
-      ctx.moveTo(center, center);
-      ctx.arc(center, center, radius, angle, angle + arc);
-      ctx.fill();
-
-      ctx.save();
-      ctx.translate(center, center);
-      ctx.rotate(angle + arc / 2);
-      ctx.textAlign = "right";
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 12px sans-serif";
-      ctx.fillText(book, radius - 10, 4);
-      ctx.restore();
-    });
-  }
-
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-
-  function startSpin(type) {
-    if (spinning[type]) return;
-
-    const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
-    spinning[type] = true;
-    const arc = (2 * Math.PI) / books.length;
-    const stopAngle = 2 * Math.PI * 5 + Math.random() * 2 * Math.PI;
-    const duration = 6530;
-    const start = performance.now();
-    const initial = angles[type];
-
-    function animate(timestamp) {
-      const elapsed = timestamp - start;
-      const progress = Math.min(elapsed / duration, 1);
-      angles[type] = initial + (stopAngle - initial) * easeOutCubic(progress);
-      drawWheel(type + "Wheel", books, angles[type]);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        spinning[type] = false;
-        const finalAngle = angles[type] % (2 * Math.PI);
-        const index = Math.floor((books.length - (finalAngle / arc)) % books.length);
-        const book = books[index];
-        const chapter = Math.ceil(Math.random() * bibleChapters[book]);
-        const result = `${book} ${chapter}`;
-        document.getElementById(`${type}Result`).textContent = result;
-        sessionStorage.setItem(`${type}TestamentResult`, result);
-      }
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  function loadStreakBadge() {
-    const badge = document.getElementById("streakBadge");
-    const streakData = JSON.parse(localStorage.getItem("streakData")) || {
-      streak: 0,
-      lastDate: null
+    const bibleChapters = {
+      "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
+      "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
+      "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
+      "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
+      "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
+      "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
+      "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
+      "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
+      "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+      "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
+      "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6,
+      "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13, "James": 5,
+      "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
+      "Jude": 1, "Revelation": 22
     };
 
-    const today = new Date().toISOString().split("T")[0];
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const bibleStartPages = {
+      "Genesis": 2, "Exodus": 124, "Leviticus": 209, "Numbers": 265, "Deuteronomy": 347,
+      "Joshua": 413, "Judges": 466, "Ruth": 527, "1 Samuel": 538, "2 Samuel": 612,
+      "1 Kings": 715, "2 Kings": 748, "1 Chronicles": 817, "2 Chronicles": 880, "Ezra": 954,
+      "Nehemiah": 983, "Esther": 1017, "Job": 1038, "Psalms": 1110, "Proverbs": 1306,
+      "Ecclesiastes": 1381, "Song of Solomon": 1400, "Isaiah": 1416, "Jeremiah": 1552, "Lamentations": 1674,
+      "Ezekiel": 1691, "Daniel": 1783, "Hosea": 1820, "Joel": 1850, "Amos": 1860,
+      "Obadiah": 1881, "Jonah": 1887, "Micah": 1896, "Nahum": 1913, "Habakkuk": 1921,
+      "Zephaniah": 1930, "Haggai": 1940, "Zechariah": 1946, "Malachi": 1969,
+      "Matthew": 1983, "Mark": 2092, "Luke": 2167, "John": 2274, "Acts": 2362,
+      "Romans": 2467, "1 Corinthians": 2514, "2 Corinthians": 2560, "Galatians": 2589, "Ephesians": 2610,
+      "Philippians": 2629, "Colossians": 2646, "1 Thessalonians": 2661, "2 Thessalonians": 2677, "1 Timothy": 2685,
+      "2 Timothy": 2701, "Titus": 2713, "Philemon": 2722, "Hebrews": 2728, "James": 2765,
+      "1 Peter": 2779, "2 Peter": 2796, "1 John": 2805, "2 John": 2820, "3 John": 2824,
+      "Jude": 2828, "Revelation": 2833
+    };
 
-    if (streakData.lastDate !== today && streakData.lastDate !== yesterdayStr) {
-      badge.textContent = "🔥 0-Day Streak";
-    } else {
-      badge.textContent = `🔥 ${streakData.streak}-Day Streak`;
+    const angles = { old: 0, new: 0 };
+    const spinning = { old: false, new: false };
+
+    function drawWheel(canvasId, books, rotation = 0) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext("2d");
+      const radius = canvas.width / 2;
+      const center = radius;
+      const arc = (2 * Math.PI) / books.length;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      books.forEach((book, i) => {
+        const angle = i * arc + rotation;
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(${(i / books.length) * 360}, 70%, 70%)`;
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, angle, angle + arc);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(book, radius - 10, 4);
+        ctx.restore();
+      });
     }
-  }
 
-  window.onload = function () {
-    const verses = [
-      "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
-      "Philippians 4:13 — I can do all things through Christ who strengthens me.",
-      "John 3:16 — For God so loved the world...",
-      "Romans 8:28 — And we know that in all things God works for the good...",
-      "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
-      "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
-      "Proverbs 3:5 — Trust in the Lord with all your heart...",
-      "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
-      "Psalm 46:1 — God is our refuge and strength...",
-      "James 1:2 — Consider it pure joy...",
-      "1 Peter 5:7 — Cast all your anxiety on him...",
-      "Romans 12:2 — Do not conform to the pattern of this world...",
-      "Hebrews 11:1 — Now faith is the assurance...",
-      "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
-      "2 Timothy 1:7 — For God gave us a spirit not of fear...",
-      "Psalm 118:24 — This is the day that the Lord has made...",
-      "Matthew 6:33 — But seek first the kingdom of God...",
-      "Colossians 3:23 — Whatever you do, work at it with all your heart...",
-      "Joshua 1:9 — Be strong and courageous...",
-      "Ephesians 2:8 — For by grace you have been saved through faith..."
-    ];
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
 
-    const today = new Date();
-    const start = new Date(today.getFullYear(), 0, 0);
-    const diff = today - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    const fullVerse = verses[dayOfYear % verses.length];
-    const verseRef = fullVerse.split(' — ')[0];
+    function startSpin(type) {
+      if (spinning[type]) return;
 
-    document.getElementById("verseText").innerText = `Scripture of the Day: ${fullVerse}`;
-    document.getElementById("learnMoreLink").href = `https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(verseRef)}&version=ESV`;
+      const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
+      spinning[type] = true;
+      const arc = (2 * Math.PI) / books.length;
+      const stopAngle = 2 * Math.PI * 5 + Math.random() * 2 * Math.PI;
+      const duration = 6530;
+      const start = performance.now();
+      const initial = angles[type];
 
-    drawWheel("oldWheel", oldTestamentBooks);
-    drawWheel("newWheel", newTestamentBooks);
+      function animate(timestamp) {
+        const elapsed = timestamp - start;
+        const progress = Math.min(elapsed / duration, 1);
+        angles[type] = initial + (stopAngle - initial) * easeOutCubic(progress);
+        drawWheel(type + "Wheel", books, angles[type]);
 
-    const oldSaved = sessionStorage.getItem("oldTestamentResult");
-    const newSaved = sessionStorage.getItem("newTestamentResult");
-    if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
-    if (newSaved) document.getElementById("newResult").textContent = newSaved;
-
-    loadStreakBadge();
-  };
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const userExists = localStorage.getItem("userCredentials") !== null;
-    if (userExists) {
-      const accountLink = document.getElementById('accountLink');
-      if (accountLink) {
-        accountLink.textContent = "Profile";
-        accountLink.href = "profile.html";
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          spinning[type] = false;
+          const finalAngle = angles[type] % (2 * Math.PI);
+          const index = Math.floor((books.length - (finalAngle / arc)) % books.length);
+          const book = books[index];
+          const chapter = Math.ceil(Math.random() * bibleChapters[book]);
+          const page = bibleStartPages[book] || 'N/A';
+          const result = `${book} ${chapter} — Page ${page}`;
+          document.getElementById(`${type}Result`).textContent = result;
+          sessionStorage.setItem(`${type}TestamentResult`, result);
+        }
       }
-      const mobileSelect = document.getElementById('mobileAccountSelect');
-      if (mobileSelect) {
-        const options = mobileSelect.options;
-        for (let i = 0; i < options.length; i++) {
-          if (options[i].value === "register.html") {
-            options[i].text = "Profile";
-            options[i].value = "profile.html";
-            break;
+
+      requestAnimationFrame(animate);
+    }
+
+    function loadStreakBadge() {
+      const badge = document.getElementById("streakBadge");
+      const streakData = JSON.parse(localStorage.getItem("streakData")) || {
+        streak: 0,
+        lastDate: null
+      };
+
+      const today = new Date().toISOString().split("T")[0];
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+      if (streakData.lastDate !== today && streakData.lastDate !== yesterdayStr) {
+        badge.textContent = "🔥 0-Day Streak";
+      } else {
+        badge.textContent = `🔥 ${streakData.streak}-Day Streak`;
+      }
+    }
+
+    window.onload = function () {
+      const verses = [
+        "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
+        "Philippians 4:13 — I can do all things through Christ who strengthens me.",
+        "John 3:16 — For God so loved the world...",  
+        "Romans 8:28 — And we know that in all things God works for the good...",
+        "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
+        "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
+        "Proverbs 3:5 — Trust in the Lord with all your heart...",
+        "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
+        "Psalm 46:1 — God is our refuge and strength...",
+        "James 1:2 — Consider it pure joy...",
+        "1 Peter 5:7 — Cast all your anxiety on him...",
+        "Romans 12:2 — Do not conform to the pattern of this world...",
+        "Hebrews 11:1 — Now faith is the assurance...",
+        "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
+        "2 Timothy 1:7 — For God gave us a spirit not of fear...",
+        "Psalm 118:24 — This is the day that the Lord has made...",
+        "Matthew 6:33 — But seek first the kingdom of God...",
+        "Colossians 3:23 — Whatever you do, work at it with all your heart...",
+        "Joshua 1:9 — Be strong and courageous...",
+        "Ephesians 2:8 — For by grace you have been saved through faith..."
+      ];
+
+      const today = new Date();
+      const start = new Date(today.getFullYear(), 0, 0);
+      const diff = today - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      const dayOfYear = Math.floor(diff / oneDay);
+      const fullVerse = verses[dayOfYear % verses.length];
+      const verseRef = fullVerse.split(' — ')[0];
+
+      document.getElementById("verseText").innerText = `Scripture of the Day: ${fullVerse}`;
+      document.getElementById("learnMoreLink").href = `https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(verseRef)}&version=ESV`;
+
+      drawWheel("oldWheel", oldTestamentBooks);
+      drawWheel("newWheel", newTestamentBooks);
+
+      const oldSaved = sessionStorage.getItem("oldTestamentResult");
+      const newSaved = sessionStorage.getItem("newTestamentResult");
+      if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
+      if (newSaved) document.getElementById("newResult").textContent = newSaved;
+
+      loadStreakBadge();
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const userExists = localStorage.getItem("userCredentials") !== null;
+      if (userExists) {
+        const accountLink = document.getElementById('accountLink');
+        if (accountLink) {
+          accountLink.textContent = "Profile";
+          accountLink.href = "profile.html";
+        }
+        const mobileSelect = document.getElementById('mobileAccountSelect');
+        if (mobileSelect) {
+          const options = mobileSelect.options;
+          for (let i = 0; i < options.length; i++) {
+            if (options[i].value === "register.html") {
+              options[i].text = "Profile";
+              options[i].value = "profile.html";
+              break;
+            }
           }
         }
       }
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
