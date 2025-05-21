@@ -14,6 +14,8 @@
     canvas {
       border: 2px solid #1e293b;
       background: white;
+      display: block;
+      margin: 0 auto;
     }
     button {
       margin-top: 1rem;
@@ -87,6 +89,7 @@
           const y = 50 + row * 50;
           ctx.beginPath();
           ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.fillStyle = "#1e293b";
           ctx.fill();
         }
       }
@@ -105,19 +108,21 @@
       const radius = 8;
       let x = canvas.width / 2;
       let y = radius;
+      const color = type === 'old' ? '#1e40af' : '#22c55e';
 
       function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBoard();
+
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = type === 'old' ? '#1e40af' : '#22c55e';
+        ctx.fillStyle = color;
         ctx.fill();
 
         y += 5 + Math.random() * 2;
-        x += (Math.random() - 0.5) * 10;
+        x += (Math.random() - 0.5) * 8;
 
-        if (y < canvas.height - 20) {
+        if (y < canvas.height - 30) {
           requestAnimationFrame(animate);
         } else {
           const result = pickRandomReading(type);
@@ -129,15 +134,6 @@
             document.getElementById('newResult').textContent = result;
           }
         }
-      }
-
-      // Clear old before new drop
-      if (type === 'old') {
-        sessionStorage.removeItem('oldTestamentResult');
-        document.getElementById('oldResult').textContent = '...';
-      } else {
-        sessionStorage.removeItem('newTestamentResult');
-        document.getElementById('newResult').textContent = '...';
       }
 
       animate();
