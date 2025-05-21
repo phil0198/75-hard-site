@@ -125,15 +125,16 @@
       const rows = 10;
       const spacingX = canvas.width / cols;
       const spacingY = canvas.height / rows;
-      pegs[type] = [];
+      pegs[type] = []; // Initialize pegs with random radii
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols - (row % 2); col++) {
           const x = spacingX / 2 + col * spacingX + (row % 2) * spacingX / 2;
           const y = spacingY / 2 + row * spacingY;
-          pegs[type].push({ x, y });
+          const radius = Math.random() > 0.8 ? 6 : 4; // 20% larger pegs
+          pegs[type].push({ x, y, radius });
           ctx.beginPath();
-          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
           ctx.fillStyle = '#facc15';
           ctx.fill();
         }
@@ -196,7 +197,7 @@
     // Redraw pegs every frame for visibility
     for (const peg of pegs[type]) {
       ctx.beginPath();
-      ctx.arc(peg.x, peg.y, 4, 0, Math.PI * 2);
+      ctx.arc(peg.x, peg.y, peg.radius || 4, 0, Math.PI * 2);
       ctx.fillStyle = '#facc15';
       ctx.fill();
     }
@@ -215,7 +216,7 @@
         const dx = ball.x - peg.x;
         const dy = ball.y - peg.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 10) {
+        if (dist < ((peg.radius || 4) + 4)) {
           const angle = Math.atan2(dy, dx);
           const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
           ball.vx = Math.cos(angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI / 3) * speed;
