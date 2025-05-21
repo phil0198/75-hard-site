@@ -4,41 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>75 Hard Bible Edition - Bible Search</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      line-height: 1.5;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-    }
-    .search-container {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    input, button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      margin-right: 0.5rem;
-    }
-    #bibleContent h2 {
-      margin-top: 2rem;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 0.5rem;
-    }
-    #bibleContent p {
-      margin: 0.5rem 0;
-    }
-    sup {
-      font-size: 0.85rem;
-      vertical-align: super;
-      margin-right: 0.25rem;
-    }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #1f2937; padding: 2rem; text-align: center; }
+    nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+    nav a { text-decoration: none; padding: 0.5rem 1rem; background-color: #1e293b; color: white; border-radius: 6px; font-weight: 500; }
+    nav a:hover { background-color: #334155; }
+    .mobile-nav { display: none; }
+    select.mobile-dropdown { width: 100%; max-width: 300px; padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 2rem; }
+    @media (max-width: 640px) { nav { display: none; } .mobile-nav { display: block; } }
+    h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .search-container { margin-bottom: 1.5rem; }
+    input#bookInput { width: 300px; max-width: 100%; padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+    button#searchBtn { padding: 0.75rem 1.5rem; font-size: 1rem; border: none; border-radius: 6px; background-color: #fcd34d; cursor: pointer; }
+    button#searchBtn:hover { background-color: #fbbf24; }
+    #bibleContent { margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left; }
+    #bibleContent h2 { margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
+    #bibleContent p { margin: 0.5rem 0; }
+    .error { color: #6b7280; margin-top: 1rem; font-weight: 500; }
+    sup { font-size: 0.85rem; vertical-align: super; margin-right: 0.25rem; }
   </style>
 </head>
 <body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+    <a href="bible-search.html">Bible Search</a>
+    <a href="streak.html">Streak Tracker</a>
+    <a href="register.html" id="accountLink">Create Account</a>
+  </nav>
+  <div class="mobile-nav">
+    <select class="mobile-dropdown" onchange="location=this.value">
+      <option disabled selected>Navigate to...</option>
+      <option value="index.html">Home</option>
+      <option value="journal.html">Journal</option>
+      <option value="prayer-generator.html">Prayer Generator</option>
+      <option value="past-entries.html">Past Entries</option>
+      <option value="scripture-search.html">Scripture Search</option>
+      <option value="bible-search.html">Bible Search</option>
+      <option value="streak.html">Streak Tracker</option>
+      <option value="register.html">Create Account</option>
+    </select>
+  </div>
   <h1>75 Hard Bible Edition</h1>
   <div class="search-container">
     <input id="bookInput" list="books" placeholder="Enter a book name, e.g. Genesis">
@@ -48,58 +58,42 @@
   <div id="bibleContent"></div>
 
   <script>
-    // List of 66 books of the Protestant Bible
     const books = [
-      "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
-      "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
-      "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra",
-      "Nehemiah", "Esther", "Job", "Psalms", "Proverbs",
-      "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
-      "Ezekiel", "Daniel", "Hosea", "Joel", "Amos",
-      "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
-      "Zephaniah", "Haggai", "Zechariah", "Malachi",
-      "Matthew", "Mark", "Luke", "John", "Acts",
-      "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
-      "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy",
-      "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
-      "1 Peter", "2 Peter", "1 John", "2 John", "3 John",
-      "Jude", "Revelation"
+      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
+      "Joshua","Judges","Ruth","1 Samuel","2 Samuel",
+      "1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
+      "Nehemiah","Esther","Job","Psalms","Proverbs",
+      "Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations",
+      "Ezekiel","Daniel","Hosea","Joel","Amos",
+      "Obadiah","Jonah","Micah","Nahum","Habakkuk",
+      "Zephaniah","Haggai","Zechariah","Malachi",
+      "Matthew","Mark","Luke","John","Acts",
+      "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
+      "Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy",
+      "2 Timothy","Titus","Philemon","Hebrews","James",
+      "1 Peter","2 Peter","1 John","2 John","3 John",
+      "Jude","Revelation"
     ];
-
-    // Populate datalist for autocomplete
     const datalist = document.getElementById('books');
-    books.forEach(book => {
-      const option = document.createElement('option');
-      option.value = book;
-      datalist.appendChild(option);
-    });
+    books.forEach(book => { const option = document.createElement('option'); option.value = book; datalist.appendChild(option); });
+
+    function showError(message) {
+      const container = document.getElementById('bibleContent');
+      container.innerHTML = `<div class="error">Error: ${message}</div>`;
+    }
 
     document.getElementById('searchBtn').addEventListener('click', () => {
       const book = document.getElementById('bookInput').value.trim();
-      if (!books.includes(book)) {
-        alert('Please select a valid book from the list.');
-        return;
-      }
-      const url = `https://bible-api.com/${encodeURIComponent(book)}?translation=web`;  // Uses World English Bible (public domain)
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const container = document.getElementById('bibleContent');
-          if (data.error) {
-            container.innerHTML = `<p>Error: ${data.error}</p>`;
-            return;
-          }
-          let html = `<h2>${data.reference}</h2>`;
-          data.verses.forEach(v => {
-            html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
-          });
-          container.innerHTML = html;
+      if (!books.includes(book)) return showError('Please select a valid book.');
+      fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=web`)
+        .then(r => r.json())
+        .then(d => {
+          if (d.error) return showError(d.error);
+          let html = `<h2>${d.reference}</h2>`;
+          d.verses.forEach(v => { html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`; });
+          document.getElementById('bibleContent').innerHTML = html;
         })
-        .catch(err => {
-          console.error(err);
-          document.getElementById('bibleContent').innerHTML = '<p>Failed to fetch the requested book.</p>';
-        });
+        .catch(() => showError('not found'));
     });
   </script>
 </body>
