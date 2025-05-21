@@ -6,94 +6,65 @@
   <title>75 Hard – Bible Edition</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    :root {
+      --bg-light: #f9fafb;
+      --text-light: #1f2937;
+      --card-bg: #ffffff;
+      --accent: #f4c430;
+      --nav-bg: #1e293b;
+      --nav-hover: #334155;
+    }
+    [data-theme="dark"] {
+      --bg-light: #1f2937;
+      --text-light: #f9fafb;
+      --card-bg: #2e3a4e;
+      --accent: #f4c430;
+      --nav-bg: #334155;
+      --nav-hover: #1e293b;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f9fafb;
-      color: #1f2937;
-      padding: 2rem;
+      margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+      background: var(--bg-light); color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
       text-align: center;
     }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: var(--card-bg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    nav a {
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      background-color: #1e293b;
-      color: white;
-      border-radius: 6px;
-      font-weight: 500;
+    header nav { display: flex; gap: 1rem; }
+    header nav a {
+      text-decoration: none; padding: 0.5rem 1rem;
+      background-color: var(--nav-bg); color: white;
+      border-radius: 6px; font-weight: 500;
     }
-    nav a:hover {
-      background-color: #334155;
-    }
-    .mobile-nav {
-      display: none;
-    }
-    select.mobile-dropdown {
-      width: 100%;
-      max-width: 300px;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 640px) {
-      nav { display: none; }
-      .mobile-nav { display: block; }
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.25rem;
-    }
-    #streakBadge {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #1e40af;
-      margin-bottom: 1.5rem;
-    }
-    p {
-      margin-bottom: 2rem;
-      color: #4b5563;
-    }
+    header nav a:hover { background-color: var(--nav-hover); }
+    h1 { font-size: 2.5rem; margin-top: 1rem; }
     .scripture-of-day {
       max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
+      margin: 2rem auto;
+      background-color: var(--card-bg);
       padding: 1rem 1.5rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
       font-style: italic;
-      margin-top: 2rem;
     }
     .wheel-container {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      align-items: flex-start;
+      display: flex; justify-content: space-around;
+      flex-wrap: wrap; align-items: flex-start;
       margin-top: 2rem;
     }
     .wheel-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
     }
     canvas {
       margin-bottom: 1rem;
     }
-    .result-text {
-      margin-top: 1rem;
-      font-weight: bold;
-      color: #1e293b;
-      font-size: 1.1rem;
-    }
     .spin-btn {
-      background-color: #1e40af;
-      color: white;
+      background-color: var(--accent);
+      color: var(--text-light);
       border: none;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
@@ -101,285 +72,48 @@
       font-size: 1rem;
       margin-top: 1rem;
     }
-    .spin-btn:hover {
-      background-color: #1d4ed8;
+    .spin-btn:hover { opacity: 0.9; }
+    .result-text {
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.1rem;
     }
   </style>
 </head>
-<body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="journal.html">Journal</a>
-    <a href="prayer-generator.html">Prayer Generator</a>
-    <a href="past-entries.html">Past Entries</a>
-    <a href="scripture-search.html">Scripture Search</a>
-    <a href="bible_search.html">Bible Search</a>
-    <a href="streak.html">Streak Tracker</a>
-    <a href="register.html" id="accountLink">Create Account</a>
-  </nav>
-
-  <div class="mobile-nav">
-    <select class="mobile-dropdown" id="mobileAccountSelect" onchange="location=this.value">
-      <option disabled selected>Navigate to...</option>
-      <option value="index.html">Home</option>
-      <option value="journal.html">Journal</option>
-      <option value="prayer-generator.html">Prayer Generator</option>
-      <option value="past-entries.html">Past Entries</option>
-      <option value="scripture-search.html">Scripture Search</option>
-      <option value="bible-search.html">Bible Search</option>
-      <option value="streak.html">Streak Tracker</option>
-      <option value="register.html">Create Account</option>
-    </select>
-  </div>
-
-  <h1>75 Hard – Bible Edition</h1>
-  <div id="streakBadge">🔥 Loading streak...</div>
-  <p>
-    Start your daily spiritual challenge by spinning the Old and New Testament wheels to receive your Bible reading for the day.<br><br>
-    Then journal your reflections and track your consistency using the
-    <a href="streak.html" style="color:#1e40af; font-weight:600; text-decoration:underline;">Streak Tracker</a>.<br>
-    Build your streak. Stay faithful. Grow deeper.
-  </p>
-
-  <div class="scripture-of-day" id="dailyVerse">
-    <span id="verseText">Loading scripture of the day...</span><br>
-    <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top:0.5rem; color:#1e40af; text-decoration: underline; font-size:0.9rem;">Learn more</a>
-  </div>
-
-  <div class="wheel-container">
-    <div class="wheel-section">
-      <h2>Old Testament</h2>
-      <canvas id="oldWheel" width="300" height="300"></canvas>
-      <button class="spin-btn" onclick="startSpin('old')">Spin Old Testament</button>
-      <div id="oldResult" class="result-text"></div>
+<body data-theme="dark">
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="journal.html">Journal</a>
+      <a href="prayer-generator.html">Prayer Generator</a>
+      <a href="past-entries.html">Past Entries</a>
+      <a href="scripture-search.html">Scripture Search</a>
+      <a href="bible_search.html">Bible Search</a>
+      <a href="streak.html">Streak Tracker</a>
+      <a href="register.html" id="accountLink">Create Account</a>
+    </nav>
+  </header>
+  <main>
+    <h1>75 Hard – Bible Edition</h1>
+    <div class="scripture-of-day" id="dailyVerse">
+      <span id="verseText">Loading scripture of the day...</span><br>
+      <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top:0.5rem; color:var(--accent); text-decoration: underline; font-size:0.9rem;">Learn more</a>
     </div>
-    <div class="wheel-section">
-      <h2>New Testament</h2>
-      <canvas id="newWheel" width="300" height="300"></canvas>
-      <button class="spin-btn" onclick="startSpin('new')">Spin New Testament</button>
-      <div id="newResult" class="result-text"></div>
+    <div class="wheel-container">
+      <div class="wheel-section">
+        <h2>Old Testament</h2>
+        <canvas id="oldWheel" width="300" height="300"></canvas>
+        <button class="spin-btn" onclick="startSpin('old')">Spin Old Testament</button>
+        <div id="oldResult" class="result-text"></div>
+      </div>
+      <div class="wheel-section">
+        <h2>New Testament</h2>
+        <canvas id="newWheel" width="300" height="300"></canvas>
+        <button class="spin-btn" onclick="startSpin('new')">Spin New Testament</button>
+        <div id="newResult" class="result-text"></div>
+      </div>
     </div>
-  </div>
-
-  <script>
-    const oldTestamentBooks = [
-      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
-      "Joshua","Judges","Ruth","1 Samuel","2 Samuel",
-      "1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
-      "Nehemiah","Esther","Job","Psalms","Proverbs",
-      "Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations",
-      "Ezekiel","Daniel","Hosea","Joel","Amos",
-      "Obadiah","Jonah","Micah","Nahum","Habakkuk",
-      "Zephaniah","Haggai","Zechariah","Malachi"
-    ];
-    const newTestamentBooks = [
-      "Matthew","Mark","Luke","John","Acts",
-      "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
-      "Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy",
-      "2 Timothy","Titus","Philemon","Hebrews","James",
-      "1 Peter","2 Peter","1 John","2 John","3 John",
-      "Jude","Revelation"
-    ];
-
-    const bibleChapters = {
-      "Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,
-      "Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,
-      "1 Kings":22,"2 Kings":25,"1 Chronicles":29,"2 Chronicles":36,"Ezra":10,
-      "Nehemiah":13,"Esther":10,"Job":42,"Psalms":150,"Proverbs":31,
-      "Ecclesiastes":12,"Song of Solomon":8,"Isaiah":66,"Jeremiah":52,"Lamentations":5,
-      "Ezekiel":48,"Daniel":12,"Hosea":14,"Joel":3,"Amos":9,
-      "Obadiah":1,"Jonah":4,"Micah":7,"Nahum":3,"Habakkuk":3,
-      "Zephaniah":3,"Haggai":2,"Zechariah":14,"Malachi":4,
-      "Matthew":28,"Mark":16,"Luke":24,"John":21,"Acts":28,
-      "Romans":16,"1 Corinthians":16,"2 Corinthians":13,"Galatians":6,"Ephesians":6,
-      "Philippians":4,"Colossians":4,"1 Thessalonians":5,"2 Thessalonians":3,"1 Timothy":6,
-      "2 Timothy":4,"Titus":3,"Philemon":1,"Hebrews":13,"James":5,
-      "1 Peter":5,"2 Peter":3,"1 John":5,"2 John":1,"3 John":1,
-      "Jude":1,"Revelation":22
-    };
-
-    const bibleStartPages = {
-      "Genesis":2,"Exodus":124,"Leviticus":209,"Numbers":265,"Deuteronomy":347,
-      "Joshua":413,"Judges":466,"Ruth":527,"1 Samuel":538,"2 Samuel":612,
-      "1 Kings":715,"2 Kings":748,"1 Chronicles":817,"2 Chronicles":880,"Ezra":954,
-      "Nehemiah":983,"Esther":1017,"Job":1038,"Psalms":1110,"Proverbs":1306,
-      "Ecclesiastes":1381,"Song of Solomon":1400,"Isaiah":1416,"Jeremiah":1552,"Lamentations":1674,
-      "Ezekiel":1691,"Daniel":1783,"Hosea":1820,"Joel":1850,"Amos":1860,
-      "Obadiah":1881,"Jonah":1887,"Micah":1896,"Nahum":1913,"Habakkuk":1921,
-      "Zephaniah":1930,"Haggai":1940,"Zechariah":1946,"Malachi":1969,
-      "Matthew":1983,"Mark":2092,"Luke":2167,"John":2274,"Acts":2362,
-      "Romans":2467,"1 Corinthians":2514,"2 Corinthians":2560,"Galatians":2589,"Ephesians":2610,
-      "Philippians":2629,"Colossians":2646,"1 Thessalonians":2661,"2 Thessalonians":2677,"1 Timothy":2685,
-      "2 Timothy":2701,"Titus":2713,"Philemon":2722,"Hebrews":2728,"James":2765,
-      "1 Peter":2779,"2 Peter":2796,"1 John":2805,"2 John":2820,"3 John":2824,
-      "Jude":2828,"Revelation":2833
-    };
-
-    const angles = {old:0,new:0};
-    const spinning = {old:false,new:false};
-
-    function drawWheel(canvasId, books, rotation=0) {
-      const c = document.getElementById(canvasId), ctx = c.getContext("2d"), radius = c.width/2, arc = 2*Math.PI/books.length;
-      ctx.clearRect(0,0,c.width,c.height);
-      books.forEach((book,i)=>{
-        const angle = i*arc + rotation;
-        ctx.beginPath();
-        ctx.fillStyle = `hsl(${(i/books.length)*360},70%,70%)`;
-        ctx.moveTo(radius,radius);
-        ctx.arc(radius,radius,radius,angle,angle+arc);
-        ctx.fill();
-        ctx.save();
-        ctx.translate(radius,radius);
-        ctx.rotate(angle+arc/2);
-        ctx.textAlign="right";
-        ctx.fillStyle="#000";
-        ctx.font="bold 12px sans-serif";
-        ctx.fillText(book,radius-10,4);
-        ctx.restore();
-      });
-    }
-
-    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-    function startSpin(type) {
-      if(spinning[type]) return;
-      const books = type==='old'?oldTestamentBooks:newTestamentBooks;
-      spinning[type] = true;
-      const arc=2*Math.PI/books.length, stopAngle=2*Math.PI*5+Math.random()*2*Math.PI, duration=6530, start=performance.now(), initial=angles[type];
-      function animate(ts) {
-        const elapsed=ts-start, prog=Math.min(elapsed/duration,1);
-        angles[type]=initial+(stopAngle-initial)*easeOutCubic(prog);
-        drawWheel(type+"Wheel",books,angles[type]);
-        if(prog<1) requestAnimationFrame(animate);
-        else {
-          spinning[type]=false;
-          const final=angles[type]%(2*Math.PI), idx=Math.floor((books.length-(final/arc))%books.length), book=books[idx], chap=Math.ceil(Math.random()*bibleChapters[book]), page=bibleStartPages[book]||"N/A", display=`${book} ${chap} — Page ${page}`;
-          document.getElementById(type+"Result").textContent=display;
-          document.getElementById("learnMoreLink").href=`https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(book+" "+chap)}&version=ESV`;
-          sessionStorage.setItem(type+"TestamentResult",display);
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-
-    function loadStreakBadge() {
-      const b=document.getElementById("streakBadge"), sd=JSON.parse(localStorage.getItem("streakData"))||{streak:0,lastDate:null}, today=new Date().toISOString().split("T")[0], y=new Date();
-      y.setDate(y.getDate()-1);
-      const yesterday=y.toISOString().split("T")[0];
-      b.textContent = (sd.lastDate!==today && sd.lastDate!==yesterday)
-        ? "🔥 0-Day Streak"
-        : `🔥 ${sd.streak}-Day Streak`;
-    }
-
-    window.onload = function() {
-      const verses=[
-        "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
-        "Philippians 4:13 — I can do all things through Christ who strengthens me.",
-        "John 3:16 — For God so loved the world...",
-        "Romans 8:28 — And we know that in all things God works for the good...",
-        "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
-        "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
-        "Proverbs 3:5 — Trust in the Lord with all your heart...",
-        "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
-        "Psalm 46:1 — God is our refuge and strength...",
-        "James 1:2 — Consider it pure joy...",
-        "1 Peter 5:7 — Cast all your anxiety on him...",
-        "Romans 12:2 — Do not conform to the pattern of this world...",
-        "Hebrews 11:1 — Now faith is the assurance...",
-        "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
-        "2 Timothy 1:7 — For God gave us a spirit not of fear...",
-        "Psalm 118:24 — This is the day that the Lord has made...",
-        "Matthew 6:33 — But seek first the kingdom of God...",
-        "Colossians 3:23 — Whatever you do, work at it with all your heart...",
-        "Joshua 1:9 — Be strong and courageous...",
-        "Ephesians 2:8 — For by grace you have been saved through faith..."
-      ];
-      const now=new Date(), start=new Date(now.getFullYear(),0,0), diff=now-start, day=Math.floor(diff/(1000*60*60*24)), full=verses[day%verses.length], ref=full.split(' — ')[0];
-      document.getElementById("verseText").innerText=`Scripture of the Day: ${full}`;
-      document.getElementById("learnMoreLink").href=`https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(ref)}&version=ESV`;
-      drawWheel("oldWheel",oldTestamentBooks);
-      drawWheel("newWheel",newTestamentBooks);
-      const o=sessionStorage.getItem("oldTestamentResult"), n=sessionStorage.getItem("newTestamentResult");
-      if(o) document.getElementById("oldResult").textContent=o;
-      if(n) document.getElementById("newResult").textContent=n;
-      loadStreakBadge();
-    };
-
-    window.addEventListener('DOMContentLoaded',()=>{
-      const exists=localStorage.getItem("userCredentials")!==null;
-      if(exists){
-        const a=document.getElementById("accountLink"); if(a){ a.textContent="Profile"; a.href="profile.html"; }
-        const sel=document.getElementById("mobileAccountSelect"); if(sel){
-          for(let i=0;i<sel.options.length;i++){
-            if(sel.options[i].value==="register.html"){ sel.options[i].text="Profile"; sel.options[i].value="profile.html"; break; }
-          }
-        }
-      }
-    });
-  </script>
-</body>
-</html>
-
-
-<!-- bible-search.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>75 Hard Bible Edition - Bible Search</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; color: #333; }
-    h1 { text-align: center; }
-    .search-container { text-align: center; margin-bottom: 1.5rem; }
-    input, button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
-    #bibleContent h2 { margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
-    #bibleContent p { margin: 0.5rem 0; }
-    sup { font-size: 0.85rem; vertical-align: super; margin-right: 0.25rem; }
-  </style>
-</head>
-<body>
-  <h1>75 Hard Bible Edition</h1>
-  <div class="search-container">
-    <input id="bookInput" list="books" placeholder="Enter a book name, e.g. Genesis">
-    <datalist id="books"></datalist>
-    <button id="searchBtn">Search</button>
-  </div>
-  <div id="bibleContent"></div>
-
-  <script>
-    const books = [
-      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
-      "Joshua","Judges","Ruth","1 Samuel","2 Samuel",
-      "1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
-      "Nehemiah","Esther","Job","Psalms","Proverbs",
-      "Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations",
-      "Ezekiel","Daniel","Hosea","Joel","Amos",
-      "Obadiah","Jonah","Micah","Nahum","Habakkuk",
-      "Zephaniah","Haggai","Zechariah","Malachi",
-      "Matthew","Mark","Luke","John","Acts",
-      "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
-      "Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy",
-      "2 Timothy","Titus","Philemon","Hebrews","James",
-      "1 Peter","2 Peter","1 John","2 John","3 John",
-      "Jude","Revelation"
-    ];
-    const datalist = document.getElementById('books');
-    books.forEach(book => { const option = document.createElement('option'); option.value = book; datalist.appendChild(option); });
-
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const book = document.getElementById('bookInput').value.trim();
-      if (!books.includes(book)) return alert('Please select a valid book from the list.');
-      fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=web`)
-        .then(r => r.json())
-        .then(d => {
-          const c = document.getElementById('bibleContent'); if (d.error) return c.innerHTML = `<p>Error: ${d.error}</p>`;
-          let html = `<h2>${d.reference}</h2>`;
-          d.verses.forEach(v => { html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`; });
-          c.innerHTML = html;
-        })
-        .catch(() => document.getElementById('bibleContent').innerHTML = '<p>Failed to fetch.</p>');
-    });
-  </script>
+  </main>
+  <script src="main.js"></script>
 </body>
 </html>
