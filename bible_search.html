@@ -116,7 +116,6 @@
         <option value="web">WEB</option>
         <option value="kjv">KJV</option>
         <option value="asv">ASV</option>
-        <option value="darby">Darby</option>
         <option value="ylt">YLT</option>
         <option value="bbe">BBE</option>
       </select>
@@ -136,27 +135,25 @@
         body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
       });
 
-      // Map of chapters per book
-      const bibleChapters = { Genesis:50, Exodus:40, Leviticus:27, Numbers:36, Deuteronomy:34,
-        Joshua:24, Judges:21, Ruth:4, '1 Samuel':31, '2 Samuel':24, '1 Kings':22, '2 Kings':25,
-        '1 Chronicles':29, '2 Chronicles':36, Ezra:10, Nehemiah:13, Esther:10, Job:42,
-        Psalms:150, Proverbs:31, Ecclesiastes:12, 'Song of Solomon':8, Isaiah:66,
-        Jeremiah:52, Lamentations:5, Ezekiel:48, Daniel:12, Hosea:14, Joel:3, Amos:9,
-        Obadiah:1, Jonah:4, Micah:7, Nahum:3, Habakkuk:3, Zephaniah:3, Haggai:2,
-        Zechariah:14, Malachi:4, Matthew:28, Mark:16, Luke:24, John:21, Acts:28,
-        Romans:16, '1 Corinthians':16, '2 Corinthians':13, Galatians:6, Ephesians:6,
-        Philippians:4, Colossians:4, '1 Thessalonians':5, '2 Thessalonians':3,
-        '1 Timothy':6, '2 Timothy':4, Titus:3, Philemon:1, Hebrews:13, James:5,
-        '1 Peter':5, '2 Peter':3, '1 John':5, '2 John':1, '3 John':1, Jude:1, Revelation:22 };
-
-      // Populate book dropdown
+      // List of books
+      const books = [
+        'Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth',
+        '1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra',
+        'Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon',
+        'Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos',
+        'Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi',
+        'Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians',
+        'Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians',
+        '1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter',
+        '1 John','2 John','3 John','Jude','Revelation'
+      ];
       const bookSelect = document.getElementById('bookSelect');
-      Object.keys(bibleChapters).forEach(book => {
+      books.forEach(book => {
         const opt = document.createElement('option'); opt.value = book; opt.textContent = book;
         bookSelect.appendChild(opt);
       });
 
-      // Search handler: sequential per-chapter fetch
+      // Fetch and render full book once
       document.getElementById('searchBtn').addEventListener('click', async () => {
         const book = bookSelect.value;
         const version = document.getElementById('versionSelect').value;
@@ -164,38 +161,34 @@
         container.innerHTML = '';
         if (!book) {
           container.innerHTML = '<div class="error">Please select a book.</div>';
-          bookSelect.focus();
           return;
         }
-        container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2><div class="error">Loading chapters...</div>`;
-        for (let chap = 1; chap <= bibleChapters[book]; chap++) {
-          try {
-            const url = `https://bible-api.com/${encodeURIComponent(book + ' ' + chap)}?translation=${version}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            if (data.error) throw new Error(data.error);
-            // render chapter
-            const details = document.createElement('details');
-            const summary = document.createElement('summary');
-            summary.textContent = `Chapter ${chap}`;
-            details.appendChild(summary);
-            const div = document.createElement('div');
-            data.verses.forEach(v => {
-              const p = document.createElement('p');
-              p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
-              div.appendChild(p);
-            });
-            details.appendChild(div);
-            container.appendChild(details);
-          } catch (e) {
-            // skip chapter on error
-            console.warn(`Chapter ${chap} failed:`, e.message);
-          }
+        container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2><div class="error">Loading...</div>`;
+        try {
+          const url = `https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2>`;
+          let currentChap = 0;
+          data.verses.forEach(v => {
+            if (v.chapter !== currentChap) {
+              currentChap = v.chapter;
+              const details = document.createElement('details');
+              const summary = document.createElement('summary');
+              summary.textContent = `Chapter ${currentChap}`;
+              details.appendChild(summary);
+              container.appendChild(details);
+            }
+            const lastDetail = container.querySelector('details:last-of-type');
+            const p = document.createElement('p');
+            p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
+            lastDetail.appendChild(p);
+          });
+        } catch (err) {
+          container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
         }
-        // remove loading note
-        const note = container.querySelector('.error');
-        if (note) note.remove();
       });
     });
   </script>
