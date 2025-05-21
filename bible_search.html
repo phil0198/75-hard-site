@@ -133,16 +133,29 @@
         return;
       }
       container.innerHTML = '<div class="error">Loading book...</div>';
-      let html = `<h2>${book} (${version.toUpperCase()})</h2>`;
-      for (let chap = 1; chap <= bibleChapters[book]; chap++) {
-        try {
-          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book + " " + chap)}?translation=${version}`);
-          const data = await res.json();
-          if (data.error) continue;
-          html += `<h3>Chapter ${chap}</h3>`;
-          data.verses.forEach(v => {
-            html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
-          });
+      try {
+        const res = await fetch(
+          `https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`
+        );
+        const data = await res.json();
+        if (data.error) {
+          container.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+          return;
+        }
+        let html = `<h2>${book} (${version.toUpperCase()})</h2>`;
+        let currentChap = 0;
+        data.verses.forEach(v => {
+          if (v.chapter !== currentChap) {
+            currentChap = v.chapter;
+            html += `<h3>Chapter ${currentChap}</h3>`;
+          }
+          html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
+        });
+        container.innerHTML = html;
+      } catch (e) {
+        container.innerHTML = '<div class="error">Failed to fetch the requested book.</div>';
+      }
+    });
         } catch (e) {
           console.warn(`Failed to load chapter ${chap}`, e);
         }
