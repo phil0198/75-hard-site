@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>75 Hard Bible Edition - Bible Search</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
     body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #1f2937; padding: 2rem; text-align: center; }
     nav { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
@@ -32,7 +32,7 @@
     <a href="prayer-generator.html">Prayer Generator</a>
     <a href="past-entries.html">Past Entries</a>
     <a href="scripture-search.html">Scripture Search</a>
-    <a href="bible-search.html">Bible Search</a>
+    <a href="bible_search.html">Bible Search</a>
     <a href="streak.html">Streak Tracker</a>
     <a href="register.html" id="accountLink">Create Account</a>
   </nav>
@@ -44,7 +44,7 @@
       <option value="prayer-generator.html">Prayer Generator</option>
       <option value="past-entries.html">Past Entries</option>
       <option value="scripture-search.html">Scripture Search</option>
-      <option value="bible-search.html">Bible Search</option>
+      <option value="bible_search.html">Bible Search</option>
       <option value="streak.html">Streak Tracker</option>
       <option value="register.html">Create Account</option>
     </select>
@@ -75,25 +75,33 @@
       "Jude","Revelation"
     ];
     const datalist = document.getElementById('books');
-    books.forEach(book => { const option = document.createElement('option'); option.value = book; datalist.appendChild(option); });
+    books.forEach(book => {
+      const option = document.createElement('option');
+      option.value = book;
+      datalist.appendChild(option);
+    });
 
-    function showError(message) {
-      const container = document.getElementById('bibleContent');
-      container.innerHTML = `<div class="error">Error: ${message}</div>`;
-    }
-
-    document.getElementById('searchBtn').addEventListener('click', () => {
+    document.getElementById('searchBtn').addEventListener('click', async () => {
       const book = document.getElementById('bookInput').value.trim();
-      if (!books.includes(book)) return showError('Please select a valid book.');
-      fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=web`)
-        .then(r => r.json())
-        .then(d => {
-          if (d.error) return showError(d.error);
-          let html = `<h2>${d.reference}</h2>`;
-          d.verses.forEach(v => { html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`; });
-          document.getElementById('bibleContent').innerHTML = html;
-        })
-        .catch(() => showError('not found'));
+      if (!books.includes(book)) {
+        document.getElementById('bibleContent').innerHTML = '<div class="error">Please select a valid book.</div>';
+        return;
+      }
+      try {
+        const response = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=web`);
+        const data = await response.json();
+        if (data.error) {
+          document.getElementById('bibleContent').innerHTML = `<div class="error">Error: ${data.error}</div>`;
+          return;
+        }
+        let html = `<h2>${data.reference}</h2>`;
+        data.verses.forEach(v => {
+          html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
+        });
+        document.getElementById('bibleContent').innerHTML = html;
+      } catch (err) {
+        document.getElementById('bibleContent').innerHTML = '<div class="error">Failed to fetch the requested book.</div>';
+      }
     });
   </script>
 </body>
