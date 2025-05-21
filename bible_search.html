@@ -32,24 +32,17 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 1rem 2rem; background: var(--card-bg); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    header nav {
-      display: flex; gap: 1rem;
-    }
+    header nav { display: flex; gap: 1rem; }
     header nav a {
       text-decoration: none; padding: 0.5rem 1rem; background-color: var(--nav-bg);
       color: white; border-radius: 6px; font-weight: 500;
     }
-    header nav a:hover {
-      background-color: var(--nav-hover);
-    }
+    header nav a:hover { background-color: var(--nav-hover); }
     .theme-toggle {
       cursor: pointer; background: var(--accent); border: none; padding: 0.5rem;
       border-radius: 50%; font-size: 1.2rem;
     }
-    main {
-      padding: 2rem;
-      max-width: 800px; margin: 0 auto;
-    }
+    main { padding: 2rem; max-width: 800px; margin: 0 auto; }
     .search-container {
       display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
       margin-bottom: 2rem;
@@ -63,12 +56,8 @@
       padding: 0.75rem 1.5rem; font-size: 1rem; border: none; border-radius: 6px;
       background-color: var(--accent); color: var(--text-light); cursor: pointer;
     }
-    .search-container button:hover {
-      opacity: 0.9;
-    }
-    #bibleContent {
-      text-align: left;
-    }
+    .search-container button:hover { opacity: 0.9; }
+    #bibleContent { text-align: left; }
     #bibleContent h2 {
       font-size: 1.75rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.25rem;
     }
@@ -77,24 +66,16 @@
       border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     summary {
-      cursor: pointer; font-weight: 600; font-size: 1.1rem;
-      outline: none;
+      cursor: pointer; font-weight: 600; font-size: 1.1rem; outline: none;
     }
     summary::-webkit-details-marker { display: none; }
-    details[open] summary::after {
-      content: '▼'; float: right;
-    }
-    summary::after {
-      content: '▶'; float: right;
-    }
+    details[open] summary::after { content: '▼'; float: right; }
+    summary::after { content: '▶'; float: right; }
     details div p { margin: 0.25rem 0; }
     .error {
-      color: #e53e3e; font-weight: 500; margin-top: 1rem;
-      text-align: center;
+      color: #e53e3e; font-weight: 500; margin-top: 1rem; text-align: center;
     }
-    footer {
-      text-align: center; padding: 1rem; font-size: 0.85rem; color: #6b7280;
-    }
+    footer { text-align: center; padding: 1rem; font-size: 0.85rem; color: #6b7280; }
   </style>
 </head>
 <body data-theme="light">
@@ -115,9 +96,7 @@
     <h1>75 Hard Bible Edition</h1>
     <div class="search-container">
       <input id="bookInput" list="books" placeholder="Book name (e.g. Genesis)" autocomplete="off">
-      <datalist id="books">
-        <!-- options populated by JS -->
-      </datalist>
+      <datalist id="books"></datalist>
       <select id="versionSelect">
         <option value="web">WEB</option>
         <option value="esv">ESV</option>
@@ -142,70 +121,77 @@
       </select>
       <button id="searchBtn">Search</button>
     </div>
-
     <div id="bibleContent"></div>
   </main>
   <footer>© 2025 75 Hard Bible Edition. All rights reserved.</footer>
 
   <script>
-    // Theme toggle
-    document.querySelector('.theme-toggle').addEventListener('click', () => {
-      const body = document.body;
-      body.datasetTheme = body.datasetTheme === 'light' ? 'dark' : 'light';
-    });
+    window.addEventListener('DOMContentLoaded', () => {
+      // Theme toggle
+      const themeToggle = document.querySelector('.theme-toggle');
+      themeToggle.addEventListener('click', () => {
+        const body = document.body;
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+      });
 
-    const books = [
-      'Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth',
-      '1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra',
-      'Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon',
-      'Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos',
-      'Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi',
-      'Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians',
-      'Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians',
-      '1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter',
-      '1 John','2 John','3 John','Jude','Revelation'
-    ];
+      // Book list
+      const books = [
+        'Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth',
+        '1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra',
+        'Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon',
+        'Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos',
+        'Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi',
+        'Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians',
+        'Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians',
+        '1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter',
+        '1 John','2 John','3 John','Jude','Revelation'
+      ];
+      const datalist = document.getElementById('books');
+      books.forEach(book => {
+        const opt = document.createElement('option');
+        opt.value = book;
+        datalist.appendChild(opt);
+      });
 
-    // Populate datalist
-    books.forEach(book => {
-      const opt = document.createElement('option');
-      opt.value = book;
-      document.getElementById('books').appendChild(opt);
-    });
-
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-      const book = document.getElementById('bookInput').value.trim();
-      const version = document.getElementById('versionSelect').value;
-      const container = document.getElementById('bibleContent');
-      container.innerHTML = '';
-      if (!books.includes(book)) {
-        container.innerHTML = '<div class="error">Please select a valid book.</div>';
-        return;
-      }
-      container.innerHTML = '<div class="error">Loading...</div>';
-      try {
-        const res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`);
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2>`;
-        let currentChap = 0;
-        data.verses.forEach(v => {
-          if (v.chapter !== currentChap) {
-            currentChap = v.chapter;
-            const details = document.createElement('details');
-            const summary = document.createElement('summary');
-            summary.textContent = `Chapter ${currentChap}`;
-            details.appendChild(summary);
-            container.appendChild(details);
-          }
-          const lastDetail = container.querySelector('details:last-of-type');
-          const p = document.createElement('p');
-          p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
-          lastDetail.appendChild(p);
-        });
-      } catch (err) {
-        container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
-      }
+      // Search handler
+      document.getElementById('searchBtn').addEventListener('click', async () => {
+        const bookInput = document.getElementById('bookInput');
+        const book = bookInput.value.trim();
+        const version = document.getElementById('versionSelect').value;
+        const container = document.getElementById('bibleContent');
+        container.innerHTML = '';
+        if (!books.includes(book)) {
+          container.innerHTML = '<div class="error">Please select a valid book.</div>';
+          bookInput.focus();
+          return;
+        }
+        container.innerHTML = '<div class="error">Loading...</div>';
+        try {
+          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2>`;
+          let currentChap = 0;
+          data.verses.forEach(v => {
+            if (v.chapter !== currentChap) {
+              currentChap = v.chapter;
+              const details = document.createElement('details');
+              details.open = false;
+              const summary = document.createElement('summary');
+              summary.textContent = `Chapter ${currentChap}`;
+              details.appendChild(summary);
+              container.appendChild(details);
+            }
+            const lastDetail = container.querySelector('details:last-of-type');
+            const p = document.createElement('p');
+            p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
+            lastDetail.appendChild(p);
+          });
+        } catch (err) {
+          container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        }
+      });
     });
   </script>
 </body>
