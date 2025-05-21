@@ -168,10 +168,20 @@
         }
         container.innerHTML = '<div class="error">Loading...</div>';
         try {
-          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`);
-          const data = await res.json();
+          let versionUsed = version;
+          let res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${versionUsed}`);
+          let data = await res.json();
+
+          // Fallback if translation not supported
+          if (data.error && data.error.toLowerCase().includes('translation')) {
+            container.innerHTML = `<div class="error">Translation '${versionUsed}' not supported. Loading WEB version instead...</div>`;
+            versionUsed = 'web';
+            res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${versionUsed}`);
+            data = await res.json();
+          }
+
           if (data.error) throw new Error(data.error);
-          container.innerHTML = `<h2>${book} (${version.toUpperCase()})</h2>`;
+          container.innerHTML = `<h2>${book} (${versionUsed.toUpperCase()})</h2>`;
           let currentChap = 0;
           data.verses.forEach(v => {
             if (v.chapter !== currentChap) {
@@ -188,7 +198,7 @@
             p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
             lastDetail.appendChild(p);
           });
-        } catch (err) {
+        } catch (err) (err) {
           container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
         }
       });
