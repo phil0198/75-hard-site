@@ -60,6 +60,16 @@
       margin-bottom: 2rem;
       color: #4b5563;
     }
+    .scripture-of-day {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      font-style: italic;
+      margin-top: 2rem;
+    }
     .wheel-container {
       display: flex;
       justify-content: space-around;
@@ -80,16 +90,6 @@
       font-weight: bold;
       color: #1e293b;
       font-size: 1.1rem;
-    }
-    .scripture-of-day {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      font-style: italic;
-      margin-top: 2rem;
     }
     .spin-btn {
       background-color: #1e40af;
@@ -113,6 +113,7 @@
     <a href="prayer-generator.html">Prayer Generator</a>
     <a href="past-entries.html">Past Entries</a>
     <a href="scripture-search.html">Scripture Search</a>
+    <a href="bible-search.html">Bible Search</a>
     <a href="streak.html">Streak Tracker</a>
     <a href="register.html" id="accountLink">Create Account</a>
   </nav>
@@ -125,6 +126,7 @@
       <option value="prayer-generator.html">Prayer Generator</option>
       <option value="past-entries.html">Past Entries</option>
       <option value="scripture-search.html">Scripture Search</option>
+      <option value="bible-search.html">Bible Search</option>
       <option value="streak.html">Streak Tracker</option>
       <option value="register.html">Create Account</option>
     </select>
@@ -141,10 +143,7 @@
 
   <div class="scripture-of-day" id="dailyVerse">
     <span id="verseText">Loading scripture of the day...</span><br>
-    <a id="learnMoreLink" href="#" target="_blank"
-       style="display:inline-block; margin-top:0.5rem; color:#1e40af; text-decoration: underline; font-size:0.9rem;">
-      Learn more
-    </a>
+    <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top:0.5rem; color:#1e40af; text-decoration: underline; font-size:0.9rem;">Learn more</a>
   </div>
 
   <div class="wheel-container">
@@ -164,7 +163,7 @@
 
   <script>
     const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
-    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 John,3 John,Jude,Revelation".split(",");
+    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 User continues unchanged. README truncated due to brevity.
 
     const bibleChapters = {
       "Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,
