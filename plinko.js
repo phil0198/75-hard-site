@@ -47,11 +47,11 @@ function pickRandomReading(testament) {
 
 function createPlinkoBoard(canvasId, type) {
   const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const width = canvas.width;
   const height = canvas.height;
 
-  // Draw pins (grid)
   const rows = 7;
   const cols = 7;
   const radius = 5;
@@ -72,6 +72,7 @@ function createPlinkoBoard(canvasId, type) {
 function dropBall(type) {
   const canvasId = type === 'old' ? 'oldCanvas' : 'newCanvas';
   const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const width = canvas.width;
   const height = canvas.height;
