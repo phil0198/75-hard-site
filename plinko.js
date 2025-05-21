@@ -1,118 +1,136 @@
-// plinko.js
-
-const oldTestamentBooks = [
-  "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
-  "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
-  "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra",
-  "Nehemiah", "Esther", "Job", "Psalms", "Proverbs",
-  "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
-  "Ezekiel", "Daniel", "Hosea", "Joel", "Amos",
-  "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
-  "Zephaniah", "Haggai", "Zechariah", "Malachi"
-];
-
-const newTestamentBooks = [
-  "Matthew", "Mark", "Luke", "John", "Acts",
-  "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
-  "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy",
-  "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
-  "1 Peter", "2 Peter", "1 John", "2 John", "3 John",
-  "Jude", "Revelation"
-];
-
-const bibleChapters = {
-  "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
-  "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
-  "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
-  "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
-  "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
-  "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
-  "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
-  "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
-  "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
-  "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
-  "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6,
-  "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13, "James": 5,
-  "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
-  "Jude": 1, "Revelation": 22
-};
-
-function pickRandomReading(testament) {
-  const books = testament === 'old' ? oldTestamentBooks : newTestamentBooks;
-  const book = books[Math.floor(Math.random() * books.length)];
-  const maxChapter = bibleChapters[book];
-  const chapter = Math.ceil(Math.random() * maxChapter);
-  return `${book} ${chapter}`;
-}
-
-function createPlinkoBoard(canvasId, type) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-
-  const rows = 7;
-  const cols = 7;
-  const radius = 5;
-
-  ctx.clearRect(0, 0, width, height);
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const x = (col + 1) * (width / (cols + 1));
-      const y = (row + 1) * (height / (rows + 2));
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = "#ccc";
-      ctx.fill();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plinko Bible Selector</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f8;
+      padding: 2rem;
+      text-align: center;
     }
-  }
-}
-
-function dropBall(type) {
-  const canvasId = type === 'old' ? 'oldCanvas' : 'newCanvas';
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-  const ballRadius = 7;
-
-  let x = width / 2;
-  let y = 0;
-  let vx = 0;
-  let vy = 2;
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    createPlinkoBoard(canvasId, type);
-
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-    ctx.fillStyle = "gold";
-    ctx.fill();
-
-    y += vy;
-    x += (Math.random() - 0.5) * 4;
-
-    if (y + ballRadius < height - 20) {
-      requestAnimationFrame(animate);
-    } else {
-      const result = pickRandomReading(type);
-      document.getElementById(`${type}Result`).textContent = result;
-      localStorage.setItem(`${type}TestamentReading`, result);
+    canvas {
+      border: 2px solid #1e293b;
+      background: white;
     }
-  }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #1e40af;
+      color: white;
+      cursor: pointer;
+    }
+    #results {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Plinko Bible Picker</h1>
+  <canvas id="plinkoCanvas" width="400" height="500"></canvas>
+  <div>
+    <button onclick="dropBall('old')">Drop Old Testament Ball</button>
+    <button onclick="dropBall('new')">Drop New Testament Ball</button>
+    <div id="results">
+      <p>Old Testament: <span id="oldResult">None</span></p>
+      <p>New Testament: <span id="newResult">None</span></p>
+    </div>
+    <button onclick="goToJournal()">Go to Journal</button>
+  </div>
 
-  animate();
-}
+  <script>
+    const canvas = document.getElementById('plinkoCanvas');
+    const ctx = canvas.getContext('2d');
 
-window.onload = () => {
-  createPlinkoBoard("oldCanvas", "old");
-  createPlinkoBoard("newCanvas", "new");
+    const bibleStructure = {
+      old: {
+        'Genesis': 50, 'Exodus': 40, 'Leviticus': 27, 'Numbers': 36, 'Deuteronomy': 34,
+        'Joshua': 24, 'Judges': 21, 'Ruth': 4, '1 Samuel': 31, '2 Samuel': 24,
+        '1 Kings': 22, '2 Kings': 25, '1 Chronicles': 29, '2 Chronicles': 36,
+        'Ezra': 10, 'Nehemiah': 13, 'Esther': 10, 'Job': 42, 'Psalms': 150,
+        'Proverbs': 31, 'Ecclesiastes': 12, 'Song of Solomon': 8,
+        'Isaiah': 66, 'Jeremiah': 52, 'Lamentations': 5, 'Ezekiel': 48, 'Daniel': 12,
+        'Hosea': 14, 'Joel': 3, 'Amos': 9, 'Obadiah': 1, 'Jonah': 4, 'Micah': 7,
+        'Nahum': 3, 'Habakkuk': 3, 'Zephaniah': 3, 'Haggai': 2, 'Zechariah': 14, 'Malachi': 4
+      },
+      new: {
+        'Matthew': 28, 'Mark': 16, 'Luke': 24, 'John': 21, 'Acts': 28,
+        'Romans': 16, '1 Corinthians': 16, '2 Corinthians': 13,
+        'Galatians': 6, 'Ephesians': 6, 'Philippians': 4, 'Colossians': 4,
+        '1 Thessalonians': 5, '2 Thessalonians': 3,
+        '1 Timothy': 6, '2 Timothy': 4,
+        'Titus': 3, 'Philemon': 1,
+        'Hebrews': 13, 'James': 5,
+        '1 Peter': 5, '2 Peter': 3,
+        '1 John': 5, '2 John': 1, '3 John': 1,
+        'Jude': 1, 'Revelation': 22
+      }
+    };
 
-  const oldSaved = localStorage.getItem("oldTestamentReading");
-  const newSaved = localStorage.getItem("newTestamentReading");
-  if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
-  if (newSaved) document.getElementById("newResult").textContent = newSaved;
-};
+    function drawBoard() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col <= row; col++) {
+          const x = 50 + col * 40 + (row % 2) * 20;
+          const y = 50 + row * 50;
+          ctx.beginPath();
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function pickRandomReading(type) {
+      const books = Object.keys(bibleStructure[type]);
+      const randomBook = books[Math.floor(Math.random() * books.length)];
+      const chapterMax = bibleStructure[type][randomBook];
+      const randomChapter = Math.floor(Math.random() * chapterMax) + 1;
+      return `${randomBook} ${randomChapter}`;
+    }
+
+    function dropBall(type) {
+      drawBoard();
+      const radius = 8;
+      let x = canvas.width / 2;
+      let y = radius;
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBoard();
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = type === 'old' ? '#1e40af' : '#22c55e';
+        ctx.fill();
+
+        y += 5 + Math.random() * 2;
+        x += (Math.random() - 0.5) * 10;
+
+        if (y < canvas.height - 20) {
+          requestAnimationFrame(animate);
+        } else {
+          const result = pickRandomReading(type);
+          document.getElementById(type + 'Result').textContent = result;
+          sessionStorage.setItem(
+            type === 'old' ? 'oldTestamentResult' : 'newTestamentResult',
+            result
+          );
+        }
+      }
+
+      animate();
+    }
+
+    function goToJournal() {
+      window.location.href = 'journal.html';
+    }
+
+    drawBoard();
+  </script>
+</body>
+</html>
