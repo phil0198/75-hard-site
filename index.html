@@ -154,10 +154,15 @@
 
       function drawBoard() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let row = 0; row < 8; row++) {
-          for (let col = 0; col <= row; col++) {
-            const pegX = 30 + col * 30 + (row % 2) * 15;
-            const pegY = 40 + row * 40;
+        const rows = 10;
+        const cols = 11;
+        const spacingX = canvas.width / cols;
+        const spacingY = canvas.height / rows;
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols - (row % 2); col++) {
+            const pegX = spacingX / 2 + col * spacingX + (row % 2) * (spacingX / 2);
+            const pegY = spacingY / 2 + row * spacingY;
             ctx.beginPath();
             ctx.arc(pegX, pegY, 4, 0, Math.PI * 2);
             ctx.fillStyle = '#facc15';
