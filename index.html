@@ -162,8 +162,24 @@
   </div>
 
   <script>
-    const oldTestamentBooks = "Genesis,Exodus,Leviticus,Numbers,Deuteronomy,Joshua,Judges,Ruth,1 Samuel,2 Samuel,1 Kings,2 Kings,1 Chronicles,2 Chronicles,Ezra,Nehemiah,Esther,Job,Psalms,Proverbs,Ecclesiastes,Song of Solomon,Isaiah,Jeremiah,Lamentations,Ezekiel,Daniel,Hosea,Joel,Amos,Obadiah,Jonah,Micah,Nahum,Habakkuk,Zephaniah,Haggai,Zechariah,Malachi".split(",");
-    const newTestamentBooks = "Matthew,Mark,Luke,John,Acts,Romans,1 Corinthians,2 Corinthians,Galatians,Ephesians,Philippians,Colossians,1 Thessalonians,2 Thessalonians,1 Timothy,2 Timothy,Titus,Philemon,Hebrews,James,1 Peter,2 Peter,1 John,2 User continues unchanged. README truncated due to brevity.
+    const oldTestamentBooks = [
+      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
+      "Joshua","Judges","Ruth","1 Samuel","2 Samuel",
+      "1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
+      "Nehemiah","Esther","Job","Psalms","Proverbs",
+      "Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations",
+      "Ezekiel","Daniel","Hosea","Joel","Amos",
+      "Obadiah","Jonah","Micah","Nahum","Habakkuk",
+      "Zephaniah","Haggai","Zechariah","Malachi"
+    ];
+    const newTestamentBooks = [
+      "Matthew","Mark","Luke","John","Acts",
+      "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
+      "Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy",
+      "2 Timothy","Titus","Philemon","Hebrews","James",
+      "1 Peter","2 Peter","1 John","2 John","3 John",
+      "Jude","Revelation"
+    ];
 
     const bibleChapters = {
       "Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,
@@ -203,12 +219,9 @@
     const spinning = {old:false,new:false};
 
     function drawWheel(canvasId, books, rotation=0) {
-      const c = document.getElementById(canvasId),
-            ctx = c.getContext("2d"),
-            radius = c.width/2,
-            arc = 2*Math.PI/books.length;
+      const c = document.getElementById(canvasId), ctx = c.getContext("2d"), radius = c.width/2, arc = 2*Math.PI/books.length;
       ctx.clearRect(0,0,c.width,c.height);
-      books.forEach((book,i)=> {
+      books.forEach((book,i)=>{
         const angle = i*arc + rotation;
         ctx.beginPath();
         ctx.fillStyle = `hsl(${(i/books.length)*360},70%,70%)`;
@@ -226,47 +239,31 @@
       });
     }
 
-    function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
     function startSpin(type) {
-      if(spinning[type])return;
-      const books = type==='old' ? oldTestamentBooks : newTestamentBooks;
-      spinning[type]=true;
-      const arc=2*Math.PI/books.length,
-            stopAngle=2*Math.PI*5+Math.random()*2*Math.PI,
-            duration=6530,
-            start=performance.now(),
-            initial=angles[type];
+      if(spinning[type]) return;
+      const books = type==='old'?oldTestamentBooks:newTestamentBooks;
+      spinning[type] = true;
+      const arc=2*Math.PI/books.length, stopAngle=2*Math.PI*5+Math.random()*2*Math.PI, duration=6530, start=performance.now(), initial=angles[type];
       function animate(ts) {
-        const elapsed=ts-start,
-              prog=Math.min(elapsed/duration,1);
+        const elapsed=ts-start, prog=Math.min(elapsed/duration,1);
         angles[type]=initial+(stopAngle-initial)*easeOutCubic(prog);
         drawWheel(type+"Wheel",books,angles[type]);
-        if(prog<1){
-          requestAnimationFrame(animate);
-        } else {
+        if(prog<1) requestAnimationFrame(animate);
+        else {
           spinning[type]=false;
-          const final=angles[type]%(2*Math.PI),
-                idx=Math.floor((books.length-(final/arc))%books.length),
-                book=books[idx],
-                chap=Math.ceil(Math.random()*bibleChapters[book]),
-                page=bibleStartPages[book]||"N/A",
-                display=`${book} ${chap} — Page ${page}`;
+          const final=angles[type]%(2*Math.PI), idx=Math.floor((books.length-(final/arc))%books.length), book=books[idx], chap=Math.ceil(Math.random()*bibleChapters[book]), page=bibleStartPages[book]||"N/A", display=`${book} ${chap} — Page ${page}`;
           document.getElementById(type+"Result").textContent=display;
-          // link only book+chapter
-          const link=`https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(book+" "+chap)}&version=ESV`;
-          document.getElementById("learnMoreLink").href=link;
+          document.getElementById("learnMoreLink").href=`https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(book+" "+chap)}&version=ESV`;
           sessionStorage.setItem(type+"TestamentResult",display);
         }
       }
       requestAnimationFrame(animate);
     }
 
-    function loadStreakBadge(){
-      const b=document.getElementById("streakBadge"),
-            sd=JSON.parse(localStorage.getItem("streakData"))||{streak:0,lastDate:null},
-            today=new Date().toISOString().split("T")[0],
-            y=new Date();
+    function loadStreakBadge() {
+      const b=document.getElementById("streakBadge"), sd=JSON.parse(localStorage.getItem("streakData"))||{streak:0,lastDate:null}, today=new Date().toISOString().split("T")[0], y=new Date();
       y.setDate(y.getDate()-1);
       const yesterday=y.toISOString().split("T")[0];
       b.textContent = (sd.lastDate!==today && sd.lastDate!==yesterday)
@@ -274,8 +271,7 @@
         : `🔥 ${sd.streak}-Day Streak`;
     }
 
-    window.onload=function(){
-      // daily scripture-of-day
+    window.onload = function() {
       const verses=[
         "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
         "Philippians 4:13 — I can do all things through Christ who strengthens me.",
@@ -298,18 +294,12 @@
         "Joshua 1:9 — Be strong and courageous...",
         "Ephesians 2:8 — For by grace you have been saved through faith..."
       ];
-      const now=new Date(),
-            start=new Date(now.getFullYear(),0,0),
-            diff=now-start,
-            day=Math.floor(diff/(1000*60*60*24)),
-            full=verses[day%verses.length],
-            ref=full.split(' — ')[0];
+      const now=new Date(), start=new Date(now.getFullYear(),0,0), diff=now-start, day=Math.floor(diff/(1000*60*60*24)), full=verses[day%verses.length], ref=full.split(' — ')[0];
       document.getElementById("verseText").innerText=`Scripture of the Day: ${full}`;
       document.getElementById("learnMoreLink").href=`https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(ref)}&version=ESV`;
       drawWheel("oldWheel",oldTestamentBooks);
       drawWheel("newWheel",newTestamentBooks);
-      const o=sessionStorage.getItem("oldTestamentResult"),
-            n=sessionStorage.getItem("newTestamentResult");
+      const o=sessionStorage.getItem("oldTestamentResult"), n=sessionStorage.getItem("newTestamentResult");
       if(o) document.getElementById("oldResult").textContent=o;
       if(n) document.getElementById("newResult").textContent=n;
       loadStreakBadge();
@@ -318,19 +308,77 @@
     window.addEventListener('DOMContentLoaded',()=>{
       const exists=localStorage.getItem("userCredentials")!==null;
       if(exists){
-        const a=document.getElementById("accountLink");
-        if(a){ a.textContent="Profile"; a.href="profile.html"; }
-        const sel=document.getElementById("mobileAccountSelect");
-        if(sel){
+        const a=document.getElementById("accountLink"); if(a){ a.textContent="Profile"; a.href="profile.html"; }
+        const sel=document.getElementById("mobileAccountSelect"); if(sel){
           for(let i=0;i<sel.options.length;i++){
-            if(sel.options[i].value==="register.html"){
-              sel.options[i].text="Profile";
-              sel.options[i].value="profile.html";
-              break;
-            }
+            if(sel.options[i].value==="register.html"){ sel.options[i].text="Profile"; sel.options[i].value="profile.html"; break; }
           }
         }
       }
+    });
+  </script>
+</body>
+</html>
+
+
+<!-- bible-search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>75 Hard Bible Edition - Bible Search</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; color: #333; }
+    h1 { text-align: center; }
+    .search-container { text-align: center; margin-bottom: 1.5rem; }
+    input, button { padding: 0.5rem 1rem; font-size: 1rem; margin-right: 0.5rem; }
+    #bibleContent h2 { margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
+    #bibleContent p { margin: 0.5rem 0; }
+    sup { font-size: 0.85rem; vertical-align: super; margin-right: 0.25rem; }
+  </style>
+</head>
+<body>
+  <h1>75 Hard Bible Edition</h1>
+  <div class="search-container">
+    <input id="bookInput" list="books" placeholder="Enter a book name, e.g. Genesis">
+    <datalist id="books"></datalist>
+    <button id="searchBtn">Search</button>
+  </div>
+  <div id="bibleContent"></div>
+
+  <script>
+    const books = [
+      "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
+      "Joshua","Judges","Ruth","1 Samuel","2 Samuel",
+      "1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra",
+      "Nehemiah","Esther","Job","Psalms","Proverbs",
+      "Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations",
+      "Ezekiel","Daniel","Hosea","Joel","Amos",
+      "Obadiah","Jonah","Micah","Nahum","Habakkuk",
+      "Zephaniah","Haggai","Zechariah","Malachi",
+      "Matthew","Mark","Luke","John","Acts",
+      "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
+      "Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy",
+      "2 Timothy","Titus","Philemon","Hebrews","James",
+      "1 Peter","2 Peter","1 John","2 John","3 John",
+      "Jude","Revelation"
+    ];
+    const datalist = document.getElementById('books');
+    books.forEach(book => { const option = document.createElement('option'); option.value = book; datalist.appendChild(option); });
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const book = document.getElementById('bookInput').value.trim();
+      if (!books.includes(book)) return alert('Please select a valid book from the list.');
+      fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=web`)
+        .then(r => r.json())
+        .then(d => {
+          const c = document.getElementById('bibleContent'); if (d.error) return c.innerHTML = `<p>Error: ${d.error}</p>`;
+          let html = `<h2>${d.reference}</h2>`;
+          d.verses.forEach(v => { html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`; });
+          c.innerHTML = html;
+        })
+        .catch(() => document.getElementById('bibleContent').innerHTML = '<p>Failed to fetch.</p>');
     });
   </script>
 </body>
