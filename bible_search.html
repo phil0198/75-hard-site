@@ -57,12 +57,18 @@
       padding: 0.75rem 1rem; font-size: 1rem;
       border-radius: 6px; border: 1px solid #ccc;
     }
-    .search-container select { width: 180px; }
+    .search-container select { width: 160px; }
     .search-container button {
       background-color: var(--accent);
       color: var(--text-light); border: none; cursor: pointer;
     }
     .search-container button:hover { opacity: 0.9; }
+    .nav-btn {
+      padding: 0.5rem 0.75rem; font-size: 1.2rem;
+      background: var(--nav-bg); color: white; border: none;
+      border-radius: 6px; cursor: pointer;
+    }
+    .nav-btn:disabled { opacity: 0.5; cursor: default; }
     #bibleContent { text-align: left; }
     #bibleContent h2 {
       font-size: 1.75rem; border-bottom: 2px solid var(--accent);
@@ -103,6 +109,8 @@
       <select id="chapterSelect" disabled>
         <option disabled selected>Chapter</option>
       </select>
+      <button id="prevBtn" class="nav-btn" disabled title="Previous Chapter">←</button>
+      <button id="nextBtn" class="nav-btn" disabled title="Next Chapter">→</button>
       <select id="versionSelect">
         <option value="web">WEB</option>
         <option value="kjv">KJV</option>
@@ -120,13 +128,11 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Theme toggle
+      const body = document.body;
       document.querySelector('.theme-toggle').addEventListener('click', () => {
-        const body = document.body;
         body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
       });
 
-      // Map of chapters per book
       const bibleChapters = {
         'Genesis':50,'Exodus':40,'Leviticus':27,'Numbers':36,'Deuteronomy':34,
         'Joshua':24,'Judges':21,'Ruth':4,'1 Samuel':31,'2 Samuel':24,'1 Kings':22,'2 Kings':25,
@@ -141,36 +147,38 @@
         '1 John':5,'2 John':1,'3 John':1,'Jude':1,'Revelation':22
       };
 
-      // Populate book select
       const bookSelect = document.getElementById('bookSelect');
       const chapterSelect = document.getElementById('chapterSelect');
-      for (const book in bibleChapters) {
+      const versionSelect = document.getElementById('versionSelect');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const searchBtn = document.getElementById('searchBtn');
+      const container = document.getElementById('bibleContent');
+
+      let currentBook = '';
+      let currentChap = 1;
+
+      // Populate book dropdown
+      Object.keys(bibleChapters).forEach(book => {
         const opt = document.createElement('option'); opt.value = book; opt.textContent = book;
         bookSelect.appendChild(opt);
-      }
+      });
 
       // Populate chapters on book change
       bookSelect.addEventListener('change', () => {
-        const chapters = bibleChapters[bookSelect.value];
+        currentBook = bookSelect.value;
         chapterSelect.innerHTML = '<option disabled selected>Chapter</option>';
-        for (let i = 1; i <= chapters; i++) {
+        for (let i = 1; i <= bibleChapters[currentBook]; i++) {
           const opt = document.createElement('option'); opt.value = i; opt.textContent = i;
           chapterSelect.appendChild(opt);
         }
         chapterSelect.disabled = false;
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
       });
 
-      // Fetch and render single chapter
-      document.getElementById('searchBtn').addEventListener('click', async () => {
-        const book = bookSelect.value;
-        const chap = chapterSelect.value;
-        const version = document.getElementById('versionSelect').value;
-        const container = document.getElementById('bibleContent');
-        container.innerHTML = '';
-        if (!book || !chap) {
-          container.innerHTML = '<div class="error">Please select a book and chapter.</div>';
-          return;
-        }
+      // Render a chapter
+      async function renderChapter(book, chap, version) {
         container.innerHTML = `<h2>${book} ${chap} (${version.toUpperCase()})</h2><div class="error">Loading...</div>`;
         try {
           const url = `https://bible-api.com/${encodeURIComponent(book + ' ' + chap)}?translation=${version}`;
@@ -186,6 +194,37 @@
           });
         } catch (err) {
           container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        }
+      }
+
+      // Search handler
+      function doSearch() {
+        currentChap = parseInt(chapterSelect.value, 10);
+        const version = versionSelect.value;
+        renderChapter(currentBook, currentChap, version);
+        prevBtn.disabled = currentChap <= 1;
+        nextBtn.disabled = currentChap >= bibleChapters[currentBook];
+      }
+
+      searchBtn.addEventListener('click', () => {
+        if (bookSelect.value && chapterSelect.value) {
+          doSearch();
+        } else {
+          container.innerHTML = '<div class="error">Please select a book and chapter.</div>';
+        }
+      });
+
+      // Prev/Next handlers
+      prevBtn.addEventListener('click', () => {
+        if (currentChap > 1) {
+          chapterSelect.value = --currentChap;
+          doSearch();
+        }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (currentChap < bibleChapters[currentBook]) {
+          chapterSelect.value = ++currentChap;
+          doSearch();
         }
       });
     });
