@@ -83,45 +83,18 @@
   <div id="bibleContent"></div>
 
   <script>
-    const books = [...document.getElementById('books').options].map(o => o.value);
-    
-    // Populate datalist options
-    const datalistElem = document.getElementById('books');
-    books.forEach(b => {
-      const opt = document.createElement('option'); opt.value = b; datalistElem.appendChild(opt);
-    });
-
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-      const book = document.getElementById('bookInput').value.trim();
-      const version = document.getElementById('versionSelect').value;
-      const container = document.getElementById('bibleContent');
-      if (!books.includes(book)) {
-        container.innerHTML = '<div class="error">Please select a valid book.</div>';
-        return;
-      }
-      container.innerHTML = '<div class="error">Loading book...</div>';
-      try {
-        // Fetch entire book
-        const res = await fetch(`https://bible-api.com/${encodeURIComponent(book)}?translation=${version}`);
-        const data = await res.json();
-        if (data.error) {
-          container.innerHTML = `<div class="error">Error: ${data.error}</div>`;
-          return;
-        }
-        let html = `<h2>${book} (${version.toUpperCase()})</h2>`;
-        let currentChap = 0;
-        data.verses.forEach(v => {
-          if (v.chapter !== currentChap) {
-            currentChap = v.chapter;
-            html += `<h3>Chapter ${currentChap}</h3>`;
-          }
-          html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
-        });
-        container.innerHTML = html;
-      } catch (err) {
-        container.innerHTML = '<div class="error">Failed to fetch the requested book.</div>';
-      }
-    });
-  </script>
-</body>
-</html>
+    const books = [
+      "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy",
+      "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel",
+      "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra",
+      "Nehemiah", "Esther", "Job", "Psalms", "Proverbs",
+      "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations",
+      "Ezekiel", "Daniel", "Hosea", "Joel", "Amos",
+      "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+      "Zephaniah", "Haggai", "Zechariah", "Malachi",
+      "Matthew", "Mark", "Luke", "John", "Acts",
+      "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians",
+      "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy",
+      "2 Timothy", "Titus", "Philemon", "Hebrews", "James",
+      "1 Peter", "2 Peter", "1 John", "2 User Escape… truncated」
+}]}
