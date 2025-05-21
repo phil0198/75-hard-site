@@ -17,6 +17,7 @@
     }
     button {
       margin-top: 1rem;
+      margin-right: 0.5rem;
       padding: 0.5rem 1rem;
       font-size: 1rem;
       border: none;
@@ -26,17 +27,22 @@
       cursor: pointer;
     }
     #results {
-      margin-top: 1rem;
-      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+    }
+    #results span {
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
   <h1>Plinko Bible Picker</h1>
   <canvas id="plinkoCanvas" width="400" height="500"></canvas>
+
   <div>
     <button onclick="dropBall('old')">Drop Old Testament Ball</button>
     <button onclick="dropBall('new')">Drop New Testament Ball</button>
+    <button onclick="resetSelections()">Reset Books</button>
     <div id="results">
       <p>Old Testament: <span id="oldResult">None</span></p>
       <p>New Testament: <span id="newResult">None</span></p>
@@ -89,9 +95,9 @@
     function pickRandomReading(type) {
       const books = Object.keys(bibleStructure[type]);
       const randomBook = books[Math.floor(Math.random() * books.length)];
-      const chapterMax = bibleStructure[type][randomBook];
-      const randomChapter = Math.floor(Math.random() * chapterMax) + 1;
-      return `${randomBook} ${randomChapter}`;
+      const maxChapter = bibleStructure[type][randomBook];
+      const chapter = Math.floor(Math.random() * maxChapter) + 1;
+      return `${randomBook} ${chapter}`;
     }
 
     function dropBall(type) {
@@ -115,15 +121,34 @@
           requestAnimationFrame(animate);
         } else {
           const result = pickRandomReading(type);
-          document.getElementById(type + 'Result').textContent = result;
-          sessionStorage.setItem(
-            type === 'old' ? 'oldTestamentResult' : 'newTestamentResult',
-            result
-          );
+          if (type === 'old') {
+            sessionStorage.setItem('oldTestamentResult', result);
+            document.getElementById('oldResult').textContent = result;
+          } else {
+            sessionStorage.setItem('newTestamentResult', result);
+            document.getElementById('newResult').textContent = result;
+          }
         }
       }
 
+      // Clear old before new drop
+      if (type === 'old') {
+        sessionStorage.removeItem('oldTestamentResult');
+        document.getElementById('oldResult').textContent = '...';
+      } else {
+        sessionStorage.removeItem('newTestamentResult');
+        document.getElementById('newResult').textContent = '...';
+      }
+
       animate();
+    }
+
+    function resetSelections() {
+      sessionStorage.removeItem('oldTestamentResult');
+      sessionStorage.removeItem('newTestamentResult');
+      document.getElementById('oldResult').textContent = 'None';
+      document.getElementById('newResult').textContent = 'None';
+      drawBoard();
     }
 
     function goToJournal() {
