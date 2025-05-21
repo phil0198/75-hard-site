@@ -7,113 +7,159 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     :root {
-      --bg-light: #1f2937;
-      --text-light: #f9fafb;
-      --card-bg: #2e3a4e;
+      --bg: #1f2937;
+      --text: #f9fafb;
       --accent: #f4c430;
-      --nav-bg: #334155;
-      --nav-hover: #1e293b;
+      --card: #2e3a4e;
     }
-    * { box-sizing: border-box; }
     body {
-      margin: 0; padding: 0; font-family: 'Inter', sans-serif;
-      background: var(--bg-light); color: var(--text-light);
-      transition: background 0.3s, color 0.3s;
-      text-align: center;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
     }
     header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 2rem; background: var(--card-bg);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: var(--card);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-    header nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+    header nav {
+      display: flex;
+      gap: 1rem;
+    }
     header nav a {
-      text-decoration: none; padding: 0.5rem 1rem;
-      background-color: var(--nav-bg); color: white;
-      border-radius: 6px; font-weight: 500;
+      text-decoration: none;
+      color: white;
+      background: #334155;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
     }
-    header nav a:hover { background-color: var(--nav-hover); }
-    h1 { font-size: 2.5rem; margin-top: 1rem; }
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 1rem;
+    }
     .scripture-of-day {
-      max-width: 600px;
-      margin: 2rem auto;
-      background-color: var(--card-bg);
+      background-color: var(--card);
       padding: 1rem 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      margin: 2rem auto;
+      max-width: 600px;
       font-style: italic;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    .wheel-container {
-      display: flex; justify-content: space-around;
-      flex-wrap: wrap; align-items: flex-start;
-      margin-top: 2rem;
+    #plinkos {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 3rem;
+      margin-top: 3rem;
     }
-    .wheel-section {
-      display: flex; flex-direction: column; align-items: center;
-      background-color: var(--card-bg);
+    .plinkoboard {
+      background: #111827;
+      border: 2px solid #374151;
+      border-radius: 12px;
       padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      margin: 1rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
     }
     canvas {
-      margin-bottom: 1rem;
-      background-color: transparent;
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+      display: block;
+      margin: auto;
     }
     .spin-btn {
       background-color: var(--accent);
-      color: var(--text-light);
-      border: none;
+      color: #000;
       padding: 0.75rem 1.5rem;
+      border: none;
       border-radius: 8px;
-      cursor: pointer;
       font-size: 1rem;
+      cursor: pointer;
       margin-top: 1rem;
     }
-    .spin-btn:hover { opacity: 0.9; }
     .result-text {
       margin-top: 1rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
   </style>
 </head>
-<body data-theme="dark">
+<body>
   <header>
     <nav>
       <a href="index.html">Home</a>
       <a href="journal.html">Journal</a>
-      <a href="prayer-generator.html">Prayer Generator</a>
-      <a href="past-entries.html">Past Entries</a>
-      <a href="scripture-search.html">Scripture Search</a>
-      <a href="bible_search.html">Bible Search</a>
-      <a href="streak.html">Streak Tracker</a>
-      <a href="register.html" id="accountLink">Create Account</a>
+      <a href="prayer-generator.html">Prayer</a>
+      <a href="past-entries.html">Past</a>
+      <a href="scripture-search.html">Scripture</a>
+      <a href="bible_search.html">Bible</a>
+      <a href="streak.html">Streak</a>
+      <a href="register.html">Account</a>
     </nav>
   </header>
+
   <main>
     <h1>75 Hard – Bible Edition</h1>
-    <div class="scripture-of-day" id="dailyVerse">
+
+    <div class="scripture-of-day">
       <span id="verseText">Loading scripture of the day...</span><br>
-      <a id="learnMoreLink" href="#" target="_blank" style="display:inline-block; margin-top:0.5rem; color:var(--accent); text-decoration: underline; font-size:0.9rem;">Learn more</a>
+      <a id="learnMoreLink" href="#" target="_blank" style="color: var(--accent); text-decoration: underline; display: inline-block; margin-top: 0.5rem;">Learn more</a>
     </div>
-    <div class="wheel-container">
-      <div class="wheel-section">
+
+    <div id="plinkos">
+      <div class="plinkoboard">
         <h2>Old Testament</h2>
-        <canvas id="oldWheel" width="300" height="300"></canvas>
-        <button class="spin-btn" onclick="startSpin('old')">Spin Old Testament</button>
+        <canvas id="oldPlinko" width="300" height="400"></canvas>
+        <button class="spin-btn" onclick="startPlinko('old')">Drop Ball</button>
         <div id="oldResult" class="result-text"></div>
       </div>
-      <div class="wheel-section">
+      <div class="plinkoboard">
         <h2>New Testament</h2>
-        <canvas id="newWheel" width="300" height="300"></canvas>
-        <button class="spin-btn" onclick="startSpin('new')">Spin New Testament</button>
+        <canvas id="newPlinko" width="300" height="400"></canvas>
+        <button class="spin-btn" onclick="startPlinko('new')">Drop Ball</button>
         <div id="newResult" class="result-text"></div>
       </div>
     </div>
   </main>
-  <script src="wheel.js"></script>
+
+  <script>
+    const verses = [
+      "Psalm 23:1 — The Lord is my shepherd; I shall not want.",
+      "Philippians 4:13 — I can do all things through Christ who strengthens me.",
+      "John 3:16 — For God so loved the world...",
+      "Romans 8:28 — And we know that in all things God works for the good...",
+      "Isaiah 40:31 — But those who hope in the Lord will renew their strength.",
+      "Jeremiah 29:11 — For I know the plans I have for you, declares the Lord...",
+      "Proverbs 3:5 — Trust in the Lord with all your heart...",
+      "Matthew 11:28 — Come to me, all who labor and are heavy laden...",
+      "Psalm 46:1 — God is our refuge and strength...",
+      "James 1:2 — Consider it pure joy...",
+      "1 Peter 5:7 — Cast all your anxiety on him...",
+      "Romans 12:2 — Do not conform to the pattern of this world...",
+      "Hebrews 11:1 — Now faith is the assurance...",
+      "Galatians 5:22 — But the fruit of the Spirit is love, joy, peace...",
+      "2 Timothy 1:7 — For God gave us a spirit not of fear...",
+      "Psalm 118:24 — This is the day that the Lord has made...",
+      "Matthew 6:33 — But seek first the kingdom of God...",
+      "Colossians 3:23 — Whatever you do, work at it with all your heart...",
+      "Joshua 1:9 — Be strong and courageous...",
+      "Ephesians 2:8 — For by grace you have been saved through faith..."
+    ];
+    window.onload = function () {
+      const day = new Date().getDay();
+      const verse = verses[day % verses.length];
+      const ref = verse.split(' — ')[0];
+      document.getElementById('verseText').textContent = `Scripture of the Day: ${verse}`;
+      document.getElementById('learnMoreLink').href = `https://www.biblegateway.com/quicksearch/?quicksearch=${encodeURIComponent(ref)}&version=ESV`;
+    };
+  </script>
+  <script src="plinko.js"></script>
 </body>
 </html>
