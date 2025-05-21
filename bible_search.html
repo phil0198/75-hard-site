@@ -198,7 +198,7 @@
             p.innerHTML = `<sup>${v.chapter}:${v.verse}</sup> ${v.text.trim()}`;
             lastDetail.appendChild(p);
           });
-        } catch (err) (err) {
+        } catch (err) {
           container.innerHTML = `<div class="error">Error: ${err.message}</div>`;
         }
       });
