@@ -158,18 +158,22 @@
       let currentBook = '';
       let currentChap = 1;
 
-      // Populate book dropdown
-      Object.keys(bibleChapters).forEach(book => {
-        const opt = document.createElement('option'); opt.value = book; opt.textContent = book;
+      const books = Object.keys(bibleChapters);
+
+      books.forEach(book => {
+        const opt = document.createElement('option');
+        opt.value = book;
+        opt.textContent = book;
         bookSelect.appendChild(opt);
       });
 
-      // Populate chapters on book change
       bookSelect.addEventListener('change', () => {
         currentBook = bookSelect.value;
         chapterSelect.innerHTML = '<option disabled selected>Chapter</option>';
         for (let i = 1; i <= bibleChapters[currentBook]; i++) {
-          const opt = document.createElement('option'); opt.value = i; opt.textContent = i;
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = i;
           chapterSelect.appendChild(opt);
         }
         chapterSelect.disabled = false;
@@ -177,7 +181,6 @@
         nextBtn.disabled = true;
       });
 
-      // Render a chapter
       async function renderChapter(book, chap, version) {
         container.innerHTML = `<h2>${book} ${chap} (${version.toUpperCase()})</h2><div class="error">Loading...</div>`;
         try {
@@ -197,13 +200,13 @@
         }
       }
 
-      // Search handler
       function doSearch() {
         currentChap = parseInt(chapterSelect.value, 10);
         const version = versionSelect.value;
         renderChapter(currentBook, currentChap, version);
-        prevBtn.disabled = currentChap <= 1;
-        nextBtn.disabled = currentChap >= bibleChapters[currentBook];
+        const currentBookIndex = books.indexOf(currentBook);
+        prevBtn.disabled = currentChap <= 1 && currentBookIndex === 0;
+        nextBtn.disabled = currentBookIndex === books.length - 1 && currentChap >= bibleChapters[currentBook];
       }
 
       searchBtn.addEventListener('click', () => {
@@ -214,18 +217,56 @@
         }
       });
 
-      // Prev/Next handlers
       prevBtn.addEventListener('click', () => {
+        const version = versionSelect.value;
+        const currentBookIndex = books.indexOf(currentBook);
         if (currentChap > 1) {
           chapterSelect.value = --currentChap;
-          doSearch();
+        } else if (currentBookIndex > 0) {
+          currentBook = books[currentBookIndex - 1];
+          bookSelect.value = currentBook;
+          currentChap = bibleChapters[currentBook];
+          chapterSelect.innerHTML = '<option disabled selected>Chapter</option>';
+          for (let i = 1; i <= bibleChapters[currentBook]; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = i;
+            chapterSelect.appendChild(opt);
+          }
+          chapterSelect.disabled = false;
+        } else {
+          return;
         }
+        chapterSelect.value = currentChap;
+        renderChapter(currentBook, currentChap, version);
+        prevBtn.disabled = currentChap <= 1 && currentBookIndex === 0;
+        nextBtn.disabled = currentBookIndex === books.length - 1 && currentChap >= bibleChapters[currentBook];
       });
+
       nextBtn.addEventListener('click', () => {
+        const version = versionSelect.value;
+        const currentBookIndex = books.indexOf(currentBook);
         if (currentChap < bibleChapters[currentBook]) {
           chapterSelect.value = ++currentChap;
-          doSearch();
+        } else if (currentBookIndex < books.length - 1) {
+          currentBook = books[currentBookIndex + 1];
+          bookSelect.value = currentBook;
+          currentChap = 1;
+          chapterSelect.innerHTML = '<option disabled selected>Chapter</option>';
+          for (let i = 1; i <= bibleChapters[currentBook]; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = i;
+            chapterSelect.appendChild(opt);
+          }
+          chapterSelect.disabled = false;
+        } else {
+          return;
         }
+        chapterSelect.value = currentChap;
+        renderChapter(currentBook, currentChap, version);
+        prevBtn.disabled = currentChap <= 1 && currentBookIndex === 0;
+        nextBtn.disabled = currentBookIndex === books.length - 1 && currentChap >= bibleChapters[currentBook];
       });
     });
   </script>
