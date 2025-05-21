@@ -20,56 +20,98 @@ const newTestamentBooks = [
   "Jude", "Revelation"
 ];
 
-// This sets up the game canvas and physics (p5.js or Matter.js needed)
-function setupPlinkoBoard(type) {
-  const container = document.getElementById(`${type}-plinko`);
-  container.innerHTML = `<canvas id="${type}-canvas"></canvas><div class="plinko-result" id="${type}-result">Drop the ball!</div>`;
+const bibleChapters = {
+  "Genesis": 50, "Exodus": 40, "Leviticus": 27, "Numbers": 36, "Deuteronomy": 34,
+  "Joshua": 24, "Judges": 21, "Ruth": 4, "1 Samuel": 31, "2 Samuel": 24,
+  "1 Kings": 22, "2 Kings": 25, "1 Chronicles": 29, "2 Chronicles": 36, "Ezra": 10,
+  "Nehemiah": 13, "Esther": 10, "Job": 42, "Psalms": 150, "Proverbs": 31,
+  "Ecclesiastes": 12, "Song of Solomon": 8, "Isaiah": 66, "Jeremiah": 52, "Lamentations": 5,
+  "Ezekiel": 48, "Daniel": 12, "Hosea": 14, "Joel": 3, "Amos": 9,
+  "Obadiah": 1, "Jonah": 4, "Micah": 7, "Nahum": 3, "Habakkuk": 3,
+  "Zephaniah": 3, "Haggai": 2, "Zechariah": 14, "Malachi": 4,
+  "Matthew": 28, "Mark": 16, "Luke": 24, "John": 21, "Acts": 28,
+  "Romans": 16, "1 Corinthians": 16, "2 Corinthians": 13, "Galatians": 6, "Ephesians": 6,
+  "Philippians": 4, "Colossians": 4, "1 Thessalonians": 5, "2 Thessalonians": 3, "1 Timothy": 6,
+  "2 Timothy": 4, "Titus": 3, "Philemon": 1, "Hebrews": 13, "James": 5,
+  "1 Peter": 5, "2 Peter": 3, "1 John": 5, "2 John": 1, "3 John": 1,
+  "Jude": 1, "Revelation": 22
+};
 
-  const canvas = document.getElementById(`${type}-canvas`);
-  const ctx = canvas.getContext('2d');
-  canvas.width = 600;
-  canvas.height = 400;
-
-  const books = type === 'old' ? oldTestamentBooks : newTestamentBooks;
-  const slots = books.length;
-  const slotWidth = canvas.width / slots;
-
-  // Draw bottom slots with labels
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < slots; i++) {
-    ctx.fillStyle = `hsl(${(i / slots) * 360}, 80%, 70%)`;
-    ctx.fillRect(i * slotWidth, canvas.height - 30, slotWidth - 2, 30);
-    ctx.fillStyle = '#000';
-    ctx.font = '10px sans-serif';
-    ctx.fillText(books[i], i * slotWidth + 4, canvas.height - 10);
-  }
-
-  // Drop ball simulation (basic bounce)
-  let ballX = canvas.width / 2;
-  let ballY = 0;
-  let velocity = 0;
-  const gravity = 0.5;
-  const ballRadius = 5;
-  const interval = setInterval(() => {
-    velocity += gravity;
-    ballY += velocity;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height - 40);
-    ctx.beginPath();
-    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-    ctx.fillStyle = 'yellow';
-    ctx.fill();
-
-    if (ballY >= canvas.height - 35) {
-      const chosenIndex = Math.floor(ballX / slotWidth);
-      const book = books[chosenIndex];
-      const chapter = Math.ceil(Math.random() *  (type === 'old' ? 50 : 28)); // Estimate
-      document.getElementById(`${type}-result`).textContent = `${book} ${chapter}`;
-      clearInterval(interval);
-    }
-  }, 30);
+function pickRandomReading(testament) {
+  const books = testament === 'old' ? oldTestamentBooks : newTestamentBooks;
+  const book = books[Math.floor(Math.random() * books.length)];
+  const maxChapter = bibleChapters[book];
+  const chapter = Math.ceil(Math.random() * maxChapter);
+  return `${book} ${chapter}`;
 }
 
-// Example triggers
-// setupPlinkoBoard('old');
-// setupPlinkoBoard('new');
+function createPlinkoBoard(canvasId, type) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // Draw pins (grid)
+  const rows = 7;
+  const cols = 7;
+  const radius = 5;
+
+  ctx.clearRect(0, 0, width, height);
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const x = (col + 1) * (width / (cols + 1));
+      const y = (row + 1) * (height / (rows + 2));
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#ccc";
+      ctx.fill();
+    }
+  }
+}
+
+function dropBall(type) {
+  const canvasId = type === 'old' ? 'oldCanvas' : 'newCanvas';
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+  const width = canvas.width;
+  const height = canvas.height;
+  const ballRadius = 7;
+
+  let x = width / 2;
+  let y = 0;
+  let vx = 0;
+  let vy = 2;
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    createPlinkoBoard(canvasId, type);
+
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "gold";
+    ctx.fill();
+
+    y += vy;
+    x += (Math.random() - 0.5) * 4;
+
+    if (y + ballRadius < height - 20) {
+      requestAnimationFrame(animate);
+    } else {
+      const result = pickRandomReading(type);
+      document.getElementById(`${type}Result`).textContent = result;
+      localStorage.setItem(`${type}TestamentReading`, result);
+    }
+  }
+
+  animate();
+}
+
+window.onload = () => {
+  createPlinkoBoard("oldCanvas", "old");
+  createPlinkoBoard("newCanvas", "new");
+
+  const oldSaved = localStorage.getItem("oldTestamentReading");
+  const newSaved = localStorage.getItem("newTestamentReading");
+  if (oldSaved) document.getElementById("oldResult").textContent = oldSaved;
+  if (newSaved) document.getElementById("newResult").textContent = newSaved;
+};
