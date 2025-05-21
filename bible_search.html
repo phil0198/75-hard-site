@@ -20,7 +20,7 @@
     button#searchBtn:hover { background-color: #fbbf24; }
     #bibleContent { margin-top: 1rem; max-width: 600px; margin: 0 auto; text-align: left; }
     #bibleContent h2 { margin-top: 2rem; font-size: 1.5rem; border-bottom: 1px solid #ccc; padding-bottom: 0.25rem; }
-    #bibleContent h3 { margin-top: 1rem; font-size: 1.25rem; color: #1e293b; }
+    #bibleContent h3 { margin-top: 1.5rem; font-size: 1.25rem; color: #1e293b; }
     #bibleContent p { margin: 0.25rem 0; }
     .error { color: #6b7280; margin-top: 1rem; font-weight: 500; }
     sup { font-size: 0.85rem; vertical-align: super; margin-right: 0.25rem; }
@@ -92,39 +92,37 @@
       "Jude":1,"Revelation":22
     };
 
-    const datalist = document.getElementById('books');
-    books.forEach(book => { const option = document.createElement('option'); option.value = book; datalist.appendChild(option); });
+    // populate datalist
+    const datalistElem = document.getElementById('books');
+    books.forEach(book => {
+      const option = document.createElement('option');
+      option.value = book;
+      datalistElem.appendChild(option);
+    });
 
     document.getElementById('searchBtn').addEventListener('click', async () => {
       const book = document.getElementById('bookInput').value.trim();
+      const container = document.getElementById('bibleContent');
       if (!books.includes(book)) {
-        document.getElementById('bibleContent').innerHTML = '<div class="error">Please select a valid book.</div>';
+        container.innerHTML = '<div class="error">Please select a valid book.</div>';
         return;
       }
-      document.getElementById('bibleContent').innerHTML = '<div class="error">Loading book...</div>';
-      try {
-        const chapterCount = bibleChapters[book];
-        const fetches = [];
-        for (let chap = 1; chap <= chapterCount; chap++) {
-          fetches.push(
-            fetch(`https://bible-api.com/${encodeURIComponent(book + " " + chap)}?translation=web`)
-              .then(res => res.json())
-          );
-        }
-        const chapters = await Promise.all(fetches);
-        let html = `<h2>${book}</h2>`;
-        chapters.forEach(ch => {
-          if (ch.error) return;
-          const chapNum = ch.verses[0]?.chapter;
-          html += `<h3>Chapter ${chapNum}</h3>`;
-          ch.verses.forEach(v => {
+      container.innerHTML = '<div class="error">Loading book...</div>';
+      let html = `<h2>${book}</h2>`;
+      for (let chap = 1; chap <= bibleChapters[book]; chap++) {
+        try {
+          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book + " " + chap)}?translation=web`);
+          const data = await res.json();
+          if (data.error) continue;
+          html += `<h3>Chapter ${chap}</h3>`;
+          data.verses.forEach(v => {
             html += `<p><sup>${v.chapter}:${v.verse}</sup> ${v.text}</p>`;
           });
-        });
-        document.getElementById('bibleContent').innerHTML = html;
-      } catch (err) {
-        document.getElementById('bibleContent').innerHTML = '<div class="error">Failed to fetch the book.</div>';
+        } catch (e) {
+          console.warn(`Failed to load chapter ${chap}`, e);
+        }
       }
+      container.innerHTML = html;
     });
   </script>
 </body>
