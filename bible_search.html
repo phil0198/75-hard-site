@@ -14,8 +14,9 @@
     select.mobile-dropdown { width: 100%; max-width: 300px; padding: 0.5rem; font-size: 1rem; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 2rem; }
     @media (max-width: 640px) { nav { display: none; } .mobile-nav { display: block; } }
     h1 { font-size: 2rem; margin-bottom: 1rem; }
-    .search-container { margin-bottom: 1.5rem; }
+    .search-container { margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
     input#bookInput { width: 300px; max-width: 100%; padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+    select#versionSelect { padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; background: white; }
     button#searchBtn { padding: 0.75rem 1.5rem; font-size: 1rem; border: none; border-radius: 6px; background-color: #fcd34d; cursor: pointer; }
     button#searchBtn:hover { background-color: #fbbf24; }
     #bibleContent { margin-top: 1rem; max-width: 600px; margin: 0 auto; text-align: left; }
@@ -53,8 +54,30 @@
   <h1>75 Hard Bible Edition</h1>
   <div class="search-container">
     <input id="bookInput" list="books" placeholder="Enter a book name, e.g. Genesis">
-    <datalist id="books"></datalist>
+    <select id="versionSelect">
+      <option value="web">WEB (World English Bible)</option>
+      <option value="esv">ESV (English Standard Version)</option>
+      <option value="kjv">KJV (King James Version)</option>
+      <option value="asv">ASV (American Standard Version)</option>
+      <option value="bbe">BBE (Basic English Bible)</option>
+      <option value="darby">Darby Translation</option>
+      <option value="ylt">YLT (Young's Literal Translation)</option>
+      <option value="nasb">NASB (New American Standard Bible)</option>
+      <option value="niv">NIV (New International Version)</option>
+      <option value="nlt">NLT (New Living Translation)</option>
+      <option value="nkjv">NKJV (New King James Version)</option>
+      <option value="msg">MSG (The Message)</option>
+      <option value="ceb">CEB (Common English Bible)</option>
+      <option value="amp">AMP (Amplified Bible)</option>
+      <option value="nrsv">NRSV (New Revised Standard Version)</option>
+      <option value="rsb">RSB (Revised Standard Bible)</option>
+      <option value="gnb">GNB (Good News Bible)</option>
+      <option value="nivuk">NIVUK (New International Version UK)</option>
+      <option value="esvuk">ESVUK (English Standard Version UK)</option>
+      <option value="nltp">NLTP (New Living Translation – Paperback)</option>
+    </select>
     <button id="searchBtn">Search</button>
+    <datalist id="books"></datalist>
   </div>
   <div id="bibleContent"></div>
 
@@ -75,6 +98,7 @@
       "1 Peter","2 Peter","1 John","2 John","3 John",
       "Jude","Revelation"
     ];
+
     const bibleChapters = {
       "Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,
       "Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,
@@ -102,16 +126,17 @@
 
     document.getElementById('searchBtn').addEventListener('click', async () => {
       const book = document.getElementById('bookInput').value.trim();
+      const version = document.getElementById('versionSelect').value;
       const container = document.getElementById('bibleContent');
       if (!books.includes(book)) {
         container.innerHTML = '<div class="error">Please select a valid book.</div>';
         return;
       }
       container.innerHTML = '<div class="error">Loading book...</div>';
-      let html = `<h2>${book}</h2>`;
+      let html = `<h2>${book} (${version.toUpperCase()})</h2>`;
       for (let chap = 1; chap <= bibleChapters[book]; chap++) {
         try {
-          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book + " " + chap)}?translation=web`);
+          const res = await fetch(`https://bible-api.com/${encodeURIComponent(book + " " + chap)}?translation=${version}`);
           const data = await res.json();
           if (data.error) continue;
           html += `<h3>Chapter ${chap}</h3>`;
