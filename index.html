@@ -116,7 +116,23 @@
   
 
   <script>
-    const pegs = {};
+    const pegSounds = [
+  "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3",
+  "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/click.mp3",
+  "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/tick.mp3"
+];
+let lastPegSoundTime = 0;
+function playPegSound() {
+  const now = Date.now();
+  if (now - lastPegSoundTime > 100) {
+    const sound = new Audio(pegSounds[Math.floor(Math.random() * pegSounds.length)]);
+    sound.volume = 0.4;
+    sound.play();
+    lastPegSoundTime = now;
+  }
+}
+
+const pegs = {};
 const balls = {};
 const assignedBooks = {};
 
@@ -221,7 +237,7 @@ function update(type, canvasId) {
         const dy = ball.y - peg.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < ((peg.radius || 4) + 4)) {
-          new Audio("https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3").play();
+          playPegSound();
           const angle = Math.atan2(dy, dx);
           const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
           ball.vx = Math.cos(angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI / 3) * speed;
