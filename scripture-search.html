@@ -4,79 +4,85 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scripture Search</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f9faff;
-      margin: 0;
-      padding: 2rem;
+      background-color: #1f2937;
+      color: #f9fafb;
       text-align: center;
+      margin: 0;
+      padding: 1rem 0.75rem;
     }
-
     nav {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin-bottom: 2rem;
+      background-color: #334155;
+      padding: 1rem;
     }
-
     nav a {
+      color: #f9fafb;
       text-decoration: none;
-      padding: 0.5rem 1rem;
+      font-weight: 500;
       background-color: #1e293b;
-      color: white;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
     }
-
+    nav a:hover {
+      background-color: #475569;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+    p {
+      margin: 0 0 2rem;
+    }
     .grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
       max-width: 900px;
-      margin: 2rem auto;
+      margin: 0 auto;
     }
-
     .topic-card {
-      background-color: #fff;
+      background-color: #334155;
       padding: 1rem;
       border-radius: 8px;
-      border: 1px solid #ccc;
+      border: 1px solid #475569;
       cursor: pointer;
       transition: all 0.2s;
+      color: #f9fafb;
+      font-weight: 500;
     }
-
     .topic-card:hover {
-      background-color: #e0e7ff;
-      border-color: #4f46e5;
+      background-color: #475569;
+      border-color: #facc15;
+      color: #facc15;
     }
-
     #results {
       margin-top: 2rem;
       text-align: left;
       max-width: 700px;
       margin-left: auto;
       margin-right: auto;
-      background-color: #fff;
+      background-color: #334155;
       border-radius: 8px;
       padding: 1.5rem;
-      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-
     #results ul {
       list-style-type: none;
       padding-left: 0;
     }
-
     #results li {
       margin-bottom: 1rem;
-      color: #1e40af;
+      color: #facc15;
     }
-
     .verse-text {
       margin-top: 0.25rem;
       padding-left: 1rem;
-      color: #111827;
+      color: #f9fafb;
       font-style: italic;
     }
   </style>
@@ -87,6 +93,9 @@
     <a href="journal.html">Journal</a>
     <a href="prayer-generator.html">Prayer Generator</a>
     <a href="scripture-search.html">Scripture Search</a>
+    <a href="bible_search.html">Bible Search</a>
+    <a href="streak.html">Streak Tracker</a>
+    <a href="register.html">Create Account</a>
   </nav>
 
   <h1>Scripture Search</h1>
@@ -97,90 +106,109 @@
 
   <script>
     const scriptureData = {
-      love: ["1 Corinthians 13:4-5", "John 15:13", "Romans 5:8"],
-      fear: ["Isaiah 41:10", "2 Timothy 1:7", "Psalm 23:4"],
-      rest: ["Matthew 11:28", "Psalm 4:8", "Exodus 33:14"],
-      hope: ["Jeremiah 29:11", "Romans 15:13", "Hebrews 11:1"],
-      anxiety: ["Philippians 4:6-7", "1 Peter 5:7", "Psalm 94:19"],
-      strength: ["Isaiah 40:31", "Philippians 4:13", "Psalm 46:1"],
-      faith: ["Hebrews 11:6", "Romans 10:17", "James 2:17"],
-      forgiveness: ["1 John 1:9", "Ephesians 4:32", "Colossians 3:13"],
-      patience: ["Galatians 5:22", "Romans 12:12", "James 5:8"],
-      joy: ["Nehemiah 8:10", "Psalm 16:11", "John 16:24"],
-      healing: ["Jeremiah 17:14", "Isaiah 53:5", "Psalm 147:3"],
-      wisdom: ["James 1:5", "Proverbs 3:5-6", "Ecclesiastes 7:12"],
-      pride: ["Proverbs 16:18", "James 4:6", "Galatians 6:3"],
-      trust: ["Proverbs 3:5-6", "Psalm 56:3", "Isaiah 26:4"],
-      guidance: ["Psalm 32:8", "Isaiah 30:21", "Proverbs 16:9"],
-      deliverance: ["Psalm 34:17", "Colossians 1:13", "2 Samuel 22:2"],
-      renewal: ["Romans 12:2", "Psalm 51:10", "2 Corinthians 4:16"],
-      provision: ["Philippians 4:19", "Psalm 23:1", "Matthew 6:31-33"],
-      obedience: ["John 14:23", "James 1:22", "Deuteronomy 5:33"],
-      peace: ["John 14:27", "Romans 5:1", "Isaiah 26:3"]
-    };
-
+  love: ["1 Corinthians 13:4-5", "John 15:13", "Romans 5:8"],
+  fear: ["Isaiah 41:10", "2 Timothy 1:7", "Psalm 23:4"],
+  rest: ["Matthew 11:28", "Psalm 4:8", "Exodus 33:14"],
+  hope: ["Jeremiah 29:11", "Romans 15:13", "Hebrews 11:1"],
+  anxiety: ["Philippians 4:6-7", "1 Peter 5:7", "Psalm 94:19"],
+  strength: ["Isaiah 40:31", "Philippians 4:13", "Psalm 46:1"],
+  faith: ["Hebrews 11:6", "Romans 10:17", "James 2:17"],
+  forgiveness: ["1 John 1:9", "Ephesians 4:32", "Colossians 3:13"],
+  patience: ["Galatians 5:22", "Romans 12:12", "James 5:8"],
+  joy: ["Nehemiah 8:10", "Psalm 16:11", "John 16:24"],
+  healing: ["Jeremiah 17:14", "Isaiah 53:5", "Psalm 147:3"],
+  wisdom: ["James 1:5", "Proverbs 3:5-6", "Ecclesiastes 7:12"],
+  pride: ["Proverbs 16:18", "James 4:6", "Galatians 6:3"],
+  trust: ["Proverbs 3:5-6", "Psalm 56:3", "Isaiah 26:4"],
+  guidance: ["Psalm 32:8", "Isaiah 30:21", "Proverbs 16:9"],
+  deliverance: ["Psalm 34:17", "Colossians 1:13", "2 Samuel 22:2"],
+  renewal: ["Romans 12:2", "Psalm 51:10", "2 Corinthians 4:16"],
+  provision: ["Philippians 4:19", "Psalm 23:1", "Matthew 6:31-33"],
+  obedience: ["John 14:23", "James 1:22", "Deuteronomy 5:33"],
+  peace: ["John 14:27", "Romans 5:1", "Isaiah 26:3"],
+  humility: ["Philippians 2:3", "Micah 6:8", "Luke 14:11"],
+  purpose: ["Romans 8:28", "Proverbs 19:21", "Jeremiah 1:5"],
+  gratitude: ["1 Thessalonians 5:18", "Psalm 107:1", "Colossians 3:15"],
+  encouragement: ["1 Thessalonians 5:11", "Hebrews 10:24", "Proverbs 12:25"],
+  identity: ["Genesis 1:27", "Galatians 2:20", "1 Peter 2:9"]
+};
     const verseText = {
-      "1 Corinthians 13:4-5": "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.",
-      "John 15:13": "Greater love has no one than this: to lay down one's life for one's friends.",
-      "Romans 5:8": "But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.",
-      "Isaiah 41:10": "Fear not, for I am with you; be not dismayed, for I am your God.",
-      "2 Timothy 1:7": "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
-      "Psalm 23:4": "Even though I walk through the darkest valley, I will fear no evil, for you are with me.",
-      "Matthew 11:28": "Come to me, all you who are weary and burdened, and I will give you rest.",
-      "Psalm 4:8": "In peace I will lie down and sleep, for you alone, LORD, make me dwell in safety.",
-      "Exodus 33:14": "My Presence will go with you, and I will give you rest.",
-      "Jeremiah 29:11": "'For I know the plans I have for you,' declares the LORD...",
-      "Romans 15:13": "May the God of hope fill you with all joy and peace as you trust in him...",
-      "Hebrews 11:1": "Now faith is confidence in what we hope for and assurance about what we do not see.",
-      "Philippians 4:6-7": "Do not be anxious about anything, but in every situation...",
-      "1 Peter 5:7": "Cast all your anxiety on him because he cares for you.",
-      "Psalm 94:19": "When anxiety was great within me, your consolation brought me joy.",
-      "Isaiah 40:31": "But those who hope in the LORD will renew their strength...",
-      "Philippians 4:13": "I can do all things through Christ who strengthens me.",
-      "Psalm 46:1": "God is our refuge and strength, an ever-present help in trouble.",
-      "Hebrews 11:6": "Without faith it is impossible to please God...",
-      "Romans 10:17": "So faith comes from hearing...",
-      "James 2:17": "Faith by itself, if it is not accompanied by action, is dead.",
-      "1 John 1:9": "If we confess our sins, He is faithful and just...",
-      "Ephesians 4:32": "Be kind and compassionate...",
-      "Colossians 3:13": "Bear with each other and forgive one another...",
-      "Galatians 5:22": "But the fruit of the Spirit is love, joy, peace, patience, kindness...",
-      "Romans 12:12": "Be joyful in hope, patient in affliction, faithful in prayer.",
-      "James 5:8": "You too, be patient and stand firm, because the Lord’s coming is near.",
-      "Nehemiah 8:10": "The joy of the LORD is your strength.",
-      "Psalm 16:11": "You make known to me the path of life...",
-      "John 16:24": "Ask and you will receive, and your joy will be complete.",
-      "Jeremiah 17:14": "Heal me, LORD, and I will be healed...",
-      "Isaiah 53:5": "By his wounds we are healed.",
-      "Psalm 147:3": "He heals the brokenhearted and binds up their wounds.",
-      "James 1:5": "If any of you lacks wisdom, ask God...",
-      "Proverbs 3:5-6": "Trust in the LORD with all your heart...",
-      "Ecclesiastes 7:12": "Wisdom preserves those who have it.",
-      "Proverbs 16:18": "Pride goes before destruction, a haughty spirit before a fall.",
-      "James 4:6": "God opposes the proud but shows favor to the humble.",
-      "Galatians 6:3": "If anyone thinks they are something when they are not, they deceive themselves.",
-      "Psalm 56:3": "When I am afraid, I put my trust in you.",
-      "Isaiah 26:4": "Trust in the LORD forever...",
-      "Psalm 32:8": "I will instruct you and teach you...",
-      "Isaiah 30:21": "This is the way; walk in it.",
-      "Proverbs 16:9": "In their hearts humans plan their course, but the LORD establishes their steps.",
-      "Psalm 34:17": "The righteous cry out, and the LORD hears them...",
-      "Colossians 1:13": "He has rescued us from the dominion of darkness...",
-      "2 Samuel 22:2": "The LORD is my rock, my fortress and my deliverer.",
-      "Romans 12:2": "Be transformed by the renewing of your mind...",
-      "Psalm 51:10": "Create in me a pure heart, O God...",
-      "2 Corinthians 4:16": "Though outwardly we are wasting away...",
-      "Philippians 4:19": "And my God will meet all your needs...",
-      "Psalm 23:1": "The LORD is my shepherd, I lack nothing.",
-      "Matthew 6:31-33": "Seek first his kingdom and his righteousness...",
-      "John 14:23": "Anyone who loves me will obey my teaching...",
-      "James 1:22": "Do not merely listen to the word...",
-      "Deuteronomy 5:33": "Walk in obedience to all that the LORD your God has commanded you...",
-      "John 14:27": "Peace I leave with you; my peace I give you...",
-      "Romans 5:1": "Since we have been justified through faith, we have peace with God...",
-      "Isaiah 26:3": "You will keep in perfect peace those whose minds are steadfast..."
-    };
-
+  "1 Corinthians 13:4-5": "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.",
+  "John 15:13": "Greater love has no one than this: to lay down one's life for one's friends.",
+  "Romans 5:8": "But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.",
+  "Isaiah 41:10": "So do not fear, for I am with you; do not be dismayed, for I am your God.",
+  "2 Timothy 1:7": "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.",
+  "Psalm 23:4": "Even though I walk through the darkest valley, I will fear no evil, for you are with me.",
+  "Matthew 11:28": "Come to me, all you who are weary and burdened, and I will give you rest.",
+  "Psalm 4:8": "In peace I will lie down and sleep, for you alone, Lord, make me dwell in safety.",
+  "Exodus 33:14": "The Lord replied, 'My Presence will go with you, and I will give you rest.'",
+  "Jeremiah 29:11": "'For I know the plans I have for you,' declares the Lord...",
+  "Romans 15:13": "May the God of hope fill you with all joy and peace as you trust in him...",
+  "Hebrews 11:1": "Now faith is confidence in what we hope for and assurance about what we do not see.",
+  "Philippians 4:6-7": "Do not be anxious about anything, but in every situation...",
+  "1 Peter 5:7": "Cast all your anxiety on him because he cares for you.",
+  "Psalm 94:19": "When anxiety was great within me, your consolation brought me joy.",
+  "Isaiah 40:31": "But those who hope in the Lord will renew their strength...",
+  "Philippians 4:13": "I can do all things through Christ who strengthens me.",
+  "Psalm 46:1": "God is our refuge and strength, an ever-present help in trouble.",
+  "Hebrews 11:6": "And without faith it is impossible to please God...",
+  "Romans 10:17": "Faith comes from hearing the message...",
+  "James 2:17": "Faith by itself, if it is not accompanied by action, is dead.",
+  "1 John 1:9": "If we confess our sins, he is faithful and just...",
+  "Ephesians 4:32": "Be kind and compassionate...",
+  "Colossians 3:13": "Bear with each other and forgive one another...",
+  "Galatians 5:22": "But the fruit of the Spirit is love, joy, peace, patience, kindness...",
+  "Romans 12:12": "Be joyful in hope, patient in affliction, faithful in prayer.",
+  "James 5:8": "Be patient and stand firm, because the Lord’s coming is near.",
+  "Nehemiah 8:10": "The joy of the Lord is your strength.",
+  "Psalm 16:11": "You make known to me the path of life...",
+  "John 16:24": "Ask and you will receive, and your joy will be complete.",
+  "Jeremiah 17:14": "Heal me, Lord, and I will be healed...",
+  "Isaiah 53:5": "By his wounds we are healed.",
+  "Psalm 147:3": "He heals the brokenhearted and binds up their wounds.",
+  "James 1:5": "If any of you lacks wisdom, ask God...",
+  "Proverbs 3:5-6": "Trust in the Lord with all your heart...",
+  "Ecclesiastes 7:12": "Wisdom preserves those who have it.",
+  "Proverbs 16:18": "Pride goes before destruction, a haughty spirit before a fall.",
+  "James 4:6": "God opposes the proud but shows favor to the humble.",
+  "Galatians 6:3": "If anyone thinks they are something when they are not, they deceive themselves.",
+  "Psalm 56:3": "When I am afraid, I put my trust in you.",
+  "Isaiah 26:4": "Trust in the Lord forever...",
+  "Psalm 32:8": "I will instruct you and teach you...",
+  "Isaiah 30:21": "This is the way; walk in it.",
+  "Proverbs 16:9": "In their hearts humans plan their course, but the Lord establishes their steps.",
+  "Psalm 34:17": "The righteous cry out, and the Lord hears them...",
+  "Colossians 1:13": "He has rescued us from the dominion of darkness...",
+  "2 Samuel 22:2": "The Lord is my rock, my fortress and my deliverer.",
+  "Romans 12:2": "Be transformed by the renewing of your mind...",
+  "Psalm 51:10": "Create in me a pure heart, O God...",
+  "2 Corinthians 4:16": "Though outwardly we are wasting away...",
+  "Philippians 4:19": "And my God will meet all your needs...",
+  "Psalm 23:1": "The Lord is my shepherd, I lack nothing.",
+  "Matthew 6:31-33": "Seek first his kingdom and his righteousness...",
+  "John 14:23": "Anyone who loves me will obey my teaching...",
+  "James 1:22": "Do not merely listen to the word...",
+  "Deuteronomy 5:33": "Walk in obedience to all that the Lord your God has commanded you...",
+  "John 14:27": "Peace I leave with you; my peace I give you...",
+  "Romans 5:1": "We have peace with God through our Lord Jesus Christ...",
+  "Isaiah 26:3": "You will keep in perfect peace those whose minds are steadfast...",
+  "Philippians 2:3": "Do nothing out of selfish ambition...",
+  "Micah 6:8": "Act justly, love mercy, walk humbly with your God.",
+  "Luke 14:11": "Those who humble themselves will be exalted.",
+  "Romans 8:28": "In all things God works for the good of those who love him...",
+  "Proverbs 19:21": "Many are the plans in a person’s heart, but the Lord’s purpose prevails.",
+  "Jeremiah 1:5": "Before I formed you in the womb I knew you...",
+  "1 Thessalonians 5:18": "Give thanks in all circumstances...",
+  "Psalm 107:1": "Give thanks to the Lord, for he is good...",
+  "Colossians 3:15": "Let the peace of Christ rule in your hearts...",
+  "1 Thessalonians 5:11": "Encourage one another and build each other up...",
+  "Hebrews 10:24": "Spur one another on toward love and good deeds...",
+  "Proverbs 12:25": "Anxiety weighs down the heart, but a kind word cheers it up.",
+  "Genesis 1:27": "God created mankind in his own image...",
+  "Galatians 2:20": "I have been crucified with Christ and I no longer live...",
+  "1 Peter 2:9": "You are a chosen people, a royal priesthood..."
+};
+    
     const grid = document.getElementById("topics");
     const container = document.getElementById("results");
 
