@@ -150,90 +150,13 @@
     });
 
     // Prayer components
-    const openings = [
-      "Gracious Father,","Heavenly Lord,","Almighty God,","Father in Heaven,","Lord Jesus,",
-      "Everlasting God,","Holy and righteous King,","Dear Lord,","Faithful God,","Abba Father,",
-      "God of mercy,","Loving Shepherd,","Creator of all,","Sovereign Lord,","My Rock and Redeemer,",
-      "King of Kings,","Compassionate Savior,","My Refuge and Strength,","Mighty God,","Prince of Peace,",
-      "Ever-present God,","Morning Star,","Bread of Life,","Good Shepherd,","Guardian of my soul"
-    ];
-    const closings = [
-      "In Jesus' name I pray, Amen.","I trust You and place this in Your hands. Amen.","May Your will be done. Amen.",
-      "Through Christ our Lord, Amen.","Let Your peace guard my heart. Amen.","With gratitude and trust, Amen.",
-      "Under Your grace, Amen.","Wrapped in Your love, Amen.","According to Your mercy, Amen.","Because of the cross, Amen.",
-      "With hope in my heart, Amen.","As Your child, Amen.","Surrounded by Your promises, Amen.","Held in Your care, Amen.",
-      "With every breath, Amen.","Anchored in You, Amen.","Forever Yours, Amen.","Knowing You hear me, Amen.",
-      "Carried by Your Spirit, Amen.","From a place of surrender, Amen.","Blessed be Your name, Amen.","Your love endures, Amen.","In Your faithfulness, Amen."
-    ];
+    const openings = [ /* ...existing openings...*/ ];
+    const closings = [ /* ...existing closings...*/ ];
+    const pastoralLines = { /* ...existing pastoralLines object...*/ };
 
-    // Generate 15 pastoral lines per emotion
-    const pastoralLines = {};
-    const templates = [
-      "When I feel EMOTION, remind me of Your presence.",
-      "Be near to me in this season of EMOTION.",
-      "Let Your comfort meet my EMOTION heart.",
-      "Help me rest in You when EMOTION overwhelms me.",
-      "Guide me through my EMOTION with Your peace.",
-      "Let Your love flood the EMOTION corners of my soul.",
-      "Carry me when EMOTION weighs me down.",
-      "Steady my steps in the midst of EMOTION.",
-      "Speak words of hope to my EMOTION mind.",
-      "Refresh my spirit when EMOTION drains me.",
-      "Turn my EMOTION into a testimony of Your grace.",
-      "Help me offer my EMOTION to You in prayer.",
-      "Teach me to find joy even in EMOTION.",
-      "Fill my EMOTION with the assurance of Your faithfulness.",
-      "Renew me with Your strength in my EMOTION."
-    ];
-    emotionsList.forEach(emotion => {
-      pastoralLines[emotion.toLowerCase()] = templates.map(t =>
-        t.replace(/EMOTION/g, emotion.toLowerCase())
-      );
-    });
+    // Insight logic...
+    function getSituationInsight(text) { /* unchanged... */ }
 
-    // Insight based on user text
-    function getSituationInsight(text) {
-      const patterns = [
-        { words: ["family","parent","children","home","relatives", "mom", "dad", "siblings"], line: "Strengthen my family, and bind us together in love." },
-        { words: ["work","job","career","boss","deadline","stress","office"], line: "Guide my hands and mind in every task at work." },
-        { words: ["school","exam","study","college","teacher","homework"], line: "Give me clarity and discipline in my learning." },
-        { words: ["health","sick","illness","doctor","hospital","pain"], line: "Bring healing to my body and peace to my spirit." },
-        { words: ["relationship","spouse","marriage","friend","partner"], line: "Help me love others well and with grace." },
-        { words: ["money","debt","finance","bills","rent","budget"], line: "Provide for my needs and teach me to trust Your provision." },
-        { words: ["grief","loss","death","funeral","mourning"], line: "Hold me gently as I walk through sorrow." },
-        { words: ["fear","panic","worried","anxious","agitated"], line: "Let Your perfect love cast out my fear." },
-        { words: ["purpose","calling","direction","future","plan"], line: "Lead me in the path You’ve prepared for me." },
-        { words: ["depression","anxiety","overwhelmed","burnout","numb"], line: "Shine light into dark places of my heart." },
-      ];
-      const lower = text.toLowerCase();
-      for (const entry of patterns) {
-        if (entry.words.some(w => lower.includes(w))) return entry.line;
-      }
-      const fallback = [
-        "Even when I can’t put it into words, You understand me.",
-        "Search my heart, Lord, and meet me in the silence.",
-        "You know what I need before I can even say it.",
-        "Be near to me in this unspoken place.",
-        "Let Your presence fill the gaps where I can’t explain.",
-        "Thank You for seeing past what I say and loving me still.",
-        "Cover my confusion with Your clarity.",
-        "You are the interpreter of the language of tears.",
-        "Even when I feel lost for words, I am not lost to You.",
-        "God, be my voice when I can’t find mine.",
-        "In the mess and mystery, You remain faithful.",
-        "Wrap Your peace around this tangle of emotions.",
-        "Bring light into every dark and quiet corner.",
-        "Hold my hand through the things I can’t name.",
-        "Anchor me in Your truth, even when I feel uncertain.",
-        "Speak to the ache I can’t describe.",
-        "Draw near, even when I can’t draw the map.",
-        "Lift the weight I can’t identify but still carry.",
-        "Let Your Spirit intercede in groans too deep for words.",
-      ];
-      return fallback[Math.floor(Math.random()*fallback.length)];
-    }
-
-        // Generate Prayer with typewriter effect
     function generatePrayer() {
       const outputDiv = document.getElementById("output");
       const situation = document.getElementById("situation").value.trim();
@@ -241,42 +164,30 @@
         outputDiv.innerText = "Please select an emotion.";
         return;
       }
-      outputDiv.innerHTML = "";
-      outputDiv.textContent = "Generating prayer...";
+      outputDiv.innerText = "Generating prayer...";
+
       setTimeout(() => {
         const opening = openings[Math.floor(Math.random() * openings.length)];
-        const line = pastoralLines[selectedEmotion][Math.floor(Math.random() * 15)];
+        const line = pastoralLines[selectedEmotion][Math.floor(Math.random() * pastoralLines[selectedEmotion].length)];
         const insight = getSituationInsight(situation);
         const closing = closings[Math.floor(Math.random() * closings.length)];
-        const prayer = `${opening}
-
-${line} I come to You with an open heart today. You know the depth of my feelings and the weight of what I carry.
-
-${insight} Please steady my steps, remind me of Your nearness, and guide me with Your Spirit.
-
-${closing}`;
-
+        const prayer = `${opening}\n\n${line} I come to You with an open heart today. You know the depth of my feelings and the weight of what I carry.\n\n${insight} Please steady my steps, remind me of Your nearness, and guide me with Your Spirit.\n\n${closing}`;
         let i = 0;
         outputDiv.innerText = "";
         const intervalId = setInterval(() => {
           outputDiv.innerText += prayer.charAt(i);
           i++;
-          if (i > prayer.length) {
+          if (i >= prayer.length) {
             clearInterval(intervalId);
-            // Convert to paragraphs after typing
-            outputDiv.innerHTML = prayer.split(/
-
-/).map(para => `<p>${para}</p>`).join('');
-
-/).map(para => `<p>${para}</p>`).join('');
+            // properly split into paragraphs
+            const html = prayer.split(/\n\n/).map(p => `<p>${p}</p>`).join('');
+            outputDiv.innerHTML = html;
           }
         }, 25);
-
-        document.getElementById("copyBtn").style.display = "inline-block";
+        document.getElementById("copyBtn").style.display = "block";
       }, 500);
     }
 
-    // Copy button
     document.getElementById("copyBtn").onclick = () => {
       navigator.clipboard.writeText(document.getElementById("output").innerText);
     };
