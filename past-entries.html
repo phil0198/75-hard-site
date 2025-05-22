@@ -4,46 +4,56 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Past Journal Entries</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9fafb;
-      color: #1f2937;
-      padding: 2rem;
+      background-color: #1f2937;
+      color: #f9fafb;
       text-align: center;
+      margin: 0;
+      padding: 1rem;
     }
     nav {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin-bottom: 2rem;
+      background-color: #334155;
+      padding: 1rem;
     }
     nav a {
+      color: #f9fafb;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      background-color: #1e293b;
-      color: white;
-      border-radius: 6px;
       font-weight: 500;
+      background-color: #1e293b;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
     }
     nav a:hover {
-      background-color: #334155;
+      background-color: #475569;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 1.5rem 0;
     }
     .entry {
-      background-color: #e0e7ff;
+      background-color: #334155;
       border-radius: 8px;
       padding: 1rem;
       margin: 1rem auto;
       max-width: 600px;
       text-align: left;
       position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     .entry h3 {
       margin: 0 0 0.5rem 0;
+      color: #facc15;
     }
     .entry p {
       margin: 0.3rem 0;
+    }
+    .entry a {
+      color: #93c5fd;
     }
     .delete-btn {
       position: absolute;
@@ -69,6 +79,9 @@
     <a href="prayer-generator.html" data-link="prayer-generator">Prayer Generator</a>
     <a href="past-entries.html" data-link="past-entries">Past Entries</a>
     <a href="scripture-search.html" data-link="scripture-search">Scripture Search</a>
+    <a href="bible_search.html">Bible Search</a>
+    <a href="streak.html">Streak Tracker</a>
+    <a href="register.html">Create Account</a>
   </nav>
 
   <h1>Past Journal Entries</h1>
