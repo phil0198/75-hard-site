@@ -2,96 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prayer Generator</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9fafb;
-      color: #1f2937;
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
+      background-color: #1f2937;
+      color: #f9fafb;
+      text-align: center;
+      margin: 0;
+      padding: 1rem;
     }
-
     nav {
-      margin-bottom: 2rem;
-    }
-
-    .nav-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    #nav-wrapper a,
-    #mobile-menu a {
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      background-color: #1e293b;
-      color: white;
-      border-radius: 6px;
-      font-weight: 500;
-    }
-
-    #nav-wrapper {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      flex-wrap: wrap;
-      flex-grow: 1;
+      background-color: #334155;
+      padding: 1rem;
     }
-
-    #hamburger {
-      display: none;
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      color: #1e293b;
-      cursor: pointer;
+    nav a {
+      color: #f9fafb;
+      text-decoration: none;
+      font-weight: 500;
+      background-color: #1e293b;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
     }
-
-    #mobile-menu {
-      display: none;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 1rem;
+    nav a:hover {
+      background-color: #475569;
     }
-
-    @media (max-width: 640px) {
-      #nav-wrapper {
-        display: none;
-      }
-
-      #hamburger {
-        display: block;
-      }
-
-      #mobile-menu.show {
-        display: flex;
-      }
-    }
-
     h1 {
-      text-align: center;
+      font-size: 2rem;
+      margin: 1.5rem 0;
     }
-
     .emotion-card {
       display: inline-block;
       padding: 0.75rem 1.25rem;
       margin: 0.5rem;
-      background: #e0e7ff;
+      background: #334155;
       border-radius: 6px;
+      color: #f9fafb;
+      border: 1px solid #475569;
       cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
     }
-
+    .emotion-card:hover {
+      background-color: #475569;
+      border-color: #facc15;
+      color: #facc15;
+    }
     .emotion-card.selected {
-      background: #4338ca;
-      color: white;
+      background-color: #facc15;
+      color: #1e293b;
     }
-
     textarea, button {
       width: 100%;
       padding: 0.75rem;
@@ -100,161 +64,219 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
-
+    textarea {
+      background-color: #334155;
+      color: #f9fafb;
+      border: 1px solid #475569;
+      font-family: 'Inter', sans-serif;
+      resize: none;
+    }
     button {
-      background-color: #1e40af;
-      color: white;
+      background-color: #facc15;
+      color: #1f2937;
       border: none;
       cursor: pointer;
+      font-weight: bold;
     }
-
     #output {
       margin-top: 2rem;
-      background: #f3f4f6;
-      padding: 1rem;
+      background-color: #334155;
+      padding: 1.5rem;
       border-radius: 8px;
       white-space: pre-wrap;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+    #copyBtn {
+      background-color: #facc15;
+      color: #1f2937;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    #emotions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 800px;
+      margin: 1rem auto;
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="nav-bar">
-      <div id="nav-wrapper">
-        <a href="index.html">Home</a>
-        <a href="journal.html">Journal</a>
-        <a href="prayer-generator.html">Prayer Generator</a>
-        <a href="past-entries.html">Past Entries</a>
-        <a href="scripture-search.html">Scripture Search</a>
-      </div>
-      <button id="hamburger" onclick="toggleMobileMenu()">☰</button>
-    </div>
-    <div id="mobile-menu">
-      <a href="index.html">Home</a>
-      <a href="journal.html">Journal</a>
-      <a href="prayer-generator.html">Prayer Generator</a>
-      <a href="past-entries.html">Past Entries</a>
-      <a href="scripture-search.html">Scripture Search</a>
-    </div>
+    <a href="index.html">Home</a>
+    <a href="journal.html">Journal</a>
+    <a href="prayer-generator.html">Prayer Generator</a>
+    <a href="past-entries.html">Past Entries</a>
+    <a href="scripture-search.html">Scripture Search</a>
+    <a href="bible_search.html">Bible Search</a>
+    <a href="streak.html">Streak Tracker</a>
+    <a href="register.html">Create Account</a>
   </nav>
-
   <h1>Prayer Generator</h1>
   <p>Select how you feel:</p>
-  <div id="emotions">
-    <span class="emotion-card">Anxious</span>
-    <span class="emotion-card">Grateful</span>
-    <span class="emotion-card">Lost</span>
-    <span class="emotion-card">Hopeful</span>
-    <span class="emotion-card">Tired</span>
-    <span class="emotion-card">Hurt</span>
-    <span class="emotion-card">Joyful</span>
-    <span class="emotion-card">Burdened</span>
-    <span class="emotion-card">Angry</span>
-    <span class="emotion-card">Content</span>
-    <span class="emotion-card">Lonely</span>
-    <span class="emotion-card">Confused</span>
-  </div>
-
+  <div id="emotions"></div>
   <textarea id="situation" rows="4" placeholder="Describe your situation..."></textarea>
   <button onclick="generatePrayer()">Generate Prayer</button>
-
   <div id="output"></div>
-
   <script>
-    function toggleMobileMenu() {
-      const menu = document.getElementById('mobile-menu');
-      const button = document.getElementById('hamburger');
-
-      if (menu.classList.contains('show')) {
-        menu.classList.remove('show');
-        button.textContent = '☰';
-      } else {
-        menu.classList.add('show');
-        button.textContent = '✕';
-      }
-    }
-
+    // Emotion buttons
+    const emotionsList = [
+      "Anxious","Grateful","Lost","Hopeful","Tired","Hurt","Joyful","Burdened","Angry","Content",
+      "Lonely","Confused","Discouraged","Guilty","Insecure","Peaceful","Eager","Embarrassed","Thankful","Determined",
+      "Bored","Surprised","Ashamed","Motivated","Frustrated","Trapped","Worried","Numb","Curious","Excited"
+    ];
+    const emotionsContainer = document.getElementById("emotions");
     let selectedEmotion = "";
-
-    const openings = [
-      "Gracious Father,", "Heavenly Lord,", "Father in Heaven,", "Abba, I come to You today,", "Lord God Almighty,"
-    ];
-
-    const closings = [
-      "In Jesus' name I pray, Amen.",
-      "I trust You and place this in Your hands. Amen.",
-      "May Your will be done. Amen.",
-      "Through Christ our Lord, Amen.",
-      "Let Your peace guard my heart. Amen."
-    ];
-
-    const pastoralLines = {
-      anxious: ["Still my racing heart and anchor me in Your peace that surpasses understanding.", "Calm my anxious thoughts and draw me near to You."],
-      lonely: ["Remind me You are the friend who sticks closer than a brother.", "Comfort me with the truth that I am fully known and fully loved."],
-      hurt: ["Heal my heart and steady my soul.", "Let my pain point me to Your presence."],
-      tired: ["Give me strength where I am weak and rest for my soul.", "Sustain me through the weariness."],
-      grateful: ["Thank You for daily mercies I don’t deserve.", "Keep my heart soft and full of praise."],
-      confused: ["Speak truth into the noise and help me walk by faith, not by sight.", "Give me discernment and a steady heart."],
-      angry: ["Guard my mouth and my heart; help me to be slow to anger and quick to forgive.", "Redirect my anger into something that brings life."],
-      joyful: ["Let my joy overflow in praise and be contagious to those around me.", "Fill my days with songs of thanksgiving."],
-      burdened: ["Help me lay down every weight and take up Your yoke, which is easy and light.", "Give me courage to face what overwhelms me."],
-      hopeful: ["Fan into flame the hope You’ve planted in me.", "Renew my hope with every breath."],
-      lost: ["Be my Shepherd and guide.", "Walk with me through the fog until clarity comes."],
-      content: ["Teach me to be satisfied with Your presence above all.", "Keep me grounded in what truly matters."]
-    };
-
-    document.querySelectorAll('.emotion-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        selectedEmotion = card.innerText.toLowerCase();
+    emotionsList.forEach(emotion => {
+      const span = document.createElement("span");
+      span.className = "emotion-card";
+      span.textContent = emotion;
+      span.addEventListener("click", () => {
+        document.querySelectorAll(".emotion-card").forEach(c => c.classList.remove("selected"));
+        span.classList.add("selected");
+        selectedEmotion = emotion.toLowerCase();
       });
+      emotionsContainer.appendChild(span);
     });
 
+    // Prayer components
+    const openings = [
+      "Gracious Father,","Heavenly Lord,","Almighty God,","Father in Heaven,","Lord Jesus,",
+      "Everlasting God,","Holy and righteous King,","Dear Lord,","Faithful God,","Abba Father,",
+      "God of mercy,","Loving Shepherd,","Creator of all,","Sovereign Lord,","My Rock and Redeemer,",
+      "King of Kings,","Compassionate Savior,","My Refuge and Strength,","Mighty God,","Prince of Peace,",
+      "Ever-present God,","Morning Star,","Bread of Life,","Good Shepherd,","Guardian of my soul"
+    ];
+    const closings = [
+      "In Jesus' name I pray, Amen.","I trust You and place this in Your hands. Amen.","May Your will be done. Amen.",
+      "Through Christ our Lord, Amen.","Let Your peace guard my heart. Amen.","With gratitude and trust, Amen.",
+      "Under Your grace, Amen.","Wrapped in Your love, Amen.","According to Your mercy, Amen.","Because of the cross, Amen.",
+      "With hope in my heart, Amen.","As Your child, Amen.","Surrounded by Your promises, Amen.","Held in Your care, Amen.",
+      "With every breath, Amen.","Anchored in You, Amen.","Forever Yours, Amen.","Knowing You hear me, Amen.",
+      "Carried by Your Spirit, Amen.","From a place of surrender, Amen.","Blessed be Your name, Amen.","Your love endures, Amen.","In Your faithfulness, Amen."
+    ];
+
+    // Generate 15 pastoral lines per emotion
+    const pastoralLines = {};
+    const templates = [
+      "When I feel EMOTION, remind me of Your presence.",
+      "Be near to me in this season of EMOTION.",
+      "Let Your comfort meet my EMOTION heart.",
+      "Help me rest in You when EMOTION overwhelms me.",
+      "Guide me through my EMOTION with Your peace.",
+      "Let Your love flood the EMOTION corners of my soul.",
+      "Carry me when EMOTION weighs me down.",
+      "Steady my steps in the midst of EMOTION.",
+      "Speak words of hope to my EMOTION mind.",
+      "Refresh my spirit when EMOTION drains me.",
+      "Turn my EMOTION into a testimony of Your grace.",
+      "Help me offer my EMOTION to You in prayer.",
+      "Teach me to find joy even in EMOTION.",
+      "Fill my EMOTION with the assurance of Your faithfulness.",
+      "Renew me with Your strength in my EMOTION."
+    ];
+    emotionsList.forEach(emotion => {
+      pastoralLines[emotion.toLowerCase()] = templates.map(t =>
+        t.replace(/EMOTION/g, emotion.toLowerCase())
+      );
+    });
+
+    // Insight based on user text
+    function getSituationInsight(text) {
+      const patterns = [
+        { words: ["family","parent","children","home","relatives", "mom", "dad", "siblings"], line: "Strengthen my family, and bind us together in love." },
+        { words: ["work","job","career","boss","deadline","stress","office"], line: "Guide my hands and mind in every task at work." },
+        { words: ["school","exam","study","college","teacher","homework"], line: "Give me clarity and discipline in my learning." },
+        { words: ["health","sick","illness","doctor","hospital","pain"], line: "Bring healing to my body and peace to my spirit." },
+        { words: ["relationship","spouse","marriage","friend","partner"], line: "Help me love others well and with grace." },
+        { words: ["money","debt","finance","bills","rent","budget"], line: "Provide for my needs and teach me to trust Your provision." },
+        { words: ["grief","loss","death","funeral","mourning"], line: "Hold me gently as I walk through sorrow." },
+        { words: ["fear","panic","worried","anxious","agitated"], line: "Let Your perfect love cast out my fear." },
+        { words: ["purpose","calling","direction","future","plan"], line: "Lead me in the path You’ve prepared for me." },
+        { words: ["depression","anxiety","overwhelmed","burnout","numb"], line: "Shine light into dark places of my heart." },
+      ];
+      const lower = text.toLowerCase();
+      for (const entry of patterns) {
+        if (entry.words.some(w => lower.includes(w))) return entry.line;
+      }
+      const fallback = [
+        "Even when I can’t put it into words, You understand me.",
+        "Search my heart, Lord, and meet me in the silence.",
+        "You know what I need before I can even say it.",
+        "Be near to me in this unspoken place.",
+        "Let Your presence fill the gaps where I can’t explain.",
+        "Thank You for seeing past what I say and loving me still.",
+        "Cover my confusion with Your clarity.",
+        "You are the interpreter of the language of tears.",
+        "Even when I feel lost for words, I am not lost to You.",
+        "God, be my voice when I can’t find mine.",
+        "In the mess and mystery, You remain faithful.",
+        "Wrap Your peace around this tangle of emotions.",
+        "Bring light into every dark and quiet corner.",
+        "Hold my hand through the things I can’t name.",
+        "Anchor me in Your truth, even when I feel uncertain.",
+        "Speak to the ache I can’t describe.",
+        "Draw near, even when I can’t draw the map.",
+        "Lift the weight I can’t identify but still carry.",
+        "Let Your Spirit intercede in groans too deep for words.",
+      ];
+      return fallback[Math.floor(Math.random()*fallback.length)];
+    }
+
+        // Generate Prayer with typewriter effect
     function generatePrayer() {
       const outputDiv = document.getElementById("output");
       const situation = document.getElementById("situation").value.trim();
-
       if (!selectedEmotion) {
         outputDiv.innerText = "Please select an emotion.";
         return;
       }
-
-      outputDiv.innerText = "Generating prayer...";
-
+      outputDiv.innerHTML = "";
+      outputDiv.textContent = "Generating prayer...";
       setTimeout(() => {
         const opening = openings[Math.floor(Math.random() * openings.length)];
+        const line = pastoralLines[selectedEmotion][Math.floor(Math.random() * 15)];
+        const insight = getSituationInsight(situation);
         const closing = closings[Math.floor(Math.random() * closings.length)];
-        const line = (pastoralLines[selectedEmotion] || [""])[Math.floor(Math.random() * pastoralLines[selectedEmotion].length)];
-
-        const reminders = [
-          "Let Your Word speak louder than my fears.",
-          "Speak peace to my soul and anchor me in Your truth.",
-          "Help me remember who You are and what You’ve spoken.",
-          "Steady me with Scripture and strengthen my heart."
-        ];
-        const reminderLine = reminders[Math.floor(Math.random() * reminders.length)];
-
-        let prayerForOther = "";
-
-        const match = situation.match(/pray for ([A-Z][a-z]+)(.*)/i);
-        if (match) {
-          const name = match[1];
-          const blessing = `Be near to ${name}, meet their need, and strengthen their spirit.`;
-          prayerForOther = `\n\nAnd Lord, I lift up ${name} to You. ${blessing}`;
-        }
-
         const prayer = `${opening}
 
-Today I come to You feeling ${selectedEmotion}. ${line}
+${line} I come to You with an open heart today. You know the depth of my feelings and the weight of what I carry.
 
-${reminderLine}${prayerForOther}
+${insight} Please steady my steps, remind me of Your nearness, and guide me with Your Spirit.
 
 ${closing}`;
 
-        outputDiv.innerText = prayer;
-      }, 800);
+        let i = 0;
+        outputDiv.innerText = "";
+        const intervalId = setInterval(() => {
+          outputDiv.innerText += prayer.charAt(i);
+          i++;
+          if (i > prayer.length) {
+            clearInterval(intervalId);
+            // Convert to paragraphs after typing
+            outputDiv.innerHTML = prayer.split(/
+
+/).map(para => `<p>${para}</p>`).join('');
+          }
+        }, 25);
+
+        document.getElementById("copyBtn").style.display = "inline-block";
+      }, 500);
     }
+
+    // Copy button
+    document.getElementById("copyBtn").onclick = () => {
+      navigator.clipboard.writeText(document.getElementById("output").innerText);
+    };
   </script>
 </body>
 </html>
