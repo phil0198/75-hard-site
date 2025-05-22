@@ -113,7 +113,7 @@
     </div>
   </div>
 
-  <audio id="plinkoSound" src="https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3" preload="auto"></audio>
+  
 
   <script>
     const pegs = {};
@@ -144,9 +144,15 @@ function drawBoard(canvasId, type) {
 }
 
 function dropBall(type) {
-  const sound = document.getElementById("plinkoSound");
-  sound.currentTime = 0;
-  sound.play();
+  (function() {
+            const pegSounds = [
+              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3",
+              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/click.mp3",
+              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/tick.mp3"
+            ];
+            const randomSound = pegSounds[Math.floor(Math.random() * pegSounds.length)];
+            new Audio(randomSound).play();
+          })();
 
   const canvasId = type === 'old' ? 'oldCanvas' : 'newCanvas';
   balls[type] = [];
@@ -215,6 +221,7 @@ function update(type, canvasId) {
         const dy = ball.y - peg.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < ((peg.radius || 4) + 4)) {
+          new Audio("https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3").play();
           const angle = Math.atan2(dy, dx);
           const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
           ball.vx = Math.cos(angle + (Math.random() > 0.5 ? 1 : -1) * Math.PI / 3) * speed;
