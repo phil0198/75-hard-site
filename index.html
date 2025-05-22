@@ -125,11 +125,13 @@ let lastPegSoundTime = 0;
 function playPegSound() {
   const now = Date.now();
   if (now - lastPegSoundTime > 100) {
-    const sound = new Audio(pegSounds[Math.floor(Math.random() * pegSounds.length)]);
-    sound.volume = 0.4;
-    sound.play();
+    const original = pegSounds[Math.floor(Math.random() * pegSounds.length)];
+    const audio = new Audio(original);
+    audio.volume = 0.4;
+    audio.play().catch(e => console.log("Playback error:", e));
     lastPegSoundTime = now;
   }
+}
 }
 
 const pegs = {};
@@ -160,15 +162,7 @@ function drawBoard(canvasId, type) {
 }
 
 function dropBall(type) {
-  (function() {
-            const pegSounds = [
-              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/pop.mp3",
-              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/click.mp3",
-              "https://cdn.jsdelivr.net/gh/thatguytimothy/public-audio/sounds/tick.mp3"
-            ];
-            const randomSound = pegSounds[Math.floor(Math.random() * pegSounds.length)];
-            new Audio(randomSound).play();
-          })();
+  playPegSound();
 
   const canvasId = type === 'old' ? 'oldCanvas' : 'newCanvas';
   balls[type] = [];
